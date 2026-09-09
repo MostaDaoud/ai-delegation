@@ -59,11 +59,11 @@ Sub-skills install as sibling folders under `~/.agents/skills/` (Agent Skills la
 
 | Command | Description |
 |---------|-------------|
-| `/ai-delegation` | Interactive: walk the 7-question gate, then route |
+| `/ai-delegation` | Interactive: walk the 8-question gate, then route |
 | `/ai-delegation decide` | Should I delegate? Pattern + model tiers + context contract |
 | `/ai-delegation wire` | Generate harness-specific delegation config |
 | `/ai-delegation cost` | Run the P1–P5 economics calculator |
-| `/ai-delegation audit` | Scan a config for AP1–AP12 anti-patterns |
+| `/ai-delegation audit` | Scan a config for AP1–AP14 anti-patterns |
 
 ## Examples
 
@@ -102,10 +102,10 @@ ai-delegation/                  # Orchestrator (routing + discipline gates)
   assets/templates/             # subagent-definition, orchestrator-instructions, routing-rules
   evals/                        # 26-case eval set (trigger + behavior)
 skills/
-  ai-delegation-decide/         # 7-question gate -> decision contract
+  ai-delegation-decide/         # 8-question gate -> decision contract
   ai-delegation-wire/           # contract -> harness config
   ai-delegation-cost/           # economics across P1-P5
-  ai-delegation-audit/          # AP1-AP12 scan + evidence refresh
+  ai-delegation-audit/          # AP1-AP14 scan + evidence refresh
 ```
 
 ## Key rules the skill enforces
