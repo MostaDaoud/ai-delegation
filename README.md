@@ -105,6 +105,13 @@ skills/
 - Any Agent Skills-compatible harness (opencode, Claude Code, Codex, Gemini CLI, Cursor)
 - Python 3.10+ for the scripts (no third-party packages required; PyYAML optional for YAML config audits)
 
+## Credits
+
+This skill is based partly on two excellent open-source projects — both MIT licensed. Thank you.
+
+- **[amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills)** (MIT) — the **P6 Cross-CLI Relay** pattern is grounded in its architecture: the review-first loop (brief → dispatch → poll → review diff → *you* land the commit), the `delegate-relay.result.v1` result contract, fleet lanes with fail-closed content-bound configs, the "relay never commits" invariant, and the measured per-CLI autonomy caveats (aider auto-commits, grok un-preventable writes, `touchedFiles`-is-not-containment). Cited in-repo as DS1–DS4 in [`ai-delegation/references/evidence.md`](ai-delegation/references/evidence.md); mechanics in [`ai-delegation/references/cross-cli-relay.md`](ai-delegation/references/cross-cli-relay.md). If you install delegate-skills, its per-CLI `*-delegate` skills serve as the reference relays this skill wires against.
+- **[AgriciDaniel/skill-forge](https://github.com/AgriciDaniel/skill-forge)** (MIT) — the skill itself was planned, scaffolded, validated (0–100 score gate), evaluated, benchmarked, and packaged through the skill-forge architecture (complexity tiers, SKILL.md conventions, progressive disclosure, init/validate/package/eval/benchmark pipeline) via its discipline-fork.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

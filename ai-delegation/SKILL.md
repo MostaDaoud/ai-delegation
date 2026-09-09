@@ -14,7 +14,14 @@ description: >
   "route requests", "cascade cheap to strong", "delegate to codex/cursor",
   "fleet lanes", "audit my subagents", "delegation anti-patterns". Do NOT use
   for prompt engineering, RAG tuning, fine-tuning, human team delegation, or
-  general "make my agent better" without a delegation/routing/cost component.
+  general "make my agent better" without a   delegation/routing/cost component.
+metadata:
+  author: Mostafa Daoud
+  version: 1.1.0
+  credits: >-
+    Based partly on https://github.com/amElnagdy/delegate-skills (P6 Cross-CLI
+    Relay pattern, MIT) and https://github.com/AgriciDaniel/skill-forge (skill
+    architecture and build pipeline, MIT).
 ---
 
 # AI Delegation — Decide, Wire, Cost, Audit
