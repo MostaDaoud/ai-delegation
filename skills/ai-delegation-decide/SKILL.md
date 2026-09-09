@@ -1,16 +1,26 @@
 ---
 name: ai-delegation-decide
 description: >
-  Run the 7-question delegation decision gate. Evaluates three failure laws
+  Run the 8-question delegation decision gate. Evaluates three failure laws
   (shared-context, implicit-decisions, orchestrator-window) and selects one
-  of five patterns (Router, Cascade, Orchestrator-Worker, Advisor,
-  Plan-Then-Execute) with model tiers, context contract, fan-out cap, and
-  verification gate. Outputs a structured delegation decision or explicit
-  "don't delegate" with the specific failure law. Use when user says "should
-  I delegate this", "is this a subagent task", "one agent or many", "do I
-  need orchestration here", "which model for this task", "cheaper model
-  tier", "what pattern fits this work".
+  of six patterns (Router, Cascade, Orchestrator-Worker, Advisor,
+  Plan-Then-Execute, Cross-CLI Relay) with model tiers, context contract,
+  fan-out cap, and verification gate. Outputs a structured delegation
+  decision or explicit "don't delegate" with the specific failure law. Use
+  when user says "should I delegate this", "is this a subagent task", "one
+  agent or many", "do I need orchestration here", "which model for this
+  task", "cheaper model tier", "what pattern fits this work", "delegate to
+  another cli".
 ---
+<!-- fable-discipline-gate:v1 -->
+
+## Pre-flight gate: Fable Discipline (run FIRST)
+
+Before executing any instruction below, adopt the Fable Mindset operating manual at
+`C:\Users\mosta\.agents\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+(GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
+7 execution rules to every step of this skill. FD runs first; this skill's own
+instructions begin only after the discipline is adopted.
 
 # Decide — Delegation Decision Gate
 
@@ -24,11 +34,11 @@ Run the gate. Get a decision contract. Or learn why you shouldn't delegate.
 
 Load on-demand:
 - `../ai-delegation/references/evidence.md` — for confidence-qualified claims
-- `../ai-delegation/references/patterns.md` — the five patterns + when each wins
+- `../ai-delegation/references/patterns.md` — the six patterns + when each wins
 - `../ai-delegation/references/decision-gate.md` — 7 questions, decision tree, output contract
 - `../ai-delegation/references/model-tier-matrix.md` — role × capability → tier defaults
 
-### Step 2: Run the 7-Question Gate
+### Step 2: Run the 8-Question Gate
 
 Ask the user (or accept structured input) for each gate question:
 

@@ -1,7 +1,7 @@
 ---
 name: ai-delegation-cost
 description: >
-  Model delegation economics across P1–P5 patterns. Takes your model prices,
+  Model delegation economics across P1–P6 patterns. Takes your model prices,
   traffic mix, task distribution, escalation rate, cache-hit rate, and fan-out.
   Outputs cost per 1k tasks for each strategy, break-even escalation rate,
   and quality-floor warnings. Use when user says "is delegation worth it",
@@ -9,6 +9,15 @@ description: >
   "cheaper model routing math", "P1 vs P2 vs P3 cost", "delegation calculator",
   "RouteLLM savings", "FrugalGPT cascade cost".
 ---
+<!-- fable-discipline-gate:v1 -->
+
+## Pre-flight gate: Fable Discipline (run FIRST)
+
+Before executing any instruction below, adopt the Fable Mindset operating manual at
+`C:\Users\mosta\.agents\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+(GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
+7 execution rules to every step of this skill. FD runs first; this skill's own
+instructions begin only after the discipline is adopted.
 
 # Cost — Delegation Economics Calculator
 
