@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Purpose: Static audit of a delegation config for the 14 anti-patterns (AP1-AP14).
+Purpose: Static audit of a delegation config for the 15 anti-patterns (AP1-AP15).
 Input: Path to config directory or file (YAML/JSON) defining workers, orchestrator, routing.
 Output: JSON findings with severity + fix; optional markdown report.
 Usage: python scripts/audit_delegation.py <path> [--format json|markdown] [--output out.json]
@@ -128,6 +128,14 @@ ANTI_PATTERNS = [
         "check": lambda ctx: ctx.get("pattern") == "P6" and ctx.get("touched_files_as_containment", False),
         "evidence": "Config treats touchedFiles/post-run git status as a guarantee no other files were modified",
         "fix": "Treat touchedFiles as a review aid only. Where out-of-tree writes are unacceptable, isolate via worktree/container/OS sandbox. State CLI enforcement limits explicitly.",
+    },
+    {
+        "id": "AP15",
+        "name": "Prompt-Only Write Restriction",
+        "severity": "HIGH",
+        "check": lambda ctx: (ctx.get("gate") == "full" or ctx.get("read_only_expected", False)) and ctx.get("read_only_enforced", True) is False or ctx.get("write_restriction") == "prompt",
+        "evidence": "Read-only expectation (gate=full or read_only_expected) enforced only by prompt text: write_restriction=prompt or read_only_enforced=false",
+        "fix": "Restrict with the runtime's primitive: read-only tools allowlist (subagent lane) or CLI/OS sandbox (relay lane). Verify with a probe dispatch. If no primitive exists, use a worktree/container and say so in warnings.",
     },
 ]
 

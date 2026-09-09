@@ -1,7 +1,7 @@
 ---
 name: ai-delegation-audit
 description: >
-  Static audit of a delegation config for 14 anti-patterns (AP1–AP14).
+  Static audit of a delegation config for 15 anti-patterns (AP1–AP15).
   Scans worker briefs, orchestrator config, context contract, and routing
   rules. Outputs severity-ranked findings with specific fixes. Can also
   refresh the evidence base (re-verify dated claims). Use when user says
@@ -11,6 +11,15 @@ description: >
   AP3", "check my orchestrator for fan-out", "verify my cascade has eval gate",
   "is my relay allowed to commit", "touchedFiles guarantee".
 ---
+<!-- fable-discipline-gate:v1 -->
+
+## Pre-flight gate: Fable Discipline (run FIRST)
+
+Before executing any instruction below, adopt the Fable Mindset operating manual at
+`C:\Users\mosta\.claude\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+(GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
+7 execution rules to every step of this skill. FD runs first; this skill's own
+instructions begin only after the discipline is adopted.
 
 # Audit — Delegation Anti-Pattern Scanner
 
@@ -22,7 +31,7 @@ Runs `../ai-delegation/scripts/audit_delegation.py` over your config. Finds what
 
 ### Step 1: Load References
 
-- `../ai-delegation/references/anti-patterns.md` — 14 named failure modes (AP1–AP14) with detection + fix
+- `../ai-delegation/references/anti-patterns.md` — 15 named failure modes (AP1–AP15) with detection + fix
 - `../ai-delegation/references/evidence.md` — for claim provenance in findings
 
 ### Step 2: Accept Config Input
@@ -53,6 +62,7 @@ For each anti-pattern AP1–AP14:
 | AP12 | Routing Without Eval Gate | If pattern∈{P1,P2}, eval_gate exists |
 | AP13 | Worker Commits / No Review-Before-Land (P6) | If pattern==P6: worker_can_commit == false AND review_before_land == true |
 | AP14 | TouchedFiles Treated as Containment (P6) | If pattern==P6, touched_files_as_containment == false |
+| AP15 | Prompt-Only Write Restriction | If gate=="full" or read_only_expected: read_only_enforced == true and write_restriction != "prompt" |
 
 Also flag P6 configs whose `delegation_contract` hash does not match an approved contract — fail-closed binding (see `../ai-delegation/references/cross-cli-relay.md`).
 

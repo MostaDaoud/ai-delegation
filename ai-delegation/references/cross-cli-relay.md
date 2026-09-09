@@ -105,6 +105,17 @@ Rules (DS3):
 
 ---
 
+## Gate Depth "full" over a Relay (PG2–PG3)
+
+When the decision contract emits `gate: "full"` for a relay dispatch, the pre-write gate works differently per lane — and one property is universal:
+
+- **Read-only pass and write pass are TWO FRESH RUNS.** A Codex session cannot pause, gain permissions, and resume (confirmed upstream, openai/codex#33974). The approved plan and the answered questions carry the context between passes — the brief for the write pass includes the plan verbatim plus your answers.
+- **Empty plan = failure.** Some runtimes fail and exit 0 with an empty result that reads like a valid empty plan. A `gate: "full"` run whose plan has no steps and no questions is a failed run — re-dispatch (PG2).
+- **Preflight the sandbox.** CLI sandboxes can silently no-op in some environments (e.g., inside an IDE Flatpak). Dispatch a trivial read-only probe first; treat an empty probe as "sandbox unavailable," not as an empty plan.
+- **Enforcement, not request:** the read-only pass must be restricted by the CLI's own sandbox/read-only mode or an OS sandbox — never by a prompt instruction (AP15). If [plan-gate](https://github.com/AgriciDaniel/plan-gate) is installed, its `preflight` and `audit` commands provide tested implementations for the Codex lane.
+
+---
+
 ## When P6 vs In-Harness Subagents (P3/P5)
 
 | Signal | Choose |

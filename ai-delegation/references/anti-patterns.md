@@ -1,4 +1,4 @@
-# Anti-Patterns — 14 Named Failure Modes
+# Anti-Patterns — 15 Named Failure Modes
 
 The `audit` sub-skill scans a delegation config for these. Each has a severity (HIGH/MEDIUM/LOW), a detection rule, and a specific fix.
 
@@ -87,6 +87,12 @@ The `audit` sub-skill scans a delegation config for these. Each has a severity (
 **Detection:** P6 config or procedure that treats `touchedFiles` (or any post-run `git status` report) as a guarantee that no other files were modified — especially for CLIs without an enforced read-only mode.
 **Evidence:** DS2 — `touchedFiles` is post-run `git status`; it cannot show ignored files, reverted edits, or writes outside the repository. Grok Build cannot be prevented from writing headlessly; Command Code `--yolo` write is full-trust with no path restriction.
 **Fix:** Treat `touchedFiles` as a review aid only. Where out-of-tree writes are unacceptable, isolate via worktree, container, or OS-enforced sandbox. State the CLI's enforcement limits explicitly in the brief/procedure.
+
+## AP15 — Prompt-Only Write Restriction
+**Severity:** HIGH
+**Detection:** A `gate: "full"` (or any read-only expectation) enforced only by prompt text — "do not write any files" — with no tool allowlist, sandbox flag, or permission mode behind it.
+**Evidence:** PG3 — "restrict the capability, do not ask the model nicely. A prompt telling a model not to write is not a gate, in any runtime."
+**Fix:** Restrict with the runtime's own primitive: read-only `tools:` allowlist for a subagent lane; the CLI's sandbox/read-only mode (or an OS sandbox) for a relay lane. Verify with a probe dispatch that the worker cannot write. If the runtime offers no enforcement primitive, say so in the warnings and use a worktree/container instead.
 
 ---
 

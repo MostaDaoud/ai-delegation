@@ -50,6 +50,8 @@ This file defines the canonical patterns. The `decide` sub-skill outputs one of 
 - **P3 Orchestrator-Worker**: Task is breadth-first (many independent threads), exceeds context window, quality is the binding constraint, and you can pay 15× tokens. You MUST have effort-scaling rules and fan-out caps.
 - **P4 Advisor**: ONLY when both models are frontier-tier (cross-frontier capability routing). Never with a weak primary — it's an open training problem.
 - **P5 Plan-Then-Execute**: Coding tasks where you can write a frozen spec. The worker is persistent (revisions are cheap because of cached context). Best for "I know what I want built, I just don't want to write it."
+  - **Variant — cheap-plans-first**: when the spec itself is uncertain, invert the planner: the *cheap* worker runs read-only (tool allowlist or sandbox), returns a plan + its open questions, and executes only after approval. Emits `gate: "full"` (see `decision-gate.md` Gate Depth). Grounded in PG1–PG3.
+  - **Persistence caveat**: "persistent worker" is harness-dependent. If a session's permission mode must change mid-flow, most runtimes require a fresh session — the approved plan must carry the context between passes (PG2). `wire` emits the plan-transfer step explicitly.
 - **P6 Cross-CLI Relay**: The work needs tools, auth, or a model the orchestrating harness doesn't have (e.g., dispatch to Codex/Cursor/aider because they hold different credentials or a local endpoint). Best for bounded mechanical tasks — migrations, refactors, removal sweeps — that come back as a clean diff you review before landing. Requires a self-contained brief (the implementer has no orchestrator chat history) and a review-first loop. See `cross-cli-relay.md`.
 
 ---

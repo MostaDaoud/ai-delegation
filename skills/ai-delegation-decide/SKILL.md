@@ -5,19 +5,21 @@ description: >
   (shared-context, implicit-decisions, orchestrator-window) and selects one
   of six patterns (Router, Cascade, Orchestrator-Worker, Advisor,
   Plan-Then-Execute, Cross-CLI Relay) with model tiers, context contract,
-  fan-out cap, and verification gate. Outputs a structured delegation
-  decision or explicit "don't delegate" with the specific failure law. Use
-  when user says "should I delegate this", "is this a subagent task", "one
-  agent or many", "do I need orchestration here", "which model for this
-  task", "cheaper model tier", "what pattern fits this work", "delegate to
-  another cli".
+  gate depth, fan-out cap, and verification gate. Outputs a structured
+  delegation decision or explicit "don't delegate" with the specific failure
+  law. Gate depth scales effort: none, a one-line implicit-decision report,
+  or a full read-only plan-first gate. Use when user says "should I delegate
+  this", "is this a subagent task", "one agent or many", "do I need
+  orchestration here", "which model for this task", "cheaper model tier",
+  "what pattern fits this work", "delegate to another cli", "gate depth",
+  "plan before it writes".
 ---
 <!-- fable-discipline-gate:v1 -->
 
 ## Pre-flight gate: Fable Discipline (run FIRST)
 
 Before executing any instruction below, adopt the Fable Mindset operating manual at
-`C:\Users\mosta\.agents\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+`C:\Users\mosta\.claude\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
 (GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
 7 execution rules to every step of this skill. FD runs first; this skill's own
 instructions begin only after the discipline is adopted.
@@ -89,6 +91,7 @@ Using `model-tier-matrix.md`:
   "pattern": "P1" | "P2" | "P3" | "P4" | "P5" | "P6" | "none",
   "reason": "if none: which failure law; if pattern: why this one",
   "mechanism": "subagent" | "relay-cli",
+  "gate": "none" | "one-line" | "full",
   "model_tiers": {
     "decomposition": "frontier",
     "execution": "cheap",
@@ -106,9 +109,19 @@ Using `model-tier-matrix.md`:
     "acceptance_criteria": "..."
   },
   "escalation_trigger": "explicit condition (never let weak model decide)",
-  "warnings": ["if P4 with weak primary: WARNING — open calibration problem"]
+  "warnings": ["if P4 with weak primary: WARNING — open calibration problem", "if gate=full on a well-specified task: WARNING — gate bought nothing in PG1; default to one-line"]
 }
 ```
+
+### Step 6: Assign Gate Depth (calibrated effort — default to the cheapest)
+
+| Depth | Use when | Mechanics |
+|-------|----------|-----------|
+| `none` | Specified work, single file, lookups | Post-hoc verification gate covers it |
+| `one-line` | **Everyday default** for any delegation | Append to the brief: "Report anything you decided that the task did not specify." |
+| `full` | >3 files touched, root-causing (not localizing), fuzzy requirements, two agents on the same files, hard-to-unwind work | Worker runs **read-only by capability restriction** (tool allowlist / sandbox — never prompt-only, AP15), returns plan + questions, executes only after approval. Relay lane: read-only and write passes are two fresh runs; the plan carries context (PG2). Empty plan = failed run. |
+
+If Q4 answered NO (spec not freezable), the read-only planner IS the resolution mechanism: dispatch `gate: "full"` first, user answers the questions, spec becomes freezable, then re-run pattern selection.
 
 ---
 

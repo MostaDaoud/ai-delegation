@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Purpose: Model delegation economics across P1–P5 patterns.
+Purpose: Model delegation economics across P1-P6 patterns.
 Input: JSON config with model prices, traffic mix, task distribution, escalation rate, cache-hit rate, fan-out.
 Output: JSON cost comparison per 1k tasks + break-even analysis + quality-floor warning.
 Usage: python scripts/delegation_calculator.py --config config.json [--output out.json]
@@ -488,7 +488,7 @@ def main(args: argparse.Namespace) -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Delegation cost calculator across P1-P5 patterns")
+    parser = argparse.ArgumentParser(description="Delegation cost calculator across P1-P6 patterns")
     parser.add_argument("config", help="Path to JSON config file")
     parser.add_argument("--output", "-o", help="Output file path")
     args = parser.parse_args()

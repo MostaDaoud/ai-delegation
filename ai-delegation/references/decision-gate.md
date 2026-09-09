@@ -48,7 +48,11 @@ START
 │   ├─ YES → Is it coding?
 │   │   ├─ YES → P5 Plan-Then-Execute (persistent sidekick)
 │   │   └─ NO  → P3 with frozen briefs per worker
-│   └─ NO  → Resolve ambiguity first; STOP
+│   └─ NO  → READ-ONLY PLANNER FIRST (do not delegate yet):
+│            cheap worker restricted to read-only tools/sandbox explores,
+│            returns plan + every question the task did not answer;
+│            you answer them → spec is now freezable → re-run from Q4
+│            (mechanics: gate "full"; see "Gate Depth" below)
 │
 ├─ Info > context window?
 │   ├─ YES → Quality/wall-clock binding?
@@ -70,6 +74,7 @@ START
   "pattern": "P3" | "P1" | "P2" | "P4" | "P5" | "P6" | "none",
   "reason": "if none, which failure law; if pattern, why this one",
   "mechanism": "subagent" | "relay-cli",
+  "gate": "none" | "one-line" | "full",
   "model_tiers": {
     "decomposition": "frontier",
     "execution": "cheap",
@@ -114,8 +119,30 @@ START
 
 9. **P6 enforcement is stated in the target CLI's own terms.** Whatever the CLI cannot enforce (e.g., some have no true read-only mode) is said plainly in the warnings — never assumed. `touchedFiles` is a review aid, not containment (AP14).
 
+10. **Restrict the capability, don't ask nicely.** A prompt telling a worker not to write is not a gate. Gate depth "full" means a tool allowlist (subagent lane) or an OS/CLI sandbox (relay lane) — enforced, not requested (PG3, AP15).
+
+11. **An empty plan is a failure, not a success.** Some runtimes fail silently and exit 0 with an empty result — reads like a valid empty plan. A verifier that accepts it has false-accepted (PG2, AP9 family). If the plan has no questions and no steps on a gate="full" run, treat the run as failed and re-dispatch.
+
+---
+
+## Gate Depth (calibrated effort for the pre-write gate)
+
+Every "delegate" verdict also emits a `gate` value. Default to the cheapest that covers the risk (PG1: on well-specified tasks, a full gate bought nothing — the ungated agent was correct and cost 76k tokens vs 26k for the plan).
+
+| Depth | What it is | When to use |
+|-------|-----------|-------------|
+| `none` | No pre-write gate; the verification gate (post-hoc) covers it | Specified work, single file, lookups. Most of the time. |
+| `one-line` | Append to the brief: **"Report anything you decided that the task did not specify."** Surfaces implicit decisions without slowing anything | The everyday default for any delegation |
+| `full` | Worker runs **read-only** (tool allowlist or sandbox), returns plan + questions, executes only after approval. If approval never comes, it never writes | Gate when: the change touches **more than 3 files**; you are **root-causing** rather than localizing; **requirements are still fuzzy**; **two agents work the same files**; the work is hard to unwind |
+
+Mechanics for `full` (PG2):
+- **Subagent lane**: restrict the child to read-only tools in its definition (allowlist, not denylist).
+- **Relay lane (Codex)**: a session cannot pause, gain permissions, and resume — the read-only pass and the write pass are **two fresh runs**, with the approved plan carrying the context between them.
+- **Approval**: the orchestrator approves the plan; on anything hard to unwind, a **human** approves — a model approving a model is a known limit.
+- Read-only enforcement for a ready-made planner: if [plan-gate](https://github.com/AgriciDaniel/plan-gate) is installed, its `agents/plan-gate-planner.md` + `audit.sh` provide a tested Lane-A/Codex-B implementation; otherwise use your harness's own tool-allowlist primitive.
+
 ---
 
 ## Usage in `decide` Sub-Skill
 
-The sub-skill walks the user through the 7 questions (or accepts a structured input), then emits the output contract above. If the user provides partial context, it asks clarifying questions until the gate can be evaluated.
+The sub-skill walks the user through the 8 questions (or accepts a structured input), then emits the output contract above. If the user provides partial context, it asks clarifying questions until the gate can be evaluated.

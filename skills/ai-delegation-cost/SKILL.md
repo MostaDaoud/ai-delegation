@@ -14,7 +14,7 @@ description: >
 ## Pre-flight gate: Fable Discipline (run FIRST)
 
 Before executing any instruction below, adopt the Fable Mindset operating manual at
-`C:\Users\mosta\.agents\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+`C:\Users\mosta\.claude\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
 (GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
 7 execution rules to every step of this skill. FD runs first; this skill's own
 instructions begin only after the discipline is adopted.

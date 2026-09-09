@@ -2,33 +2,44 @@
 name: ai-delegation
 description: >
   Decide when and how to delegate work across AI agents and model tiers.
-  Runs an 8-question gate over three failure laws, recommends one of
-  six delegation patterns (Router, Cascade, Orchestrator-Worker, Advisor,
-  Plan-Then-Execute, Cross-CLI Relay), assigns model tiers per role, and wires
-  the config for your harness (opencode, Claude Code, Codex, Gemini CLI,
-  Cursor), including cross-CLI dispatch via a review-first relay. Includes a
-  P1-P6 cost calculator, AP1-AP14 anti-pattern auditor, fail-closed lane
-  configs, and a confidence-dated evidence base. Use when user says "should I
-  delegate this", "which model for this task", "orchestrator worker",
-  "subagent", "cut my API bill", "cheaper model", "context pollution",
-  "route requests", "cascade cheap to strong", "delegate to codex/cursor",
-  "fleet lanes", "audit my subagents", "delegation anti-patterns". Do NOT use
-  for prompt engineering, RAG tuning, fine-tuning, human team delegation, or
-  general "make my agent better" without a   delegation/routing/cost component.
+  Runs an 8-question gate over three failure laws, recommends one of six
+  patterns (Router, Cascade, Orchestrator-Worker, Advisor, Plan-Then-Execute,
+  Cross-CLI Relay), emits a gate depth (none / one-line / full read-only
+  plan-first), and wires any harness (opencode, Claude Code, Codex, Gemini
+  CLI, Cursor), including cross-CLI relay dispatch. Includes a P1-P6 cost
+  calculator, AP1-AP15 anti-pattern auditor, fail-closed lanes, and a dated
+  evidence base. Use when user says "should I delegate this", "which model
+  for this task", "orchestrator worker", "subagent", "cut my API bill",
+  "cheaper model", "context pollution", "route requests", "delegate to
+  codex/cursor", "fleet lanes", "gate depth", "plan before it writes",
+  "audit my subagents", "delegation anti-patterns". Do NOT use for prompt
+  engineering, RAG tuning, fine-tuning, human team delegation, or general
+  "make my agent better" without a delegation/routing/cost component.
 metadata:
   author: Mostafa Daoud
-  version: 1.1.0
+  version: 1.2.0
   credits: >-
     Based partly on https://github.com/amElnagdy/delegate-skills (P6 Cross-CLI
-    Relay pattern, MIT) and https://github.com/AgriciDaniel/skill-forge (skill
-    architecture and build pipeline, MIT).
+    Relay pattern, MIT), https://github.com/AgriciDaniel/plan-gate (gate depth
+    and read-only plan-first gate, MIT), and https://github.com/AgriciDaniel/skill-forge
+    (skill architecture and build pipeline, MIT).
 ---
+<!-- fable-discipline-gate:v1 -->
+
+## Pre-flight gate: Fable Discipline (run FIRST)
+
+Before executing any instruction below, adopt the Fable Mindset operating manual at
+`C:\Users\mosta\.claude\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+(GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
+7 execution rules to every step of this skill. FD runs first; this skill's own
+instructions begin only after the discipline is adopted.
 
 # AI Delegation — Decide, Wire, Cost, Audit
 
 Route work across agents and model tiers without guesswork. This skill encodes the
-five proven delegation patterns, three failure laws, and a decision gate that
-outputs a complete delegation contract — or tells you **don't delegate**.
+six proven delegation patterns, three failure laws, gate depth (calibrated effort for
+pre-write gates), and a decision gate that outputs a complete delegation contract —
+or tells you **don't delegate**.
 
 ---
 
@@ -40,7 +51,7 @@ outputs a complete delegation contract — or tells you **don't delegate**.
 | `/ai-delegation decide` | `../ai-delegation-decide/` | Should I delegate? Pattern + tiers + context contract |
 | `/ai-delegation wire` | `../ai-delegation-wire/` | Generate harness-specific config |
 | `/ai-delegation cost` | `../ai-delegation-cost/` | Run the economics calculator |
-| `/ai-delegation audit` | `../ai-delegation-audit/` | Audit existing setup for 14 anti-patterns |
+| `/ai-delegation audit` | `../ai-delegation-audit/` | Audit existing setup for 15 anti-patterns |
 
 ---
 
@@ -74,7 +85,7 @@ Load on-demand as needed:
 1. **ai-delegation-decide** — Run the 8-question gate; emit delegation decision contract
 2. **ai-delegation-wire** — Render harness-specific config from a decision contract
 3. **ai-delegation-cost** — Model economics across P1–P5; break-even + quality-floor warnings
-4. **ai-delegation-audit** — Static scan for AP1–AP12; severity-ranked findings + fixes
+4. **ai-delegation-audit** — Static scan for AP1-AP15; severity-ranked findings + fixes
 
 ---
 
@@ -118,8 +129,10 @@ This skill enforces the agent-discipline-forge gates:
 | "my two subagents produce conflicting code" | `audit` → AP5 finding |
 | "set up a cheap-first cascade with escalation" | `wire` → P2 cascade config |
 | "is orchestrator-worker worth 15x tokens here" | `decide` → P3 only if quality binding |
-| "audit my subagent config for anti-patterns" | `audit` → full AP1–AP12 scan |
+| "audit my subagent config for anti-patterns" | `audit` → full AP1–AP15 scan |
 | "cut my agent API bill without losing quality" | `cost` → P1/P2 recommendation |
+| "should the cheap model write, or plan first for my approval" | `decide` → gate depth (none / one-line / full) |
+| "just tell the worker not to touch prod files" | `audit` → AP15 finding (prompt-only restriction) |
 
 ### Should-NOT-Trigger (10)
 
@@ -141,7 +154,7 @@ This skill enforces the agent-discipline-forge gates:
 ## Scripts
 
 - `scripts/delegation_calculator.py` — Cost model across P1–P5 + break-even
-- `scripts/audit_delegation.py` — Static scan for AP1–AP12
+- `scripts/audit_delegation.py` — Static scan for AP1-AP15
 
 ## Assets
 

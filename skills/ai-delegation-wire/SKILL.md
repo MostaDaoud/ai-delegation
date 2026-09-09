@@ -9,6 +9,15 @@ description: >
   routing", "make the lead delegate instead of doing it inline", "generate
   delegation config for opencode", "wire up cascade for Claude Code".
 ---
+<!-- fable-discipline-gate:v1 -->
+
+## Pre-flight gate: Fable Discipline (run FIRST)
+
+Before executing any instruction below, adopt the Fable Mindset operating manual at
+`C:\Users\mosta\.claude\skills\fable-mindset\SKILL.md`. Apply its Decision Loop
+(GROUND -> REASON -> ACT -> OBSERVE -> RE-EVALUATE -> VERIFY -> NARRATE) and its
+7 execution rules to every step of this skill. FD runs first; this skill's own
+instructions begin only after the discipline is adopted.
 
 # Wire — Generate Delegation Config
 
@@ -79,6 +88,14 @@ For routing (P1/P2):
 2. **Lane config** → `.delegation/fleet.yaml` (project) or `~/.delegation/fleet.yaml` (global): `delegate-fleet.v1`-compatible lanes binding work-types to target CLIs with dials. Explicit flags override lane dials; wrong implementer for a lane fails loud.
 3. **Dispatch procedure** → `.delegation/dispatch.md`: the review-first loop (write brief → dispatch → poll → review `git diff` → re-run gates → orchestrator commits), referencing `delegate-relay.result.v1` fields. Surface the target CLI's autonomy caveats from `cross-cli-relay.md` as explicit warnings (aider commits by default; grok cannot be prevented from writing; `touchedFiles` is not containment).
 4. **Fail-closed binding**: stamp every emitted project config with a `delegation_contract` block: `{contract_hash, approved_by, approved_at}`. A config whose hash does not match an approved contract fails closed — copied or hand-edited project configs must be re-approved before dispatch.
+
+### Step 5c: Render Gate Config (from the decision's `gate` field)
+
+| Decision `gate` | What `wire` emits |
+|-----------------|-------------------|
+| `none` | Nothing extra; the post-hoc verification gate from the contract covers it |
+| `one-line` | The one-liner appended to every brief's brief: **"Report anything you decided that the task did not specify."** |
+| `full` | **Enforced read-only worker config** — never prompt-only (AP15): for `mechanism: "subagent"`, a read-only tools *allowlist* in the worker definition; for `mechanism: "relay-cli"`, the target CLI's sandbox/read-only flags plus a **two-pass procedure**: read-only pass → plan + questions → user approval → fresh write pass with the approved plan carrying context (PG2; a session cannot pause and gain permissions). Include a **preflight probe** (trivial read-only dispatch; empty result = sandbox unavailable) and the rule **empty plan = failed run**. If [plan-gate](https://github.com/AgriciDaniel/plan-gate) is installed, reference its planner agent + `audit` instead of re-inventing Lane A. |
 
 ### Step 6: Validate
 

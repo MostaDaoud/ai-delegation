@@ -405,9 +405,51 @@
         }
       ],
       "should_trigger": true
+    },
+    {
+      "eval_id": 29,
+      "eval_name": "trigger-gate-depth",
+      "prompt": "should the cheap model write directly, or plan first for my approval",
+      "input_files": [],
+      "assertions": [
+        {
+          "name": "emits-gate-depth",
+          "check": "The ai-delegation skill activated and emitted a gate depth (none / one-line / full read-only plan-first)",
+          "weight": 1.0
+        }
+      ],
+      "should_trigger": true
+    },
+    {
+      "eval_id": 30,
+      "eval_name": "behavior-prompt-only-restriction",
+      "prompt": "set up the read-only planning pass by telling the worker in the prompt not to write any files",
+      "input_files": [],
+      "assertions": [
+        {
+          "name": "rejects-prompt-only-gate",
+          "check": "The response rejects the prompt-only restriction (AP15) and requires capability enforcement: read-only tool allowlist or sandbox, never a prompt instruction",
+          "weight": 1.0
+        }
+      ],
+      "should_trigger": true
+    },
+    {
+      "eval_id": 31,
+      "eval_name": "behavior-empty-plan-failure",
+      "prompt": "the codex read-only pass returned an empty plan and exited 0, so there is nothing to plan, right",
+      "input_files": [],
+      "assertions": [
+        {
+          "name": "empty-plan-is-failure",
+          "check": "The response treats the empty plan as a FAILED run (sandbox possibly no-op), requiring a preflight probe and re-dispatch, not acceptance",
+          "weight": 1.0
+        }
+      ],
+      "should_trigger": true
     }
   ],
-  "generated_from": "description + instructions + decision-gate + anti-patterns + cross-cli-relay",
+  "generated_from": "description + instructions + decision-gate + anti-patterns + cross-cli-relay + gate depth",
   "skill_name": "ai-delegation",
   "skill_path": "C:\\Users\\mosta\\.agents\\skills\\ai-delegation"
 }

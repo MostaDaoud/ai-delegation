@@ -78,6 +78,16 @@ All claims in this skill trace to these sources. Each claim carries **confidence
 
 ---
 
+## Gate-Depth Source (plan-gate)
+
+| ID | Claim | Source | Confidence | refresh_due |
+|----|-------|--------|------------|-------------|
+| PG1 | The read-only gate holds (byte-for-byte untouched files in a session mode where permission settings are ignored) — BUT on a well-specified task it bought nothing: ungated agent 76k tokens / 14 tools / 162s, correct and clean; gated plan-only 26k / 8 / 119s, wrote nothing. **Honest default: do not gate** — use the one-line implicit-decision report most days; full-gate only when the work is genuinely uncertain | [AgriciDaniel/plan-gate](https://github.com/AgriciDaniel/plan-gate), README "What testing showed" + evidence/ | Medium — controlled A/B but **single run per arm** (their own stated limit) | 2026-12-08 |
+| PG2 | Codex cannot pause, gain write permission, and resume in the same session — the read-only pass and the write pass must be **two fresh runs**, with the approved plan carrying the context; confirmed by live run and openai/codex#33974. Also: an empty plan can exit 0 and read like a valid empty plan (sandbox no-op) — preflight and treat empty as failure | same, README "What testing showed" + "Known limits" | High — live run + upstream issue | 2026-12-08 |
+| PG3 | "Restrict the capability, do not ask the model nicely. A prompt telling a model not to write is not a gate, in any runtime." Gate-depth levels: none / one-line ("Report anything you decided that the task did not specify.") / full; gate when >3 files, root-causing (not localizing), fuzzy requirements, or two agents on the same files | same, README "Use it" | High — stated method, enforcement tested (Lane A tool allowlist, Lane B OS sandbox) | 2026-12-08 |
+
+---
+
 ## How to Use This Table
 
 - The skill's `decide` sub-skill loads this file and presents the **confidence** for any claim it cites.
