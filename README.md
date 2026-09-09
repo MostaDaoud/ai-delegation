@@ -29,12 +29,24 @@ Grounded in a source-tracked evidence base (Anthropic's multi-agent research sys
 
 ## Installation
 
-### Agent skills directory (default)
+### Skills CLI (recommended)
 
 ```bash
-git clone https://github.com/MostaDaoud/ai-delegation.git
-cd ai-delegation
-bash install.sh
+npx skills add MostaDaoud/ai-delegation
+```
+
+Browse before installing:
+
+```bash
+npx skills add MostaDaoud/ai-delegation --list
+```
+
+Or install the orchestrator only, target a specific agent, or install globally:
+
+```bash
+npx skills add MostaDaoud/ai-delegation --skill ai-delegation
+npx skills add MostaDaoud/ai-delegation --agent claude-code
+npx skills add MostaDaoud/ai-delegation --global
 ```
 
 Sub-skills install as sibling folders under `~/.agents/skills/` (Agent Skills layout):

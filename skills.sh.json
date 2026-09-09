@@ -1,0 +1,22 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "AI Delegation",
+      "description": "Decide when and how to delegate work across AI agents and model tiers — patterns, failure laws, cost math, audits.",
+      "skills": [
+        "ai-delegation"
+      ]
+    },
+    {
+      "title": "Sub-skills",
+      "description": "The decision gate, harness wiring, economics calculator, and anti-pattern auditor.",
+      "skills": [
+        "ai-delegation-decide",
+        "ai-delegation-wire",
+        "ai-delegation-cost",
+        "ai-delegation-audit"
+      ]
+    }
+  ]
+}
