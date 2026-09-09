@@ -1,0 +1,413 @@
+{
+  "evals": [
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the decide sub-skill",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 0,
+      "eval_name": "trigger-delegate-research",
+      "input_files": [],
+      "prompt": "should I delegate this research to subagents",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and assigned a model tier",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 1,
+      "eval_name": "trigger-worker-model-tier",
+      "input_files": [],
+      "prompt": "which model should the worker use for code generation",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and diagnosed L3 orchestrator-window pressure",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 2,
+      "eval_name": "trigger-orchestrator-context",
+      "input_files": [],
+      "prompt": "my orchestrator keeps running out of context",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the cost sub-skill",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 3,
+      "eval_name": "trigger-cheaper-model-savings",
+      "input_files": [],
+      "prompt": "will delegating to a cheap model actually save money",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the wire sub-skill",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 4,
+      "eval_name": "trigger-write-subagents",
+      "input_files": [],
+      "prompt": "write me subagent definitions for opencode",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the audit sub-skill with an AP5 finding",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 5,
+      "eval_name": "trigger-conflicting-subagents",
+      "input_files": [],
+      "prompt": "my two subagents produce conflicting code",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the wire sub-skill for a P2 cascade",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 6,
+      "eval_name": "trigger-cascade-setup",
+      "input_files": [],
+      "prompt": "set up a cheap-first cascade with escalation",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and evaluated P3 against the 15x token cost",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 7,
+      "eval_name": "trigger-orchestrator-worker-worth",
+      "input_files": [],
+      "prompt": "is orchestrator-worker worth 15x tokens here",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the audit sub-skill",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 8,
+      "eval_name": "trigger-audit-config",
+      "input_files": [],
+      "prompt": "audit my subagent config for anti-patterns",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill activated and routed to the cost sub-skill",
+          "name": "skill-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 9,
+      "eval_name": "trigger-cut-api-bill",
+      "input_files": [],
+      "prompt": "cut my agent API bill without losing quality",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; the request was handled as plain prompting help",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 10,
+      "eval_name": "notrigger-better-prompt",
+      "input_files": [],
+      "prompt": "write a better prompt for this",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; retrieval tuning is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 11,
+      "eval_name": "notrigger-rag-chunking",
+      "input_files": [],
+      "prompt": "tune my RAG chunking",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; model training is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 12,
+      "eval_name": "notrigger-finetune",
+      "input_files": [],
+      "prompt": "fine-tune a model on my data",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; human delegation is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 13,
+      "eval_name": "notrigger-human-team",
+      "input_files": [],
+      "prompt": "how do I delegate work to my team",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; infrastructure orchestration is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 14,
+      "eval_name": "notrigger-kubernetes",
+      "input_files": [],
+      "prompt": "orchestrate my Kubernetes deployments",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; this is a knowledge question",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 15,
+      "eval_name": "notrigger-explain-transformers",
+      "input_files": [],
+      "prompt": "explain transformers",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; debugging is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 16,
+      "eval_name": "notrigger-fix-test",
+      "input_files": [],
+      "prompt": "fix this failing test",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; model comparison without routing is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 17,
+      "eval_name": "notrigger-smartest-llm",
+      "input_files": [],
+      "prompt": "which LLM is smartest overall",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; CI setup is out of scope",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 18,
+      "eval_name": "notrigger-setup-ci",
+      "input_files": [],
+      "prompt": "set up CI",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The ai-delegation skill did NOT activate; single-task summarization has no delegation component",
+          "name": "skill-not-activated",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 19,
+      "eval_name": "notrigger-summarize-doc",
+      "input_files": [],
+      "prompt": "summarize this document",
+      "should_trigger": false
+    },
+    {
+      "assertions": [
+        {
+          "check": "The decide sub-skill refused to recommend delegation, citing the shared-context failure law (L1)",
+          "name": "refuses-on-L1",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 20,
+      "eval_name": "behavior-refuse-shared-context",
+      "input_files": [],
+      "prompt": "should I delegate this task where the subtask correctness depends on tacit decisions I made earlier that I cannot write down",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The decide sub-skill refused parallel delegation, citing the implicit-decisions failure law (L2)",
+          "name": "refuses-on-L2",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 21,
+      "eval_name": "behavior-refuse-parallel-writes",
+      "input_files": [],
+      "prompt": "should I have five subagents write to the same database tables in parallel",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The decide sub-skill capped fan-out at 5 or fewer workers",
+          "name": "caps-fanout",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 22,
+      "eval_name": "behavior-caps-fanout",
+      "input_files": [],
+      "prompt": "I want to spawn 50 subagents to research this topic",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The decide sub-skill warned that advisor with a weak primary is an open calibration problem",
+          "name": "warns-on-P4",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 23,
+      "eval_name": "behavior-warns-P4-weak-primary",
+      "input_files": [],
+      "prompt": "should I use a cheap model as the lead with a frontier advisor it consults",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "Every delegation decision emitted a context contract stating what the child receives, what returns, the fan-out cap, and failure behavior",
+          "name": "emits-context-contract",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 24,
+      "eval_name": "behavior-emits-context-contract",
+      "input_files": [],
+      "prompt": "delegate this code review task to a subagent",
+      "should_trigger": true
+    },
+    {
+      "assertions": [
+        {
+          "check": "The decision named a verification artifact (verifier type plus acceptance criteria)",
+          "name": "names-verification-artifact",
+          "weight": 1.0
+        }
+      ],
+      "eval_id": 25,
+      "eval_name": "behavior-names-verification",
+      "input_files": [],
+      "prompt": "design a delegation plan for migrating these ten endpoints",
+      "should_trigger": true
+    },
+    {
+      "eval_id": 26,
+      "eval_name": "trigger-cross-cli-relay",
+      "prompt": "delegate this refactor to the codex cli and review the diff",
+      "input_files": [],
+      "assertions": [
+        {
+          "name": "skill-activated-p6",
+          "check": "The ai-delegation skill activated and selected P6 Cross-CLI Relay with mechanism relay-cli",
+          "weight": 1.0
+        }
+      ],
+      "should_trigger": true
+    },
+    {
+      "eval_id": 27,
+      "eval_name": "behavior-no-worker-commit",
+      "prompt": "set up a relay dispatch where the implementer commits when it finishes so I do not have to",
+      "input_files": [],
+      "assertions": [
+        {
+          "name": "refuses-worker-commit",
+          "check": "The response refuses the worker committing and enforces review-before-land (AP13): relay never commits, orchestrator reviews the diff and lands the commit",
+          "weight": 1.0
+        }
+      ],
+      "should_trigger": true
+    },
+    {
+      "eval_id": 28,
+      "eval_name": "behavior-touchedfiles-containment",
+      "prompt": "the cli reported touchedFiles with only the two files from the brief, so nothing else could have changed, right",
+      "input_files": [],
+      "assertions": [
+        {
+          "name": "corrects-containment-assumption",
+          "check": "The response corrects the containment assumption (AP14): touchedFiles is post-run git status, cannot show ignored/reverted/out-of-repo writes, review the diff",
+          "weight": 1.0
+        }
+      ],
+      "should_trigger": true
+    }
+  ],
+  "generated_from": "description + instructions + decision-gate + anti-patterns + cross-cli-relay",
+  "skill_name": "ai-delegation",
+  "skill_path": "C:\\Users\\mosta\\.agents\\skills\\ai-delegation"
+}
