@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="470" viewBox="0 0 800 470" role="img" aria-label="The 8-question delegation decision gate">
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+
+  <text x="40" y="34" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#f1f5f9">The 8-Question Decision Gate</text>
+
+  <!-- three failure laws -->
+  <g font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <rect x="40" y="56" width="220" height="84" rx="10" fill="#231227" stroke="#7f1d1d"/>
+    <text x="56" y="80" font-size="14" font-weight="700" fill="#fca5a5">L1 · Shared-context</text>
+    <text x="56" y="100" font-size="11.5" fill="#d8b4b4">Correctness depends on tacit</text>
+    <text x="56" y="116" font-size="11.5" fill="#d8b4b4">decisions that cannot be written</text>
+    <text x="56" y="132" font-size="11.5" fill="#d8b4b4">into the brief</text>
+
+    <rect x="276" y="56" width="220" height="84" rx="10" fill="#231227" stroke="#7f1d1d"/>
+    <text x="292" y="80" font-size="14" font-weight="700" fill="#fca5a5">L2 · Implicit decisions</text>
+    <text x="292" y="100" font-size="11.5" fill="#d8b4b4">Children would WRITE shared</text>
+    <text x="292" y="116" font-size="11.5" fill="#d8b4b4">state in parallel — actions carry</text>
+    <text x="292" y="132" font-size="11.5" fill="#d8b4b4">conflicting implicit choices</text>
+
+    <rect x="512" y="56" width="248" height="84" rx="10" fill="#231227" stroke="#7f1d1d"/>
+    <text x="528" y="80" font-size="14" font-weight="700" fill="#fca5a5">L3 · Orchestrator window</text>
+    <text x="528" y="100" font-size="11.5" fill="#d8b4b4">Fan-out x return size overflows</text>
+    <text x="528" y="116" font-size="11.5" fill="#d8b4b4">the orchestrator's context —</text>
+    <text x="528" y="132" font-size="11.5" fill="#d8b4b4">the scarce resource</text>
+  </g>
+
+  <!-- none verdict -->
+  <rect x="40" y="156" width="720" height="40" rx="8" fill="#3f1220" stroke="#ef4444"/>
+  <text x="56" y="181" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#fecaca">ANY LAW YES &#8594; pattern: none — DON'T DELEGATE (cite the specific law)</text>
+
+  <!-- questions -->
+  <g font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <rect x="40" y="216" width="136" height="118" rx="10" fill="#0f172a" stroke="#1e293b"/>
+    <text x="52" y="238" font-size="12" font-weight="700" fill="#22d3ee">Q8</text>
+    <text x="52" y="258" font-size="11.5" fill="#9fb0c3">different CLI or</text>
+    <text x="52" y="273" font-size="11.5" fill="#9fb0c3">auth needed?</text>
+    <text x="52" y="296" font-size="11" fill="#64748b">YES &#8594;</text>
+    <text x="52" y="320" font-size="16" font-weight="700" fill="#4ade80">P6</text>
+
+    <rect x="188" y="216" width="136" height="118" rx="10" fill="#0f172a" stroke="#1e293b"/>
+    <text x="200" y="238" font-size="12" font-weight="700" fill="#22d3ee">Q4</text>
+    <text x="200" y="258" font-size="11.5" fill="#9fb0c3">can the spec</text>
+    <text x="200" y="273" font-size="11.5" fill="#9fb0c3">be frozen?</text>
+    <text x="200" y="296" font-size="11" fill="#64748b">YES (coding) &#8594;</text>
+    <text x="200" y="320" font-size="16" font-weight="700" fill="#4ade80">P5</text>
+
+    <rect x="336" y="216" width="136" height="118" rx="10" fill="#0f172a" stroke="#1e293b"/>
+    <text x="348" y="238" font-size="12" font-weight="700" fill="#22d3ee">Q5</text>
+    <text x="348" y="258" font-size="11.5" fill="#9fb0c3">info exceeds one</text>
+    <text x="348" y="273" font-size="11.5" fill="#9fb0c3">context window?</text>
+    <text x="348" y="296" font-size="11" fill="#64748b">YES &#8594;</text>
+    <text x="348" y="320" font-size="16" font-weight="700" fill="#4ade80">P3</text>
+
+    <rect x="484" y="216" width="136" height="118" rx="10" fill="#0f172a" stroke="#1e293b"/>
+    <text x="496" y="238" font-size="12" font-weight="700" fill="#22d3ee">Q6</text>
+    <text x="496" y="258" font-size="11.5" fill="#9fb0c3">cost is the</text>
+    <text x="496" y="273" font-size="11.5" fill="#9fb0c3">binding constraint?</text>
+    <text x="496" y="296" font-size="11" fill="#64748b">YES &#8594;</text>
+    <text x="496" y="320" font-size="16" font-weight="700" fill="#4ade80">P1 / P2</text>
+
+    <rect x="632" y="216" width="128" height="118" rx="10" fill="#0f172a" stroke="#1e293b"/>
+    <text x="644" y="238" font-size="12" font-weight="700" fill="#22d3ee">else</text>
+    <text x="644" y="258" font-size="11.5" fill="#9fb0c3">no trigger —</text>
+    <text x="644" y="273" font-size="11.5" fill="#9fb0c3">one agent is</text>
+    <text x="644" y="288" font-size="11.5" fill="#9fb0c3">fine</text>
+    <text x="644" y="320" font-size="13" font-weight="700" fill="#94a3b8">no fan-out</text>
+  </g>
+
+  <!-- contract footer -->
+  <rect x="40" y="356" width="720" height="76" rx="10" fill="#0f172a" stroke="#312e81"/>
+  <text x="56" y="384" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#a5b4fc">Every "delegate" verdict emits a contract:</text>
+  <text x="56" y="408" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#e2e8f0">pattern &#183; mechanism &#183; model tiers &#183; context contract &#183; fan-out cap &#183; verification gate &#183; warnings</text>
+
+  <text x="40" y="452" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">Laws: Cognition, "Don't Build Multi-Agents" / "What's Actually Working" · Effort scaling: Anthropic multi-agent research system</text>
+</svg>

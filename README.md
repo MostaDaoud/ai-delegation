@@ -1,23 +1,39 @@
 # AI Delegation
 
+<p align="center">
+  <img src="assets/banner.svg" alt="ai-delegation skill pack banner" width="800">
+</p>
+
 Decide when and how to delegate work across AI agents and model tiers — without guesswork, and with the ability to say "don't delegate."
 
 ## What it does
 
-- **Decides**: runs a 7-question decision gate over three failure laws (shared-context, implicit-decisions, orchestrator-window) and recommends one of five delegation patterns — Router, Cascade, Orchestrator-Worker, Advisor, Plan-Then-Execute — with per-role model tiers and a full context contract, or an explicit `pattern: none` with the specific law that blocks it.
-- **Wires**: generates harness-specific config (subagent definitions, orchestrator instruction blocks, routing rules) for opencode, Claude Code, Codex, Gemini CLI, and Cursor.
-- **Costs**: models the economics of all five patterns against an always-frontier baseline, with break-even escalation rates and quality-floor warnings.
-- **Audits**: statically scans an existing delegation setup for 12 named anti-patterns (AP1–AP12) with severity-ranked, specific fixes.
+- **Decides**: runs an 8-question decision gate over three failure laws (shared-context, implicit-decisions, orchestrator-window) and recommends one of six delegation patterns — Router, Cascade, Orchestrator-Worker, Advisor, Plan-Then-Execute, Cross-CLI Relay — with per-role model tiers and a full context contract, or an explicit `pattern: none` with the specific law that blocks it.
+- **Wires**: generates harness-specific config (subagent definitions, orchestrator instruction blocks, routing rules) for opencode, Claude Code, Codex, Gemini CLI, and Cursor — plus cross-CLI relay artifacts (self-contained briefs, fleet lanes, dispatch procedures) for P6.
+- **Costs**: models the economics of all six patterns against an always-frontier baseline, with break-even escalation rates, local-endpoint pricing, and quality-floor warnings.
+- **Audits**: statically scans an existing delegation setup for 14 named anti-patterns (AP1–AP14) with severity-ranked, specific fixes.
 
-Grounded in a source-tracked evidence base (Anthropic's multi-agent research system, Cognition's context-engineering work, RouteLLM/FrugalGPT, DELEGATE-52) where every claim carries a confidence level and a refresh date.
+Grounded in a source-tracked evidence base (Anthropic's multi-agent research system, Cognition's context-engineering work, RouteLLM/FrugalGPT, DELEGATE-52, amElnagdy/delegate-skills) where every claim carries a confidence level and a refresh date.
+
+## The Six Patterns
+
+<p align="center">
+  <img src="assets/patterns.svg" alt="The six delegation patterns P1 through P6" width="800">
+</p>
+
+## The Decision Gate
+
+<p align="center">
+  <img src="assets/decision-gate.svg" alt="The 8-question delegation decision gate over three failure laws" width="800">
+</p>
 
 ## Installation
 
 ### Agent skills directory (default)
 
 ```bash
-git clone <repo-url>
-cd <repo>
+git clone https://github.com/MostaDaoud/ai-delegation.git
+cd ai-delegation
 bash install.sh
 ```
 
