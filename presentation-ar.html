@@ -451,6 +451,50 @@
     color: var(--accent);
   }
 
+  /* ── Language Switcher Button (Top Right) ── */
+  .lang-switch-btn {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    background: rgba(14, 23, 42, 0.85);
+    border: 1.5px solid var(--border-bright);
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    z-index: 102;
+    direction: ltr; /* English label and tag */
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lang-switch-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+  }
+  .lang-switch-btn .lang-icon {
+    font-size: 16px;
+  }
+  .lang-switch-btn .lang-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
   /* ── Dots Indicator ── */
   .slide-dots {
     display: flex;
@@ -490,13 +534,26 @@
     }
 
     body.mode-slides .slide {
-      padding: 20px 14px 80px 14px;
+      padding: 52px 14px 80px 14px;
       justify-content: flex-start;
       -webkit-overflow-scrolling: touch;
     }
     
+    .lang-switch-btn {
+      top: 12px;
+      right: 12px;
+      padding: 5px 12px;
+      font-size: 12px;
+      z-index: 105;
+    }
+
+    .badge {
+      max-width: 100%;
+      white-space: normal;
+    }
+
     .slide-container {
-      margin: auto 0;
+      margin: 20px 0 auto 0;
       width: 100%;
     }
 
@@ -733,7 +790,7 @@
       overflow: visible !important;
       font-size: 20px !important;
     }
-    .ambient-glow, .ambient-glow-2, .top-progress, .nav-footer-hint, .nav-controller {
+    .ambient-glow, .ambient-glow-2, .top-progress, .nav-footer-hint, .nav-controller, .lang-switch-btn {
       display: none !important;
     }
     .deck {
@@ -784,6 +841,13 @@
 <div class="ambient-glow"></div>
 <div class="ambient-glow-2"></div>
 <div class="top-progress" id="progressBar"></div>
+
+<!-- Top Right Language Switcher -->
+<a href="presentation.html" id="langSwitchBtn" class="lang-switch-btn" title="Switch to English Version">
+  <span class="lang-icon">🌐</span>
+  <span>English</span>
+  <span class="lang-tag">EN</span>
+</a>
 
 <div class="nav-footer-hint" id="navHint">
   <span>التنقل بالأسهم <kbd>→</kbd> <kbd>←</kbd> <kbd>المسافة</kbd> | اضغط <kbd>F</kbd> للشاشة الكاملة</span>
@@ -1940,6 +2004,8 @@
 
   const dots = document.querySelectorAll('.dot');
 
+  const langSwitchBtn = document.getElementById('langSwitchBtn');
+
   function updateSlide(newIndex) {
     if (newIndex < 0 || newIndex >= totalSlides) return;
     
@@ -1959,6 +2025,10 @@
     currentSlide = newIndex;
     progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
     slideCount.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+    if (langSwitchBtn) {
+      langSwitchBtn.href = `presentation.html?slide=${currentSlide + 1}`;
+    }
   }
 
   function next() { if (!isScrollMode) updateSlide(currentSlide + 1); }
@@ -2037,8 +2107,17 @@
     }
   }, { passive: true });
 
-  // Init
-  updateSlide(0);
+  // Init from URL param if available
+  const urlParams = new URLSearchParams(window.location.search);
+  const slideParam = parseInt(urlParams.get('slide'), 10);
+  const hashParam = parseInt(window.location.hash.replace('#slide-', '').replace('#', ''), 10);
+  let startingSlide = 0;
+  if (!isNaN(slideParam) && slideParam >= 1 && slideParam <= totalSlides) {
+    startingSlide = slideParam - 1;
+  } else if (!isNaN(hashParam) && hashParam >= 1 && hashParam <= totalSlides) {
+    startingSlide = hashParam - 1;
+  }
+  updateSlide(startingSlide);
 </script>
 </body>
 </html>
