@@ -357,6 +357,161 @@
     border-color: var(--accent);
   }
 
+  /* ── Visual Show-Not-Tell Mockup System ── */
+  .mockup-window {
+    background: #080f1e;
+    border: 1.5px solid var(--border-bright);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .mockup-header {
+    background: #0d172a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .window-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .window-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .window-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mockup-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 14px;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  /* Chat Bubble Elements */
+  .chat-msg {
+    border-radius: 12px;
+    padding: 12px 14px;
+    line-height: 1.5;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chat-msg-user {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #e2e8f0;
+  }
+  .chat-msg-bot-fail {
+    background: rgba(251, 113, 133, 0.1);
+    border: 1px solid rgba(251, 113, 133, 0.35);
+    color: #fecdd3;
+  }
+  .chat-msg-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .chat-alert-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(251, 113, 133, 0.25);
+    color: var(--rose);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  /* CLI Terminal Line Elements */
+  .cli-agent-step {
+    background: rgba(14, 23, 42, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .cli-agent-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .cli-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .tag-fast { background: rgba(74, 222, 128, 0.15); color: var(--green); border: 1px solid rgba(74, 222, 128, 0.3); }
+  .tag-deep { background: rgba(192, 132, 252, 0.15); color: var(--purple); border: 1px solid rgba(192, 132, 252, 0.3); }
+  .tag-script { background: rgba(251, 191, 36, 0.15); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .cli-cost { color: var(--text-dim); font-size: 11.5px; font-family: 'JetBrains Mono', monospace; }
+
+  /* Summary Metrics Row in Mockups */
+  .mockup-metrics-row {
+    background: rgba(14, 23, 42, 0.7);
+    border-top: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 0 0 14px 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    text-align: center;
+  }
+  .mockup-metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .metric-label { font-size: 11px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
+  .metric-value-bad { font-size: 13.5px; color: var(--rose); font-weight: 800; }
+  .metric-value-good { font-size: 13.5px; color: var(--green); font-weight: 800; }
+
+  /* Gate Comparison & Code blocks */
+  .code-box {
+    background: #040811;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: #e2e8f0;
+    line-height: 1.45;
+    direction: ltr;
+    text-align: left;
+  }
+
   .quote-callout {
     background: rgba(56, 189, 248, 0.08);
     border-left: 6px solid var(--accent);
@@ -882,7 +1037,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 2: The Chat Window Trap -->
+  <!-- SLIDE 2: The Chat Window Trap (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge rose">⚠️ The Common Bottleneck</div>
@@ -890,34 +1045,136 @@
       <p class="lead-text">Why chatting in a single box breaks down as soon as business workflows become multi-step.</p>
 
       <div class="grid-2">
-        <div class="card card-danger">
-          <div class="badge rose" style="margin-bottom: 12px;">THE CHATBOT TRAP</div>
-          <h3 style="color: var(--rose);">Single Chat Window</h3>
-          <ul>
-            <li><span class="icon-cross">✕</span> <span><strong>The Copy-Paste Glue:</strong> You waste hours manually jumping between ChatGPT, SEO tools, spreadsheets, and CMS dashboards.</span></li>
-            <li><span class="icon-cross">✕</span> <span><strong>Context Confusion:</strong> Asking one chat to do research, drafting, formatting, and QA leads to hallucinations and diluted tone.</span></li>
-            <li><span class="icon-cross">✕</span> <span><strong>Massive Cost Waste:</strong> Paying \$75/M flagship tokens for simple bullet points and HTML formatting.</span></li>
-          </ul>
+        <!-- WRONG WAY: Single Chat Box Mockup -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--rose);">🔴 THE WRONG WAY: Chat Box Chaos</div>
+          </div>
+          
+          <div class="mockup-body">
+            <div class="chat-msg chat-msg-user">
+              <div class="chat-msg-meta">
+                <span style="color: var(--accent);">👤 Marketing Lead (Prompt 1 of 14)</span>
+                <span style="color: var(--text-dim);">10:15 AM</span>
+              </div>
+              <p style="margin: 0; font-size: 13.5px;">"Please crawl these 40 URLs, verify missing meta tags, audit E-E-A-T, check JSON-LD schemas, and write an executive summary in my brand tone."</p>
+            </div>
+
+            <div class="chat-msg chat-msg-bot-fail">
+              <div class="chat-msg-meta">
+                <span style="color: var(--rose);">🤖 Generic Web Chatbot</span>
+                <span class="chat-alert-pill">⚠️ Context Pollution &amp; Token Drift</span>
+              </div>
+              <p style="margin: 0; font-size: 13px; color: #fecdd3;">"I analyzed the first 12 URLs, but I lost track of the remaining 28 due to context memory limits. Here is a generic 3-paragraph summary instead. Please re-paste the missing links..."</p>
+            </div>
+
+            <div style="background: rgba(251, 113, 133, 0.06); border-radius: 8px; padding: 8px 10px; border: 1px dashed rgba(251, 113, 133, 0.3); font-size: 12.5px; color: #fda4af;">
+              ❌ <strong>Human Bottleneck:</strong> Manually copy-pasting data between 5 browser tabs and spreadsheets.
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">Human Labor</span>
+              <span class="metric-value-bad">4.5h Manual Glue</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Cost / Query</span>
+              <span class="metric-value-bad">$1.85 (Opus Flagship)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Reliability</span>
+              <span class="metric-value-bad">High Hallucinations</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card card-success">
-          <div class="badge green" style="margin-bottom: 12px;">THE AUTOMATED TEAM</div>
-          <h3 style="color: var(--green);">Autonomous AI Workforce</h3>
-          <ul>
-            <li><span class="icon-check">✓</span> <span><strong>1-Click Pipeline:</strong> Initiate once; agents pass data and deliverables directly to one another hands-free.</span></li>
-            <li><span class="icon-check">✓</span> <span><strong>Specialist Isolation:</strong> Each subagent gets a clean context and focuses 100% on its designated domain.</span></li>
-            <li><span class="icon-check">✓</span> <span><strong>88% Cost Reduction:</strong> Frontier brains for creative writing; fast \$0.50 models for data fetching and formatting.</span></li>
-          </ul>
+        <!-- RIGHT WAY: Autonomous CLI Pipeline Mockup -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--green);">🟢 THE RIGHT WAY: Autonomous Skill Engine</div>
+          </div>
+
+          <div class="mockup-body">
+            <div class="code-box" style="margin-bottom: 2px; padding: 8px 12px;">
+              <span style="color: var(--green); font-weight: 800;">$</span> <span style="color: #fff; font-weight: 700;">/seo audit https://brand.com --format executive-pdf</span>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>⚙️</span> <span>seo-crawler (Playwright)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-script">Scripts 3.8s</span>
+                <span class="cli-cost">$0.002</span>
+              </div>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>⚡</span> <span>seo-technical (Haiku)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-fast">Fast Tier</span>
+                <span class="cli-cost">$0.008</span>
+              </div>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>🧠</span> <span>seo-content (Opus)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-deep">Frontier E-E-A-T</span>
+                <span class="cli-cost">$0.180</span>
+              </div>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>👑</span> <span>seo-manager (Sonnet)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-deep">Report Synth</span>
+                <span class="cli-cost">$0.120</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">Human Labor</span>
+              <span class="metric-value-good">1-Click (3 min auto)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Cost / Run</span>
+              <span class="metric-value-good">$0.31 (-83% Savings)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Reliability</span>
+              <span class="metric-value-good">100% Deterministic</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>The Problem:</strong> You are acting as the human middleware between disconnected tools.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>The Golden Rule:</strong> Never be the human middleware between disconnected AI chat windows. Build a structured delegation pipeline.
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 3: The Prompter vs The Architect -->
+  <!-- SLIDE 3: The Prompter vs The Architect (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge purple">🧠 The Mental Shift</div>
@@ -925,74 +1182,164 @@
       <p class="lead-text">The biggest productivity leap isn't writing clever prompts — it's building reusable systems.</p>
 
       <div class="grid-2">
-        <div class="card" style="border-top: 6px solid var(--rose);">
-          <div class="badge rose" style="margin-bottom: 12px;">THE PROMPTER MINDSET</div>
-          <h3 style="color: #fff; font-size: 30px;">The Prompter</h3>
-          <p style="margin-bottom: 20px;">Treats AI as a chat partner to supervise every second.</p>
-          <ul>
-            <li><span class="icon-cross">✕</span> <span>Types 500-word custom prompts every single morning.</span></li>
-            <li><span class="icon-cross">✕</span> <span>Manually babysits outputs line-by-line looking for errors.</span></li>
-            <li><span class="icon-cross">✕</span> <span>Linear output: 1 hour of human work = 1 deliverable.</span></li>
-          </ul>
+        <!-- Prompter Groundhog Day -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--rose);">🔴 THE PROMPTER: Manual Daily Grind</div>
+          </div>
+
+          <div class="mockup-body">
+            <div style="background: rgba(14, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; color: var(--rose); font-weight: 800; font-size: 12px;">
+                <span>⏰ 09:00 AM — Manual Typing</span>
+                <span>500-word prompt</span>
+              </div>
+              <p style="margin: 0; color: var(--text-muted); font-size: 13px;">"Re-typing brand guidelines, tone rules, and format instructions from scratch into a blank chat box..."</p>
+            </div>
+
+            <div style="background: rgba(14, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; color: var(--amber); font-weight: 800; font-size: 12px;">
+                <span>⏰ 01:30 PM — Error Fixing</span>
+                <span>Hallucination check</span>
+              </div>
+              <p style="margin: 0; color: var(--text-muted); font-size: 13px;">"Bot forgot instruction #4. Manually cross-checking stats and correcting broken tables in Word..."</p>
+            </div>
+
+            <div style="background: rgba(14, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; color: var(--text-dim); font-weight: 800; font-size: 12px;">
+                <span>⏰ 05:00 PM — Daily Output</span>
+                <span>1 Deliverable</span>
+              </div>
+              <p style="margin: 0; color: #fda4af; font-size: 13px;">"Zero reusable assets created. Tomorrow the exact same manual ordeal repeats."</p>
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">Daily Output</span>
+              <span class="metric-value-bad">1 Deliverable / Day</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Scalability</span>
+              <span class="metric-value-bad">Linear (1h = 1 asset)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Compounding</span>
+              <span class="metric-value-bad">0% (Groundhog Day)</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
-          <div class="badge green" style="margin-bottom: 12px;">THE ARCHITECT MINDSET</div>
-          <h3 style="color: #fff; font-size: 30px;">The System Architect</h3>
-          <p style="margin-bottom: 20px;">Treats AI as a team of trained specialists to orchestrate.</p>
-          <ul>
-            <li><span class="icon-check">✓</span> <span>Packages the workflow once into a permanent Standard Operating Procedure.</span></li>
-            <li><span class="icon-check">✓</span> <span>Automates quality checks so the system self-corrects flaws.</span></li>
-            <li><span class="icon-check">✓</span> <span>Exponential output: 1 button click = 10 complete deliverables.</span></li>
-          </ul>
+        <!-- System Architect Flywheel -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--green);">🟢 THE ARCHITECT: Compounding SOP Assets</div>
+          </div>
+
+          <div class="mockup-body">
+            <div class="code-box" style="padding: 10px 14px; font-size: 12.5px;">
+              <span style="color: var(--purple); font-weight: 800;"># .agents/skills/content-engine/SKILL.md</span><br/>
+              <span style="color: var(--accent);">name:</span> content-engine<br/>
+              <span style="color: var(--accent);">brand_voice:</span> "Direct, evidence-backed, no corporate fluff"<br/>
+              <span style="color: var(--accent);">quality_gate:</span> "Assert 0 broken links &amp; 100% citability"<br/>
+              <span style="color: var(--accent);">routing:</span> [research: Haiku, synthesis: Opus]
+            </div>
+
+            <div class="code-box" style="padding: 8px 12px;">
+              <span style="color: var(--green); font-weight: 800;">$</span> <span style="color: #fff; font-weight: 700;">/content run --topic "AI Delegation Blueprint"</span>
+            </div>
+
+            <div style="background: rgba(74, 222, 128, 0.08); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(74, 222, 128, 0.25); font-size: 13px; color: #86efac;">
+              ✨ <strong>Compounding Asset:</strong> Writes once, executes infinitely across 10 channels with 100% quality guarantee.
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">Daily Output</span>
+              <span class="metric-value-good">10+ Verified Assets</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Scalability</span>
+              <span class="metric-value-good">Exponential (1-click)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Compounding</span>
+              <span class="metric-value-good">100% Asset Reusability</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>Takeaway:</strong> Don't work <em>for</em> the AI by typing prompts all day. Make the AI work for you by building a team.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>Takeaway:</strong> Don't work <em>for</em> the AI by typing prompts all day. Make the AI work for you by packaging your knowledge into executable skills.
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 4: The 2 Core Frameworks -->
+  <!-- SLIDE 4: The 2 Core Frameworks (Visual Blueprints) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge purple">🛠️ The Two Essential Capabilities</div>
       <h2 class="slide-heading">Skill Forge &amp; AI Delegation</h2>
-      <p class="lead-text">Two independent frameworks that combine to build reliable, hands-free production lines.</p>
+      <p class="lead-text">Two open-standard engines that turn chaotic prompts into structured, multi-model production lines.</p>
 
       <div class="grid-2">
-        <div class="card" style="border-top: 6px solid var(--accent);">
+        <!-- Skill Forge Blueprint -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 22px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <div class="badge" style="margin: 0;">FRAMEWORK 1</div>
-            <a href="https://github.com/AgriciDaniel/skill-forge" target="_blank" class="repo-btn" style="font-size: 13px; padding: 6px 12px;">
-              <span>⭐ GitHub Repo</span>
+            <div class="badge" style="margin: 0; font-size: 13px; padding: 4px 12px;">FRAMEWORK 1: PACKAGING</div>
+            <a href="https://github.com/AgriciDaniel/skill-forge" target="_blank" class="repo-btn" style="font-size: 12px; padding: 5px 10px;">
+              <span>⭐ Skill Forge</span>
             </a>
           </div>
-          <h3 style="color: var(--accent); font-size: 34px;">Skill Forge</h3>
-          <p style="font-weight: 800; color: #ffffff; font-size: 24px; margin-bottom: 14px;">The "Training Department" for Your AI</p>
-          <p style="margin-bottom: 20px;">Packages workflows, brand voice, step-by-step logic, and quality rules into standard, reusable SOP files.</p>
-          <ul style="border-top: 1.5px solid var(--border); padding-top: 18px;">
-            <li><span class="icon-check">•</span> <span>Turns chaotic human prompts into permanent, standardized instructions</span></li>
-            <li><span class="icon-check">•</span> <span>Defines strict inputs, outputs, and automated quality gates</span></li>
-            <li><span class="icon-check">•</span> <span>Guarantees 100% consistency across every single run</span></li>
+          <h3 style="color: var(--accent); font-size: 26px; margin-bottom: 6px;">Skill Forge</h3>
+          <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px;">The <strong>"Training &amp; SOP Department"</strong> for your AI agents.</p>
+
+          <div class="code-box" style="margin-bottom: 12px; font-size: 12px; line-height: 1.4;">
+            <span style="color: var(--accent); font-weight: 800;"># 3-Layer Architecture in SKILL.md</span><br/>
+            <span style="color: var(--green);">1. Directive:</span> Fixed goals, rules &amp; brand constraints<br/>
+            <span style="color: var(--purple);">2. Orchestration:</span> Worker fan-out &amp; context budgets<br/>
+            <span style="color: var(--amber);">3. Execution:</span> Deterministic Python scripts &amp; linters
+          </div>
+
+          <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 14px; gap: 6px;">
+            <li><span class="icon-check">✓</span> <span>Replaces fragile prompt text with version-controlled SOP files</span></li>
+            <li><span class="icon-check">✓</span> <span>Guarantees 100% deterministic output consistency across all runs</span></li>
           </ul>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
+        <!-- AI Delegation Blueprint -->
+        <div class="card" style="border-top: 6px solid var(--green); padding: 22px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <div class="badge green" style="margin: 0;">FRAMEWORK 2</div>
-            <a href="https://github.com/MostaDaoud/ai-delegation" target="_blank" class="repo-btn" style="font-size: 13px; padding: 6px 12px;">
-              <span>⭐ GitHub Repo</span>
+            <div class="badge green" style="margin: 0; font-size: 13px; padding: 4px 12px;">FRAMEWORK 2: ORCHESTRATION</div>
+            <a href="https://github.com/MostaDaoud/ai-delegation" target="_blank" class="repo-btn" style="font-size: 12px; padding: 5px 10px;">
+              <span>⭐ AI Delegation</span>
             </a>
           </div>
-          <h3 style="color: var(--green); font-size: 34px;">AI Delegation</h3>
-          <p style="font-weight: 800; color: #ffffff; font-size: 24px; margin-bottom: 14px;">The "Operations &amp; Cost Manager"</p>
-          <p style="margin-bottom: 20px;">Determines how tasks are distributed across agents and routes each step to the most cost-effective model.</p>
-          <ul style="border-top: 1.5px solid var(--border); padding-top: 18px;">
-            <li><span class="icon-check">•</span> <span>Enforces the <em>"Manager Never Writes"</em> rule to keep context clean</span></li>
-            <li><span class="icon-check">•</span> <span>Automates quality evaluation and surgical rework</span></li>
-            <li><span class="icon-check">•</span> <span>Calculates exact cost savings and optimal model tiers</span></li>
+          <h3 style="color: var(--green); font-size: 26px; margin-bottom: 6px;">AI Delegation</h3>
+          <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px;">The <strong>"Operations &amp; Cost Router"</strong> that wires multi-agent lanes.</p>
+
+          <div class="code-box" style="margin-bottom: 12px; font-size: 12px; line-height: 1.4;">
+            <span style="color: var(--green); font-weight: 800;"># 8-Question Decision Gate &amp; Routing</span><br/>
+            <span style="color: var(--accent);">• Context Law:</span> Isolate workers to prevent memory degradation<br/>
+            <span style="color: var(--amber);">• Model Tiering:</span> $0.50/M for data parsing vs $75/M for strategy<br/>
+            <span style="color: var(--rose);">• Quality Gate:</span> Reject hallucinations before finalizing output
+          </div>
+
+          <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 14px; gap: 6px;">
+            <li><span class="icon-check">✓</span> <span>Enforces the <em>"Manager Never Writes"</em> rule to keep context clean</span></li>
+            <li><span class="icon-check">✓</span> <span>Cuts API bills by 85–90% using intelligent task tiering</span></li>
           </ul>
         </div>
       </div>
@@ -1337,44 +1684,90 @@
     </div>
   </div>
 
-  <!-- SLIDE 9: Autonomous Quality Control -->
+  <!-- SLIDE 9: Autonomous Quality Control (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge amber">🛡️ Autonomous Quality Control</div>
       <h2 class="slide-heading">The Magic of Self-Correcting Quality Gates</h2>
-      <p class="lead-text">How the SEO orchestrator automatically rejects hand-waving advice and verifies every recommendation.</p>
+      <p class="lead-text">How the SEO orchestrator automatically rejects hand-waving advice and forces deterministic evidence.</p>
 
       <div class="grid-3">
-        <div class="card" style="border-top: 6px solid var(--amber);">
-          <div style="font-size: 32px; margin-bottom: 8px;">📊</div>
-          <h3 style="color: #fff; font-size: 24px;">1. Falsifiability Gate</h3>
-          <p style="font-size: 17px; margin-bottom: 14px;">The Orchestrator audits subagent findings: every item must have a specific URL, root cause, and testable pass/fail check.</p>
-          <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 10px; padding: 10px 14px; color: #fca5a5; font-weight: 700; font-size: 15px;">
-            ⚠️ Rejected: "Improve site speed" is too vague (No metric or file specified)
+        <!-- Step 1: Gate Rejection -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-title" style="color: var(--rose);">❌ STEP 1: GATE REJECTION</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase;">Subagent Initial Draft:</div>
+            <div class="code-box" style="color: #fda4af;">
+              "Finding: Improve site speed and optimize homepage images for faster load times."
+            </div>
+            
+            <div style="background: rgba(251, 113, 133, 0.12); border: 1px solid rgba(251, 113, 133, 0.35); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; color: #fecdd3;">
+              <strong>🛡️ Quality Gate Evaluation:</strong><br/>
+              • <span style="color: var(--rose);">[FAIL]</span> Rule #2: Missing exact URL &amp; asset path<br/>
+              • <span style="color: var(--rose);">[FAIL]</span> Rule #3: Missing measured ms metric
+            </div>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item" style="grid-column: span 3;">
+              <span class="metric-label">Gate Action</span>
+              <span class="metric-value-bad">REJECTED — Rerunning Diagnostic Script</span>
+            </div>
           </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--purple);">
-          <div style="font-size: 32px; margin-bottom: 8px;">🔧</div>
-          <h3 style="color: #fff; font-size: 24px;">2. Surgical Re-Audit</h3>
-          <p style="font-size: 17px; margin-bottom: 14px;">The Manager triggers <strong>seo-performance</strong> with strict parameters to pinpoint the exact render-blocking script and LCP element.</p>
-          <div style="background: rgba(192, 132, 252, 0.15); border: 1px solid #c084fc; border-radius: 10px; padding: 10px 14px; color: #e9d5ff; font-weight: 700; font-size: 15px;">
-            ⚡ Pinpointed: Defer `app.js` (480ms) + preload hero image (LCP improved by 1.2s)
+        <!-- Step 2: Auto-Correction -->
+        <div class="mockup-window" style="border-color: rgba(192, 132, 252, 0.4);">
+          <div class="mockup-header" style="background: rgba(192, 132, 252, 0.08);">
+            <div class="window-title" style="color: var(--purple);">🔄 STEP 2: AUTO-CORRECTION</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase;">Playwright Diagnostic Trace:</div>
+            <div class="code-box" style="font-size: 12px;">
+              <span style="color: var(--green);">$</span> python scripts/render_page.py<br/>
+              <span style="color: var(--amber);">[LCP Element]:</span> &lt;img src="hero.jpg"&gt; (2.8MB, +2.1s)<br/>
+              <span style="color: var(--rose);">[Blocking JS]:</span> app.js (480ms TBT)
+            </div>
+
+            <div style="background: rgba(192, 132, 252, 0.12); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; color: #e9d5ff;">
+              ⚡ <strong>Surgical Retrial:</strong> Subagent parses exact bottleneck and formulates code-level remediation.
+            </div>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item" style="grid-column: span 3;">
+              <span class="metric-label">Execution Time</span>
+              <span style="font-size: 13.5px; color: var(--purple); font-weight: 800;">1.4s Trace Complete</span>
+            </div>
           </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
-          <div style="font-size: 32px; margin-bottom: 8px;">✅</div>
-          <h3 style="color: #fff; font-size: 24px;">3. Quality Gate Passed</h3>
-          <p style="font-size: 17px; margin-bottom: 14px;">Findings pass syntax linting &amp; evidence checks. The Manager compiles the final prioritized audit roadmap.</p>
-          <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; border-radius: 10px; padding: 10px 14px; color: #86efac; font-weight: 700; font-size: 15px;">
-            🎉 Verified: 100% testable action items ready for developer execution
+        <!-- Step 3: Gate Passed -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-title" style="color: var(--green);">✅ STEP 3: QUALITY GATE PASSED</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase;">Verified Falsifiable Finding:</div>
+            <div class="code-box" style="color: #86efac; font-size: 12px;">
+              "Preload 'hero.webp' (-1.4s LCP) and add 'defer' to 'app.js' (-480ms TBT). Test: lighthouse --view."
+            </div>
+
+            <div style="background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; color: #86efac;">
+              🎉 <strong>Audit Passed:</strong> 100% testable, zero hand-waving advice, ready for immediate developer deployment.
+            </div>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item" style="grid-column: span 3;">
+              <span class="metric-label">Verification Status</span>
+              <span class="metric-value-good">100% Testable &amp; Falsifiable</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>The Rule:</strong> Never accept generic AI hallucinations. Build automated quality gates that demand evidence, testable verification steps, and exact code fixes.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>The Rule:</strong> Never accept generic AI hallucinations. Build automated quality gates that demand evidence, testable verification steps, and exact code fixes.
       </div>
     </div>
   </div>
@@ -1448,35 +1841,105 @@
     </div>
   </div>
 
-  <!-- SLIDE 11: The "Manager Never Writes" Principle -->
+  <!-- SLIDE 11: The "Manager Never Writes" Principle (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge amber">👑 The Golden Rule</div>
       <h2 class="slide-heading">Why the Manager Never Writes</h2>
-      <p class="lead-text">The critical system principle that keeps complex multi-agent analysis completely reliable at scale.</p>
+      <p class="lead-text">Separation of concerns: keeping the conductor's context window clean ensures 100% strategic reliability.</p>
 
-      <div class="grid-3">
-        <div class="card" style="border-top: 6px solid var(--accent);">
-          <div style="font-size: 38px; margin-bottom: 12px;">🧠</div>
-          <h3 style="color: var(--accent);">1. Clean Headspace</h3>
-          <p>When an AI inspects 500 pages of raw HTML, its context window gets flooded. A dedicated manager delegates pages to worker agents, keeping its context clean to synthesize high-level strategy without hallucination.</p>
+      <div class="grid-2">
+        <!-- Polluted Manager -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-title" style="color: var(--rose);">🔴 THE POLLUTED MANAGER: 185k Context Flood</div>
+          </div>
+          <div class="mockup-body">
+            <div style="background: rgba(239, 68, 68, 0.12); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(239, 68, 68, 0.3);">
+              <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 12px; color: var(--rose); margin-bottom: 6px;">
+                <span>Context Window Gauge</span>
+                <span>185,000 / 200,000 Tokens (92%)</span>
+              </div>
+              <div style="background: rgba(0,0,0,0.4); border-radius: 6px; height: 10px; width: 100%; overflow: hidden;">
+                <div style="background: var(--rose); width: 92%; height: 100%;"></div>
+              </div>
+            </div>
+
+            <div class="code-box" style="font-size: 11.5px; color: #fecdd3; max-height: 100px; overflow: hidden;">
+              &lt;html&gt;&lt;head&gt;... [500 pages of raw HTML, CSS, JavaScript blobs, and API dumps flooded inline] ...&lt;/html&gt;
+            </div>
+
+            <ul style="font-size: 13.5px; color: #fda4af; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+              <li>❌ <strong>Prompt Drift:</strong> Forgets user guidelines and previous quality rules</li>
+              <li>❌ <strong>Hallucination Spike:</strong> 40% chance of inventing fake metrics</li>
+              <li>❌ <strong>Latency &amp; Cost:</strong> 45-second latency and $2.40 per single turn</li>
+            </ul>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">Memory Health</span>
+              <span class="metric-value-bad">Severe Degradation</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Turn Cost</span>
+              <span class="metric-value-bad">$2.40 / prompt</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Decision Quality</span>
+              <span class="metric-value-bad">Unreliable</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--purple);">
-          <div style="font-size: 38px; margin-bottom: 12px;">🛡️</div>
-          <h3 style="color: var(--purple);">2. Objective Verification</h3>
-          <p>An agent that generates Schema markup will assume it's valid. Delegating validation to independent deterministic tools (Playwright / JSON-LD linters) guarantees 100% unbiased, syntax-perfect execution.</p>
-        </div>
+        <!-- Clean Conductor -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-title" style="color: var(--green);">🟢 THE CLEAN ORCHESTRATOR: 2.4k Strategic Clarity</div>
+          </div>
+          <div class="mockup-body">
+            <div style="background: rgba(74, 222, 128, 0.12); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(74, 222, 128, 0.3);">
+              <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 12px; color: var(--green); margin-bottom: 6px;">
+                <span>Context Window Gauge</span>
+                <span>2,400 / 200,000 Tokens (1.2%)</span>
+              </div>
+              <div style="background: rgba(0,0,0,0.4); border-radius: 6px; height: 10px; width: 100%; overflow: hidden;">
+                <div style="background: var(--green); width: 2%; height: 100%;"></div>
+              </div>
+            </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
-          <div style="font-size: 38px; margin-bottom: 12px;">🔄</div>
-          <h3 style="color: var(--green);">3. Surgical Retries</h3>
-          <p>If the technical audit passes but Schema markup fails, the manager only re-spawns the <strong>seo-schema</strong> subagent with the exact syntax error, preventing expensive full-site re-audits.</p>
+            <div class="code-box" style="font-size: 11.5px; color: #86efac;">
+              {<br/>
+              &nbsp;&nbsp;"technical_score": 92, "issues_count": 2,<br/>
+              &nbsp;&nbsp;"content_eeat": 88, "schema_valid": true,<br/>
+              &nbsp;&nbsp;"critical_bottleneck": "LCP hero image preload"<br/>
+              }
+            </div>
+
+            <ul style="font-size: 13.5px; color: #86efac; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+              <li>✓ <strong>100% Context Retention:</strong> Never forgets user intent or brand rules</li>
+              <li>✓ <strong>Zero Token Pollution:</strong> Subagents process raw HTML in isolated sandboxes</li>
+              <li>✓ <strong>Lightning Speed:</strong> 3-second strategic synthesis at only $0.08 per turn</li>
+            </ul>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">Memory Health</span>
+              <span class="metric-value-good">100% Pristine</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Turn Cost</span>
+              <span class="metric-value-good">$0.08 / prompt</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">Decision Quality</span>
+              <span class="metric-value-good">Optimal Strategy</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>The General Contractor Metaphor:</strong> A General Contractor does not pour concrete, wire electrical panels, or paint drywall. The Contractor inspects blueprints, coordinates licensed specialists, and enforces building code compliance.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>The General Contractor Rule:</strong> A General Contractor doesn't pour concrete or solder pipes. The contractor coordinates specialists, reviews blueprints, and enforces building code.
       </div>
     </div>
   </div>

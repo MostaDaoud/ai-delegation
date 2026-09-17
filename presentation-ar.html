@@ -361,6 +361,161 @@
     border-color: var(--accent);
   }
 
+  /* ── Visual Show-Not-Tell Mockup System (RTL Ready) ── */
+  .mockup-window {
+    background: #080f1e;
+    border: 1.5px solid var(--border-bright);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .mockup-header {
+    background: #0d172a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .window-dots {
+    display: flex;
+    gap: 6px;
+    direction: ltr;
+  }
+  .window-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .window-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mockup-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 14px;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  /* Chat Bubble Elements */
+  .chat-msg {
+    border-radius: 12px;
+    padding: 12px 14px;
+    line-height: 1.55;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chat-msg-user {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #e2e8f0;
+  }
+  .chat-msg-bot-fail {
+    background: rgba(251, 113, 133, 0.1);
+    border: 1px solid rgba(251, 113, 133, 0.35);
+    color: #fecdd3;
+  }
+  .chat-msg-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .chat-alert-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(251, 113, 133, 0.25);
+    color: var(--rose);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  /* CLI Terminal Line Elements */
+  .cli-agent-step {
+    background: rgba(14, 23, 42, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .cli-agent-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .cli-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .tag-fast { background: rgba(74, 222, 128, 0.15); color: var(--green); border: 1px solid rgba(74, 222, 128, 0.3); }
+  .tag-deep { background: rgba(192, 132, 252, 0.15); color: var(--purple); border: 1px solid rgba(192, 132, 252, 0.3); }
+  .tag-script { background: rgba(251, 191, 36, 0.15); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .cli-cost { color: var(--text-dim); font-size: 11.5px; font-family: 'JetBrains Mono', monospace; direction: ltr; }
+
+  /* Summary Metrics Row in Mockups */
+  .mockup-metrics-row {
+    background: rgba(14, 23, 42, 0.7);
+    border-top: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 0 0 14px 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    text-align: center;
+  }
+  .mockup-metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .metric-label { font-size: 11px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
+  .metric-value-bad { font-size: 13.5px; color: var(--rose); font-weight: 800; }
+  .metric-value-good { font-size: 13.5px; color: var(--green); font-weight: 800; }
+
+  /* Gate Comparison & Code blocks */
+  .code-box {
+    background: #040811;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: #e2e8f0;
+    line-height: 1.45;
+    direction: ltr;
+    text-align: left;
+  }
+
   .quote-callout {
     background: rgba(56, 189, 248, 0.08);
     border-right: 6px solid var(--accent);
@@ -894,7 +1049,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 2: The Chat Window Trap -->
+  <!-- SLIDE 2: The Chat Window Trap (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge rose">⚠️ العائق الخفي</div>
@@ -902,109 +1057,301 @@
       <p class="lead-text">كل يوم الصبح بتفتح الشات، تكتب برومبت طويل، وتصلح ورا الذكاء الاصطناعي.. ده مش ذكاء، دي وظيفة سكرتارية!</p>
 
       <div class="grid-2">
-        <!-- The Problem -->
-        <div class="card card-danger">
-          <h3 style="color: var(--rose); font-size: 28px;">3 مشاكل بيقع فيها 95% من الناس</h3>
-          <ul>
-            <li><span class="icon-cross">1</span> <div><strong style="color:#fff;">سياق بيتخنق وذاكرة بتضيع:</strong> لما الشات يطول، الموديل بينسى التعليمات الأولى ويهلوس.</div></li>
-            <li><span class="icon-cross">2</span> <div><strong style="color:#fff;">تكلفة محروقة في الفاضي:</strong> استخدام أغلى موديل (Opus / GPT-4o) عشان ينسخ ويعدل نصوص بسيطة.</div></li>
-            <li><span class="icon-cross">3</span> <div><strong style="color:#fff;">سقف إنتاجية بشري محدود:</strong> لو ما فتحتش الشات وكتبت بإيدك كل خطوة، الشغل بيقف (1 ساعة = 1 تسليمة).</div></li>
-          </ul>
+        <!-- WRONG WAY: Single Chat Box Mockup (Arabic) -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--rose);">🔴 الطريقة الغلط: عشوائية شباك الشات</div>
+          </div>
+          
+          <div class="mockup-body">
+            <div class="chat-msg chat-msg-user">
+              <div class="chat-msg-meta">
+                <span style="color: var(--accent);">👤 مدير التسويق (برومبت 1 من 14)</span>
+                <span style="color: var(--text-dim); direction: ltr;">10:15 AM</span>
+              </div>
+              <p style="margin: 0; font-size: 13.5px;">"لو سمحت افحص لي الـ 40 صفحة دول، شيك على الميتا تاج، راجع الـ E-E-A-T، اعمل سكيمات JSON-LD، واكتب تقرير تنفيذي بنفس نبرة البراند بتاعي."</p>
+            </div>
+
+            <div class="chat-msg chat-msg-bot-fail">
+              <div class="chat-msg-meta">
+                <span style="color: var(--rose);">🤖 شات بوت عام ومشتت</span>
+                <span class="chat-alert-pill">⚠️ تلوث الذاكرة وضياع السياق</span>
+              </div>
+              <p style="margin: 0; font-size: 13px; color: #fecdd3;">"أنا فحصت أول 12 رابط بس، ونسيت باقي الـ 28 رابط بسبب مساحة الذاكرة المحدودة. ده ملخص عام لـ 3 نقط.. يا ريت تبعت الروابط الباقية تاني في رسالة جديدة!"</p>
+            </div>
+
+            <div style="background: rgba(251, 113, 133, 0.06); border-radius: 8px; padding: 8px 10px; border: 1px dashed rgba(251, 113, 133, 0.3); font-size: 12.5px; color: #fda4af;">
+              ❌ <strong>المأساة البشرية:</strong> قضاء 4 ساعات في النسخ واللصق اليدوي بين 5 شيتات وبرامج مختلفة.
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">الوقت البشري</span>
+              <span class="metric-value-bad">4.5 ساعات لصق يدوي</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">تكلفة السؤال</span>
+              <span class="metric-value-bad">$1.85 (موديل Opus غالي)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">الاعتمادية</span>
+              <span class="metric-value-bad">هلوسة ونبرة باهتة</span>
+            </div>
+          </div>
         </div>
 
-        <!-- The Solution -->
-        <div class="card card-success">
-          <h3 style="color: var(--green); font-size: 28px;">الحل: ورشة عمل ذاتية التشغيل</h3>
-          <ul>
-            <li><span class="icon-check">1</span> <div><strong style="color:#fff;">ملفات مهارات قياسية (SOPs):</strong> الموديل عارف دوره، أسلوب البراند، وشروط الجودة من قبل ما تبدأ.</div></li>
-            <li><span class="icon-check">2</span> <div><strong style="color:#fff;">وكلاء متخصصين (Subagents):</strong> كل مهمة بيعملها وكيل في مساحة نظيفة بدون تشتت أو نسيان.</div></li>
-            <li><span class="icon-check">3</span> <div><strong style="color:#fff;">تشغيل أوتوماتيكي بضغطة زر:</strong> أمر واحد بينفذ 15 خطوة ورا بعض ويطلع تقرير متكامل ومعتمد.</div></li>
-          </ul>
+        <!-- RIGHT WAY: Autonomous CLI Pipeline Mockup (Arabic) -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--green);">🟢 الطريقة الصح: ورشة عمل المهارات المستقلة</div>
+          </div>
+
+          <div class="mockup-body">
+            <div class="code-box" style="margin-bottom: 2px; padding: 8px 12px;">
+              <span style="color: var(--green); font-weight: 800;">$</span> <span style="color: #fff; font-weight: 700;">/seo audit https://brand.com --format executive-pdf</span>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>⚙️</span> <span>seo-crawler (Playwright)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-script">كود في 3.8 ثانية</span>
+                <span class="cli-cost">$0.002</span>
+              </div>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>⚡</span> <span>seo-technical (Haiku)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-fast">فحص تقني سريع</span>
+                <span class="cli-cost">$0.008</span>
+              </div>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>🧠</span> <span>seo-content (Opus)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-deep">عمق E-E-A-T 88/100</span>
+                <span class="cli-cost">$0.180</span>
+              </div>
+            </div>
+
+            <div class="cli-agent-step">
+              <div class="cli-agent-name">
+                <span>👑</span> <span>seo-manager (Sonnet)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="cli-tag tag-deep">صياغة التقرير PDF</span>
+                <span class="cli-cost">$0.120</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">الوقت البشري</span>
+              <span class="metric-value-good">ضغطة زر (3 دقائق ذاتي)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">التكلفة الإجمالية</span>
+              <span class="metric-value-good">$0.31 (توفير 83%)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">الاعتمادية</span>
+              <span class="metric-value-good">دقة حتمية 100%</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        💡 <strong>قاعدة ذهبية:</strong> لو انت اللي بتكتب البرومبت كل يوم.. انت مش بتستخدم الذكاء الاصطناعي، انت شغال عنده!
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>قاعدة ذهبية:</strong> ما تبقاش حلقة الوصل اليدوية اللي بتنقل بين برامج وشاتات الذكاء الاصطناعي.. ابنِ خط إنتاج وفوض الشغل بذكاء.
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 3: The Prompter vs. The System Architect -->
+  <!-- SLIDE 3: The Prompter vs The Architect (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge amber">🧠 التحول في طريقة التفكير</div>
       <h2 class="slide-heading">عقلية "الملقن" vs. عقلية "مهندس الأنظمة"</h2>
-      <p class="lead-text">الفرق الجوهري بين اللي بيتعامل مع الذكاء الاصطناعي كشات، واللي بيبني بيه فريق عمل كامل.</p>
+      <p class="lead-text">الفرق الجوهري بين اللي بيتعامل مع الذكاء الاصطناعي كشات، واللي بيبني بيه فريق عمل كامل متكامل.</p>
 
       <div class="grid-2">
-        <div class="card" style="border-top: 6px solid var(--rose);">
-          <div class="badge rose" style="margin-bottom: 12px;">عقلية الملقن (THE PROMPTER)</div>
-          <h3 style="color: #fff; font-size: 28px;">المُلقّن التقليدي</h3>
-          <p style="margin-bottom: 18px;">بيتعامل مع الذكاء الاصطناعي كشات محتاج إشراف بشري كل ثانية.</p>
-          <ul>
-            <li><span class="icon-cross">✕</span> <span>بيكتب برومبت 500 كلمة من الصفر كل يوم.</span></li>
-            <li><span class="icon-cross">✕</span> <span>بيراجع المخرجات سطر بسطر بإيده عشان يصلح الأخطاء.</span></li>
-            <li><span class="icon-cross">✕</span> <span>إنتاجية خطية مرهقة: 1 ساعة شغل بشري = 1 تسليمة بالعافية.</span></li>
-          </ul>
+        <!-- Prompter Groundhog Day (Arabic) -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--rose);">🔴 المُلَقِّن: طحن يدوي متكرر كل يوم</div>
+          </div>
+
+          <div class="mockup-body">
+            <div style="background: rgba(14, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; color: var(--rose); font-weight: 800; font-size: 12px;">
+                <span>⏰ 09:00 صباحاً — كتابة مجهدة</span>
+                <span style="direction: ltr;">500-word prompt</span>
+              </div>
+              <p style="margin: 0; color: var(--text-muted); font-size: 13px;">"إعادة كتابة قواعد البراند وأسلوب التنسيق والشروط من الصفر في شباك شات فاضي كل يوم الصبح..."</p>
+            </div>
+
+            <div style="background: rgba(14, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; color: var(--amber); font-weight: 800; font-size: 12px;">
+                <span>⏰ 01:30 ظهراً — ترقيع الهلوسة</span>
+                <span>فحص الأرقام يدوي</span>
+              </div>
+              <p style="margin: 0; color: var(--text-muted); font-size: 13px;">"الموديل نسي الشرط رقم 4 وهلوس في أرقام الإحصائيات.. ومراجعة سطر بسطر يدوي في ملف وورد..."</p>
+            </div>
+
+            <div style="background: rgba(14, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; color: var(--text-dim); font-weight: 800; font-size: 12px;">
+                <span>⏰ 05:00 مساءً — حصاد اليوم</span>
+                <span>تسليمة واحدة بالعافية</span>
+              </div>
+              <p style="margin: 0; color: #fda4af; font-size: 13px;">"زيرو أصول قابلة لإعادة الاستخدام.. وبكرة هتصحى تعيد نفس المعاناة من الصفر!"</p>
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">الإنتاج اليومي</span>
+              <span class="metric-value-bad">تسليمة واحدة في اليوم</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">التوسع</span>
+              <span class="metric-value-bad">خطي (1 ساعة = 1 شغل)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">الأصول المتراكمة</span>
+              <span class="metric-value-bad">0% (معاناة متكررة)</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
-          <div class="badge green" style="margin-bottom: 12px;">عقلية مهندس الأنظمة (THE ARCHITECT)</div>
-          <h3 style="color: #fff; font-size: 28px;">مهندس الأنظمة الذكية</h3>
-          <p style="margin-bottom: 18px;">بيتعامل مع الذكاء الاصطناعي كفريق من الخبراء المتخصصين بيتم توجيههم.</p>
-          <ul>
-            <li><span class="icon-check">✓</span> <span>بيوثق خطوات الشغل مرة واحدة في ملف مهارة قياسي (SOP).</span></li>
-            <li><span class="icon-check">✓</span> <span>بيبرمج بوابات جودة ذاتية تكتشف العك وتصلحه لوحدها.</span></li>
-            <li><span class="icon-check">✓</span> <span>إنتاجية مضاعفة: ضغطة زر واحدة = 10 تسليمات جاهزة ومعتمدة.</span></li>
-          </ul>
+        <!-- System Architect Flywheel (Arabic) -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-dots">
+              <div class="window-dot dot-red"></div>
+              <div class="window-dot dot-yellow"></div>
+              <div class="window-dot dot-green"></div>
+            </div>
+            <div class="window-title" style="color: var(--green);">🟢 مهندس الأنظمة: أصول ومهارات بتتراكم وتكبر</div>
+          </div>
+
+          <div class="mockup-body">
+            <div class="code-box" style="padding: 10px 14px; font-size: 12.5px;">
+              <span style="color: var(--purple); font-weight: 800;"># .agents/skills/seo-audit/SKILL.md</span><br/>
+              <span style="color: var(--accent);">name:</span> seo-audit-pipeline<br/>
+              <span style="color: var(--accent);">brand_voice:</span> "مباشر، علمي، بدون حشو إنشائي"<br/>
+              <span style="color: var(--accent);">quality_gate:</span> "رفض أي توصية بدون رابط وكود وقياس دقيق"<br/>
+              <span style="color: var(--accent);">routing:</span> [crawl: Haiku, strategy: Opus]
+            </div>
+
+            <div class="code-box" style="padding: 8px 12px;">
+              <span style="color: var(--green); font-weight: 800;">$</span> <span style="color: #fff; font-weight: 700;">/seo audit https://brand.com --out report.pdf</span>
+            </div>
+
+            <div style="background: rgba(74, 222, 128, 0.08); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(74, 222, 128, 0.25); font-size: 13px; color: #86efac;">
+              ✨ <strong>أصل استراتيجي دائم:</strong> اتكتب واتبرمج مرة واحدة.. وبيشتغل آلاف المرات بضغطة زر وبنفس الجودة الفائقة.
+            </div>
+          </div>
+
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">الإنتاج اليومي</span>
+              <span class="metric-value-good">10+ تقارير معتمدة</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">التوسع</span>
+              <span class="metric-value-good">مضاعف (ضغطة زر)</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">الأصول المتراكمة</span>
+              <span class="metric-value-good">100% أصول دائمة</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>الخلاصة:</strong> ما تشتغلش <em>عند</em> الذكاء الاصطناعي.. خليه هو يشتغل <em>عندك</em> عن طريق بناء منظومة قابلة للتكرار.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>الخلاصة:</strong> ما تشتغلش <em>عند</em> الذكاء الاصطناعي.. خليه هو يشتغل <em>عندك</em> عن طريق توثيق خبرتك في ملفات مهارات قياسية قابلة للتكرار.
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 4: The 2 Core Frameworks -->
+  <!-- SLIDE 4: The 2 Core Frameworks (Visual Blueprints) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge purple">🛠️ القوتين الأساسيتين</div>
       <h2 class="slide-heading">Skill Forge &amp; AI Delegation</h2>
-      <p class="lead-text">إطارين عمل بيكملوا بعض لبناء خطوط إنتاج ذاتية التشغيل بنسبة 100%.</p>
+      <p class="lead-text">إطارين عمل مفتوحي المصدر بيحولوا البرومبتات العشوائية لخطوط إنتاج برمجية متعددة الموديلات.</p>
 
       <div class="grid-2">
-        <div class="card" style="border-top: 6px solid var(--accent);">
+        <!-- Skill Forge Blueprint (Arabic) -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 22px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <div class="badge" style="margin: 0;">الركيزة الأولى</div>
-            <a href="https://github.com/AgriciDaniel/skill-forge" target="_blank" class="repo-btn" style="font-size: 13px; padding: 6px 12px;">
-              <span>⭐ GitHub Repo</span>
+            <div class="badge" style="margin: 0; font-size: 13px; padding: 4px 12px;">الركيزة الأولى: التوثيق والتأهيل</div>
+            <a href="https://github.com/AgriciDaniel/skill-forge" target="_blank" class="repo-btn" style="font-size: 12px; padding: 5px 10px;">
+              <span>⭐ Skill Forge</span>
             </a>
           </div>
-          <h3 style="color: var(--accent); font-size: 32px;">Skill Forge</h3>
-          <p style="font-weight: 800; color: #ffffff; font-size: 22px; margin-bottom: 12px;">"إدارة التدريب والتأهيل" لفريقك الذكي</p>
-          <p style="margin-bottom: 18px;">بيوثق خطوات العمل، أسلوب البراند، والمعايير الفنية في ملفات مهارات قياسية (SOPs) جاهزة للاستدعاء الفوري.</p>
-          <ul style="border-top: 1.5px solid var(--border); padding-top: 16px;">
-            <li><span class="icon-check">•</span> <span>بيحول البرومبتات العشوائية لتعليمات قياسية ثابتة وواضحة</span></li>
-            <li><span class="icon-check">•</span> <span>بيحدد المدخلات، المخرجات، وبوابات الجودة الصارمة</span></li>
-            <li><span class="icon-check">•</span> <span>بيضمن ثبات الجودة بنسبة 100% في كل مرة يشتغل فيها</span></li>
+          <h3 style="color: var(--accent); font-size: 26px; margin-bottom: 6px;">Skill Forge</h3>
+          <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px;"><strong>"إدارة التدريب والتأهيل"</strong> لفريقك الذكي من خلال الـ SOPs.</p>
+
+          <div class="code-box" style="margin-bottom: 12px; font-size: 12px; line-height: 1.4;">
+            <span style="color: var(--accent); font-weight: 800;"># معمارية الطبقات الثلاث في SKILL.md</span><br/>
+            <span style="color: var(--green);">1. التوجيه (Directive):</span> أهداف ثابتة، أسلوب البراند، وقواعد العمل<br/>
+            <span style="color: var(--purple);">2. التنسيق (Orchestration):</span> توزيع الوكلاء وميزانية الذاكرة لكل وكيل<br/>
+            <span style="color: var(--amber);">3. التنفيذ (Execution):</span> أكواد بايثون الحتمية لفحص وتدقيق البيانات
+          </div>
+
+          <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 14px; gap: 6px;">
+            <li><span class="icon-check">✓</span> <span>بيستبدل البرومبتات الهشة بملفات مهارات قياسية ثابتة وواضحة</span></li>
+            <li><span class="icon-check">✓</span> <span>بيضمن ثبات الجودة والنتائج بنسبة 100% في كل مرة يشتغل فيها</span></li>
           </ul>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
+        <!-- AI Delegation Blueprint (Arabic) -->
+        <div class="card" style="border-top: 6px solid var(--green); padding: 22px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <div class="badge green" style="margin: 0;">الركيزة الثانية</div>
-            <a href="https://github.com/MostaDaoud/ai-delegation" target="_blank" class="repo-btn" style="font-size: 13px; padding: 6px 12px;">
-              <span>⭐ GitHub Repo</span>
+            <div class="badge green" style="margin: 0; font-size: 13px; padding: 4px 12px;">الركيزة الثانية: التوجيه والتشغيل</div>
+            <a href="https://github.com/MostaDaoud/ai-delegation" target="_blank" class="repo-btn" style="font-size: 12px; padding: 5px 10px;">
+              <span>⭐ AI Delegation</span>
             </a>
           </div>
-          <h3 style="color: var(--green); font-size: 32px;">AI Delegation</h3>
-          <p style="font-weight: 800; color: #ffffff; font-size: 22px; margin-bottom: 12px;">"إدارة التشغيل والتكاليف" (Operations &amp; Cost)</p>
-          <p style="margin-bottom: 18px;">بيحدد إزاي الشغل يتوزع بين الوكلاء ويوجه كل مهمة للموديل الأنسب والأوفر مالياً بدون إهدار.</p>
-          <ul style="border-top: 1.5px solid var(--border); padding-top: 16px;">
-            <li><span class="icon-check">•</span> <span>بيطبق قاعدة <em>"المدير ما بيكتبش بنفسه"</em> لمنع تلوث الذاكرة</span></li>
-            <li><span class="icon-check">•</span> <span>بيأتمت فحص الجودة والإصلاح الجراحي الدقيق لأي خطأ</span></li>
-            <li><span class="icon-check">•</span> <span>بيحسب التوفير المالي ويختار أرخص فئة موديل لكل خطوة</span></li>
+          <h3 style="color: var(--green); font-size: 26px; margin-bottom: 6px;">AI Delegation</h3>
+          <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px;"><strong>"إدارة التشغيل وتوجيه الموديلات"</strong> بأقل تكلفة وأعلى كفاءة.</p>
+
+          <div class="code-box" style="margin-bottom: 12px; font-size: 12px; line-height: 1.4;">
+            <span style="color: var(--green); font-weight: 800;"># بوابة القرار وقوانين التوجيه الذكي</span><br/>
+            <span style="color: var(--accent);">• قانون السياق:</span> عزل الوكلاء لمنع تلوث الذاكرة وضياع التعليمات<br/>
+            <span style="color: var(--amber);">• فئات الموديلات:</span> $0.50 للمهام الميكانيكية vs $75 للتفكير الاستراتيجي<br/>
+            <span style="color: var(--rose);">• بوابات الجودة:</span> رفض أي كلام إنشائي غير قابل للاختبار الفعلي
+          </div>
+
+          <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 14px; gap: 6px;">
+            <li><span class="icon-check">✓</span> <span>بيطبق قاعدة <em>"المدير ما بيكتبش بنفسه"</em> للحفاظ على صفاء الذاكرة</span></li>
+            <li><span class="icon-check">✓</span> <span>بيوفر 85–90% من فاتورة الـ API عن طريق توجيه الموديلات الذكي</span></li>
           </ul>
         </div>
       </div>
@@ -1354,39 +1701,85 @@
     <div class="slide-container">
       <div class="badge amber">🛡️ رقابة الجودة الذاتية</div>
       <h2 class="slide-heading">سحر بوابات الجودة اللي بتصلح الأخطاء لوحدها</h2>
-      <p class="lead-text">إزاي النظام بيرفض الكلام العام وغير القابل للقياس، ويجبر الوكيل يصلحه قبل ما التقرير يوصلك.</p>
+      <p class="lead-text">إزاي نظام السيو الذكي بيرفض التوصيات الإنشائية تلقائياً ويجبر الوكلاء على تقديم أدلة وأكواد قطعية.</p>
 
       <div class="grid-3">
-        <div class="card" style="border-top: 6px solid var(--amber);">
-          <div style="font-size: 32px; margin-bottom: 8px;">📊</div>
-          <h3 style="color: #fff; font-size: 24px;">1. بوابة الفحص والإثبات</h3>
-          <p style="font-size: 17px; margin-bottom: 14px;">المدير بيراجع مخرجات الوكلاء: أي توصية عامة لازم تترفض فوراً لو مافيش رابط محدد واختبار قياس واضح.</p>
-          <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 10px; padding: 10px 14px; color: #fca5a5; font-weight: 700; font-size: 15px;">
-            ⚠️ تم الرفض: توصية "حسّن سرعة الموقع" عامة جداً (لا يوجد ملف أو رقم محدد)
+        <!-- Step 1: Gate Rejection -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-title" style="color: var(--rose);">❌ خطوة 1: رفض بوابة الجودة</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase;">المسودة الأولى من الوكيل:</div>
+            <div class="code-box" style="color: #fda4af; direction: rtl; text-align: right;">
+              "التوصية: تسريع الموقع وتحسين صور الصفحة الرئيسية لتقليل وقت التحميل."
+            </div>
+            
+            <div style="background: rgba(251, 113, 133, 0.12); border: 1px solid rgba(251, 113, 133, 0.35); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; color: #fecdd3;">
+              <strong>🛡️ فحص بوابة الجودة (Quality Gate):</strong><br/>
+              • <span style="color: var(--rose);">[فشل]</span> قاعدة رقم 2: مفيش رابط محدد أو مسار للملف<br/>
+              • <span style="color: var(--rose);">[فشل]</span> قاعدة رقم 3: مفيش مقياس زمني بالأجزاء من الثانية (ms)
+            </div>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item" style="grid-column: span 3;">
+              <span class="metric-label">قرار البوابة</span>
+              <span class="metric-value-bad">مرفوض — إعادة تشغيل سكربت التشخيص الدقيق</span>
+            </div>
           </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--purple);">
-          <div style="font-size: 32px; margin-bottom: 8px;">🔧</div>
-          <h3 style="color: #fff; font-size: 24px;">2. إعادة الفحص الموجه</h3>
-          <p style="font-size: 17px; margin-bottom: 14px;">المدير بيشغل وكيل الأداء بتعليمات صارمة عشان يحدد السكربت المسؤول بالظبط عن بطء التحميل.</p>
-          <div style="background: rgba(192, 132, 252, 0.15); border: 1px solid #c084fc; border-radius: 10px; padding: 10px 14px; color: #e9d5ff; font-weight: 700; font-size: 15px;">
-            ⚡ تم التحديد: تأخير سكربت `app.js` (480ms) + تحميل صورة الهيرو مسبقاً
+        <!-- Step 2: Auto-Correction -->
+        <div class="mockup-window" style="border-color: rgba(192, 132, 252, 0.4);">
+          <div class="mockup-header" style="background: rgba(192, 132, 252, 0.08);">
+            <div class="window-title" style="color: var(--purple);">🔄 خطوة 2: التصحيح الذاتي التلقائي</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase;">سكربت تشخيص الأداء (Playwright):</div>
+            <div class="code-box" style="font-size: 12px; direction: ltr; text-align: left;">
+              <span style="color: var(--green);">$</span> python scripts/render_page.py<br/>
+              <span style="color: var(--amber);">[LCP Element]:</span> &lt;img src="hero.jpg"&gt; (2.8MB, +2.1s)<br/>
+              <span style="color: var(--rose);">[Blocking JS]:</span> app.js (480ms TBT)
+            </div>
+
+            <div style="background: rgba(192, 132, 252, 0.12); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; color: #e9d5ff;">
+              ⚡ <strong>إعادة فحص جراحية:</strong> الوكيل حدد الاختناق الحقيقي بالملي وصاغ كود الإصلاح المباشر.
+            </div>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item" style="grid-column: span 3;">
+              <span class="metric-label">وقت التنفيذ</span>
+              <span style="font-size: 13.5px; color: var(--purple); font-weight: 800; direction: ltr;">1.4s Trace Complete</span>
+            </div>
           </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
-          <div style="font-size: 32px; margin-bottom: 8px;">✅</div>
-          <h3 style="color: #fff; font-size: 24px;">3. اجتياز بوابة الجودة</h3>
-          <p style="font-size: 17px; margin-bottom: 14px;">التوصية بقت مثبتة وقابلة للتنفيذ بنسبة 100% ومرفق معاها كود الإصلاح المباشر للمطورين.</p>
-          <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; border-radius: 10px; padding: 10px 14px; color: #86efac; font-weight: 700; font-size: 15px;">
-            🎉 معتمد: 18 توصية محددة وقابلة للقياس والتنفيذ فوراً
+        <!-- Step 3: Gate Passed -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-title" style="color: var(--green);">✅ خطوة 3: اجتياز بوابة الجودة</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-dim); text-transform: uppercase;">توصية دقيقة قابلة للقياس والاختبار:</div>
+            <div class="code-box" style="color: #86efac; font-size: 12px; direction: ltr; text-align: left;">
+              "Preload 'hero.webp' (-1.4s LCP) and add 'defer' to 'app.js' (-480ms TBT). Test: lighthouse --view."
+            </div>
+
+            <div style="background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; color: #86efac;">
+              🎉 <strong>معتمد بنجاح:</strong> قابل للاختبار 100%، زيرو كلام إنشائي، وجاهز للتطبيق المباشر فوراً.
+            </div>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item" style="grid-column: span 3;">
+              <span class="metric-label">حالة الاعتماد</span>
+              <span class="metric-value-good">معتمد 100% وقابل للإثبات</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>القاعدة:</strong> ما تعتمدش على قوة إرادتك لمراجعة الشغل.. ابني بوابات جودة ترفض الكلام الإنشائي وتطلب إثباتات وأكواد محددة في الخلفية.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>القاعدة:</strong> اوعى تقبل هلوسة أو كلام عام من الذكاء الاصطناعي.. ابني بوابات جودة ترفض الكلام الإنشائي وتطلب إثباتات واختبارات قياس وأكواد محددة في الخلفية.
       </div>
     </div>
   </div>
@@ -1465,30 +1858,100 @@
     <div class="slide-container">
       <div class="badge amber">👑 القاعدة الذهبية</div>
       <h2 class="slide-heading">ليه المدير ما بيكتبش ولا بيفحص بنفسه أبداً؟</h2>
-      <p class="lead-text">المبدأ الهندسي الأهم اللي بيخلي الأنظمة الكبيرة تفضل سريعة ودقيقة ومتهلوسش.</p>
+      <p class="lead-text">مبدأ فصل المهام: الحفاظ على ذاكرة المنسق صافية ومركزة بيضمن دقة التخطيط والاستراتيجية بنسبة 100%.</p>
 
-      <div class="grid-3">
-        <div class="card" style="border-top: 6px solid var(--accent);">
-          <div style="font-size: 36px; margin-bottom: 12px;">🧠</div>
-          <h3 style="color: var(--accent);">1. ذهن صافي وذاكرة نظيفة</h3>
-          <p>فحص 500 صفحة بيملى الذاكرة بتفاصيل HTML. المدير المنفصل بيفضل مركز على الرؤية الشاملة وتوزيع المهام بدون ما ينسى أي تفصيلة استراتيجية.</p>
+      <div class="grid-2">
+        <!-- Polluted Manager -->
+        <div class="mockup-window" style="border-color: rgba(251, 113, 133, 0.4);">
+          <div class="mockup-header" style="background: rgba(251, 113, 133, 0.08);">
+            <div class="window-title" style="color: var(--rose);">🔴 المدير الغارق: طوفان 185 ألف توكن في الشات</div>
+          </div>
+          <div class="mockup-body">
+            <div style="background: rgba(239, 68, 68, 0.12); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(239, 68, 68, 0.3);">
+              <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 12px; color: var(--rose); margin-bottom: 6px;">
+                <span>مؤشر استهلاك الذاكرة (Context Gauge)</span>
+                <span style="direction: ltr;">185,000 / 200,000 Tokens (92%)</span>
+              </div>
+              <div style="background: rgba(0,0,0,0.4); border-radius: 6px; height: 10px; width: 100%; overflow: hidden;">
+                <div style="background: var(--rose); width: 92%; height: 100%;"></div>
+              </div>
+            </div>
+
+            <div class="code-box" style="font-size: 11.5px; color: #fecdd3; max-height: 100px; overflow: hidden; direction: ltr; text-align: left;">
+              &lt;html&gt;&lt;head&gt;... [500 pages of raw HTML, CSS, JavaScript blobs, and API dumps flooded inline] ...&lt;/html&gt;
+            </div>
+
+            <ul style="font-size: 13.5px; color: #fda4af; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+              <li>❌ <strong>تشتت وانحراف التوجيه (Prompt Drift):</strong> بينسى القواعد الأساسية وأوامر العميل</li>
+              <li>❌ <strong>ارتفاع الهلوسة:</strong> نسبة 40% لتأليف مقاييس وأرقام خيالية بدون أساس</li>
+              <li>❌ <strong>بطء وتكلفة كارثية:</strong> انتظار 45 ثانية وتكلفة $2.40 لكل رسالة شات واحدة</li>
+            </ul>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">صحة الذاكرة</span>
+              <span class="metric-value-bad">تدهور حاد ومشتت</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">تكلفة الرسالة</span>
+              <span class="metric-value-bad" style="direction: ltr;">$2.40 / prompt</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">جودة القرارات</span>
+              <span class="metric-value-bad">غير موثوقة</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card" style="border-top: 6px solid var(--purple);">
-          <div style="font-size: 36px; margin-bottom: 12px;">🛡️</div>
-          <h3 style="color: var(--purple);">2. مراجعة مستقلة ومحايدة</h3>
-          <p>الموديل اللي بيكتب كود سكيما هيقول على نفسه ممتاز. استخدام أدوات خارجية وأكواد محايدة بيضمن صحة الكود بنسبة 100% بدون تحيز.</p>
-        </div>
+        <!-- Clean Conductor -->
+        <div class="mockup-window" style="border-color: rgba(74, 222, 128, 0.4);">
+          <div class="mockup-header" style="background: rgba(74, 222, 128, 0.08);">
+            <div class="window-title" style="color: var(--green);">🟢 المنسق الصافي: 2400 توكن استراتيجي نقي</div>
+          </div>
+          <div class="mockup-body">
+            <div style="background: rgba(74, 222, 128, 0.12); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(74, 222, 128, 0.3);">
+              <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 12px; color: var(--green); margin-bottom: 6px;">
+                <span>مؤشر استهلاك الذاكرة (Context Gauge)</span>
+                <span style="direction: ltr;">2,400 / 200,000 Tokens (1.2%)</span>
+              </div>
+              <div style="background: rgba(0,0,0,0.4); border-radius: 6px; height: 10px; width: 100%; overflow: hidden;">
+                <div style="background: var(--green); width: 2%; height: 100%;"></div>
+              </div>
+            </div>
 
-        <div class="card" style="border-top: 6px solid var(--green);">
-          <div style="font-size: 36px; margin-bottom: 12px;">🔄</div>
-          <h3 style="color: var(--green);">3. إصلاح دقيق وموفر</h3>
-          <p>لو المشكلة في السكيما بس، المدير بيشغل وكيل السكيما لوحده يصلح السطر المكسور بدون ما يعيد فحص الموقع كله ويحرق توكنز عالفاضي.</p>
+            <div class="code-box" style="font-size: 11.5px; color: #86efac; direction: ltr; text-align: left;">
+              {<br/>
+              &nbsp;&nbsp;"technical_score": 92, "issues_count": 2,<br/>
+              &nbsp;&nbsp;"content_eeat": 88, "schema_valid": true,<br/>
+              &nbsp;&nbsp;"critical_bottleneck": "LCP hero image preload"<br/>
+              }
+            </div>
+
+            <ul style="font-size: 13.5px; color: #86efac; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+              <li>✓ <strong>ذاكرة استراتيجية 100%:</strong> مابينساش أهداف العميل ولا هوية البراند أبداً</li>
+              <li>✓ <strong>زيرو تلوث توكنز:</strong> الوكلاء بيعالجوا أكواد الـ HTML في بيئاتهم المعزولة</li>
+              <li>✓ <strong>سرعة خارقة وتوفير:</strong> دمج استراتيجي في 3 ثواني بتكلفة $0.08 فقط للرسالة</li>
+            </ul>
+          </div>
+          <div class="mockup-metrics-row">
+            <div class="mockup-metric-item">
+              <span class="metric-label">صحة الذاكرة</span>
+              <span class="metric-value-good">صافية 100%</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">تكلفة الرسالة</span>
+              <span class="metric-value-good" style="direction: ltr;">$0.08 / prompt</span>
+            </div>
+            <div class="mockup-metric-item">
+              <span class="metric-label">جودة القرارات</span>
+              <span class="metric-value-good">استراتيجية مثالية</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="quote-callout">
-        <strong>تشبيه المقاول العام:</strong> المقاول العام ما بيصبش خرسانة ولا بيمد أسلاك كهربا بإيده.. المقاول بيمسك المخطط، يوجه الفنيين المتخصصين، ويستلم الشغل بالمقاس قبل ما يسلمه للمالك.
+      <div class="quote-callout" style="margin-top: 20px; padding: 14px 22px; font-size: 17px;">
+        💡 <strong>تشبيه المقاول العام:</strong> المقاول العام ما بيصبش خرسانة ولا بيمد أسلاك كهربا بإيده.. المقاول بيمسك المخطط، يوجه الفنيين المتخصصين، ويستلم الشغل بالمقاس ومطابق لأعلى معايير الجودة.
       </div>
     </div>
   </div>
@@ -1497,7 +1960,7 @@
   <div class="slide">
     <div class="slide-container">
       <div class="badge green">💰 ثورة التكاليف</div>
-      <h2 class="slide-heading">ليه توجيه الموديلات (Model Routing) بيوفر 90%؟</h2>
+      <h2 class="slide-heading">ليه توجيه الموديلات (Model Routing) بيوفر 85–90%؟</h2>
       <p class="lead-text">مقارنة تكلفة تشغيل 100 فحص سيو عميق وشامل كل شهر.</p>
 
       <div class="card" style="margin-bottom: 28px; padding: 30px 34px;">
@@ -1505,9 +1968,9 @@
           <div class="cost-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <div>
               <strong style="font-size: 21px; color: #fca5a5;">الطريقة أ: الشات العادي بموديل كبير طول الوقت (Opus / GPT-4o)</strong>
-              <p style="font-size: 15.5px; color: var(--text-muted); margin: 0;">تشغيل الكراول، قراءة كود HTML، وفحص السكيما على موديلات بـ 75$ لكل مليون توكن</p>
+              <p style="font-size: 15.5px; color: var(--text-muted); margin: 0;">تشغيل الكراول، قراءة كود HTML، وفحص السكيما على موديلات بـ $75 لكل مليون توكن</p>
             </div>
-            <span style="font-size: 28px; font-weight: 900; color: #f87171; direction: ltr;">$350.00 / شهر</span>
+            <span style="font-size: 28px; font-weight: 900; color: #f87171; direction: ltr;">$250.00 / شهر</span>
           </div>
           <div style="background: rgba(239, 68, 68, 0.2); border: 1.5px solid #ef4444; border-radius: 12px; height: 38px; width: 100%; display: flex; align-items: center; padding: 0 16px;">
             <span style="font-size: 14.5px; font-weight: 800; color: #fff;">100% استهلاك لموديلات فائقة السعر في مهام ميكانيكية بسيطة (هدر عالي)</span>
@@ -1521,8 +1984,8 @@
               <p style="font-size: 15.5px; color: var(--text-muted); margin: 0;">الموديل الكبير للتحليل الاستراتيجي بس (20%)، وموديلات سريعة للكراول واستخراج البيانات (80%)</p>
             </div>
             <div style="display: flex; align-items: center; gap: 14px;">
-              <span class="badge green" style="margin: 0; font-size: 15px;">⚡ توفير 89.1%</span>
-              <span style="font-size: 28px; font-weight: 900; color: #4ade80; direction: ltr;">$38.00 / شهر</span>
+              <span class="badge green" style="margin: 0; font-size: 15px;">⚡ توفير 88.6%</span>
+              <span style="font-size: 28px; font-weight: 900; color: #4ade80; direction: ltr;">$28.50 / شهر</span>
             </div>
           </div>
           <div style="background: rgba(34, 197, 94, 0.25); border: 1.5px solid #22c55e; border-radius: 12px; height: 38px; width: 12%; min-width: 170px; display: flex; align-items: center; padding: 0 16px;">
