@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond the Chat Window: Building Your Autonomous AI Workforce</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #070d18;
+    --bg-card: #0e172a;
+    --bg-card-hover: #16243f;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.2);
+    --green: #4ade80;
+    --green-glow: rgba(74, 222, 128, 0.2);
+    --purple: #c084fc;
+    --purple-glow: rgba(192, 132, 252, 0.2);
+    --amber: #fbbf24;
+    --amber-glow: rgba(251, 191, 36, 0.2);
+    --rose: #fb7185;
+    --rose-glow: rgba(251, 113, 133, 0.2);
+    --border: rgba(255, 255, 255, 0.12);
+    --border-bright: rgba(255, 255, 255, 0.24);
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body.mode-slides { overflow: hidden; }
+  body.mode-scroll { overflow-y: auto; }
+
+  /* ── Ambient Glows ── */
+  .ambient-glow {
+    position: fixed;
+    width: 900px;
+    height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
+    top: -200px;
+    right: -200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ambient-glow-2 {
+    position: fixed;
+    width: 850px;
+    height: 850px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--purple-glow) 0%, rgba(0,0,0,0) 70%);
+    bottom: -200px;
+    left: -200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Deck & Slide System ── */
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  body.mode-slides .deck { overflow: hidden; }
+
+  body.mode-slides .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 80px 100px 80px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(50px) scale(0.98);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+    pointer-events: none;
+    overflow-y: auto;
+  }
+
+  body.mode-slides .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+  }
+
+  body.mode-slides .slide.prev {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50px) scale(0.98);
+  }
+
+  /* Scroll Mode */
+  body.mode-scroll .deck {
+    height: auto;
+    padding: 80px 40px 160px 40px;
+    max-width: 1550px;
+    margin: 0 auto;
+  }
+  body.mode-scroll .slide {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    margin-bottom: 90px;
+    padding: 60px 0;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .slide-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ── Typography ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 22px;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-bright);
+    color: var(--accent);
+    width: fit-content;
+  }
+  .badge.green { color: var(--green); border-color: rgba(74, 222, 128, 0.4); background: var(--green-glow); }
+  .badge.purple { color: var(--purple); border-color: rgba(192, 132, 252, 0.4); background: var(--purple-glow); }
+  .badge.amber { color: var(--amber); border-color: rgba(251, 191, 36, 0.4); background: var(--amber-glow); }
+  .badge.rose { color: var(--rose); border-color: rgba(251, 113, 133, 0.4); background: var(--rose-glow); }
+
+  h1.hero-title {
+    font-size: 68px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  h2.slide-heading {
+    font-size: 46px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  p.lead-text {
+    font-size: 24px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 32px;
+    max-width: 1200px;
+  }
+
+  /* ── Grids & Card Layouts ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .grid-testimonial { display: grid; grid-template-columns: 340px 1fr; gap: 32px; align-items: stretch; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 36px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+  }
+  .card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-3px);
+  }
+
+  .card-danger {
+    background: linear-gradient(150deg, #1c0e18 0%, #110910 100%);
+    border: 2px solid rgba(251, 113, 133, 0.5);
+  }
+  .card-success {
+    background: linear-gradient(150deg, #0d221c 0%, #071612 100%);
+    border: 2px solid rgba(74, 222, 128, 0.5);
+  }
+
+  .card h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: #ffffff;
+  }
+  .card p {
+    font-size: 20px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .card ul { list-style: none; }
+  .card ul li {
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    line-height: 1.5;
+  }
+  .card ul li:last-child { margin-bottom: 0; }
+
+  .icon-check {
+    color: var(--green);
+    font-weight: 900;
+    font-size: 22px;
+    background: rgba(74, 222, 128, 0.15);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-cross {
+    color: var(--rose);
+    font-weight: 900;
+    font-size: 22px;
+    background: rgba(251, 113, 133, 0.15);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Interactive Pipeline Steps ── */
+  .phase-card {
+    background: #091122;
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-title { font-size: 22px; font-weight: 800; color: #ffffff; }
+  .phase-agent {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .phase-actions { list-style: none; margin-bottom: 20px; }
+  .phase-actions li {
+    font-size: 17px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phase-actions li::before {
+    content: "•";
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .phase-tier-badge {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .tier-cheap { background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); color: #86efac; }
+  .tier-frontier { background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.4); color: #f3e8ff; }
+  .tier-mid { background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.35); color: #fde68a; }
+
+  /* ── QR Code Styling ── */
+  .qr-box {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px;
+    width: 170px;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    margin: 0 auto 16px auto;
+  }
+  .qr-box svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    background: #1e293b;
+    border: 1px solid var(--border-bright);
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .repo-btn:hover {
+    background: var(--accent);
+    color: #070d18;
+    border-color: var(--accent);
+  }
+
+  .quote-callout {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 6px solid var(--accent);
+    padding: 22px 30px;
+    border-radius: 0 16px 16px 0;
+    margin-top: 28px;
+    font-size: 22px;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+  .quote-callout strong { color: #ffffff; font-weight: 800; }
+
+  /* ── Top Progress ── */
+  .top-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+  }
+
+  /* ── Floating Controller ── */
+  .nav-controller {
+    position: fixed;
+    bottom: 28px;
+    right: 36px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    background: rgba(11, 17, 32, 0.95);
+    backdrop-filter: blur(16px);
+    padding: 10px 22px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--border-bright);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  }
+  .nav-controller button {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-controller button:hover {
+    background: var(--bg-card-hover);
+    color: var(--accent);
+  }
+  .btn-mode-toggle {
+    font-size: 16px !important;
+    font-weight: 700;
+    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+  }
+
+  .nav-footer-hint {
+    position: fixed;
+    bottom: 30px;
+    left: 36px;
+    font-size: 17px;
+    color: var(--text-muted);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-footer-hint kbd {
+    background: var(--bg-card);
+    border: 1px solid var(--border-bright);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--accent);
+  }
+
+  /* ── Dots Indicator ── */
+  .slide-dots {
+    display: flex;
+    gap: 7px;
+    margin: 0 10px;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .dot.active {
+    background: var(--accent);
+    transform: scale(1.4);
+  }
+
+  /* ── Responsive & Mobile Breakpoints ── */
+  @media (max-width: 1200px) {
+    .grid-2, .grid-3, .grid-testimonial { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    body.mode-slides .slide { padding: 30px 24px 90px 24px; }
+    h1.hero-title { font-size: clamp(34px, 6vw, 56px) !important; }
+    h2.slide-heading { font-size: clamp(26px, 4.5vw, 38px) !important; }
+    p.lead-text { font-size: 18px; }
+    .nav-footer-hint { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    html, body { font-size: 16px; }
+    
+    .grid-2, .grid-3, .grid-4, .grid-testimonial { 
+      grid-template-columns: 1fr !important; 
+      gap: 16px; 
+    }
+
+    body.mode-slides .slide {
+      padding: 20px 14px 80px 14px;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .slide-container {
+      margin: auto 0;
+      width: 100%;
+    }
+
+    body.mode-scroll .deck {
+      padding: 30px 12px 90px 12px;
+    }
+    body.mode-scroll .slide {
+      padding: 24px 0;
+      margin-bottom: 32px;
+    }
+
+    /* Typography */
+    h1.hero-title {
+      font-size: clamp(24px, 6.5vw, 36px) !important;
+      line-height: 1.15;
+      margin-bottom: 12px !important;
+    }
+    h2.slide-heading {
+      font-size: clamp(20px, 5.2vw, 28px) !important;
+      line-height: 1.2;
+      margin-bottom: 8px !important;
+    }
+    p.lead-text {
+      font-size: 14.5px !important;
+      line-height: 1.5;
+      margin-bottom: 16px !important;
+    }
+    .badge {
+      font-size: 11.5px;
+      padding: 5px 12px;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
+
+    /* Cards */
+    .card {
+      padding: 16px 14px;
+      border-radius: 14px;
+    }
+    .card h3 {
+      font-size: 19px !important;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+    .card ul li {
+      font-size: 14px;
+      margin-bottom: 10px;
+      gap: 8px;
+      line-height: 1.45;
+    }
+    .icon-check, .icon-cross {
+      width: 22px;
+      height: 22px;
+      font-size: 13px;
+    }
+
+    .quote-callout {
+      padding: 12px 14px;
+      font-size: 13.5px;
+      margin-top: 14px;
+      border-left-width: 4px;
+      border-radius: 0 10px 10px 0;
+      line-height: 1.5;
+    }
+
+    /* Interactive Phase Cards */
+    .phase-card {
+      padding: 16px 14px;
+      border-radius: 14px;
+    }
+    .phase-title { font-size: 18px; }
+    .phase-agent { font-size: 13.5px; margin-bottom: 10px; }
+    .phase-actions li { font-size: 13.5px; }
+    .phase-tier-badge { padding: 8px 10px; font-size: 13px; }
+
+    /* Manager Bar & Summary Rows */
+    .manager-bar {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 10px !important;
+      padding: 14px !important;
+    }
+    .manager-bar p {
+      font-size: 13.5px !important;
+    }
+    .card-summary-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 10px !important;
+      padding: 14px !important;
+    }
+    .card-summary-row span {
+      display: block;
+      margin-left: 0 !important;
+      margin-top: 4px;
+      font-size: 14px !important;
+    }
+    .cost-header-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+    }
+    .cost-header-row strong {
+      font-size: 16px !important;
+    }
+    .cost-header-row span {
+      font-size: 20px !important;
+    }
+
+    /* Floating Navigation Controller */
+    .nav-controller {
+      bottom: 10px;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: 360px;
+      padding: 5px 10px;
+      gap: 6px;
+      justify-content: space-between;
+    }
+    .slide-dots {
+      display: none !important;
+    }
+    .nav-controller button {
+      padding: 6px 10px;
+      font-size: 15px;
+    }
+    .btn-mode-toggle {
+      font-size: 11.5px !important;
+      padding: 5px 8px !important;
+    }
+    #slideCount {
+      font-size: 12.5px !important;
+      min-width: 45px !important;
+    }
+
+    /* Slide 8 Testimonials */
+    .testimonial-avatar-box {
+      width: 110px !important;
+      height: 110px !important;
+      margin-bottom: 10px !important;
+    }
+
+    /* Slide 15 QR Codes Grid */
+    .qr-box {
+      width: 110px !important;
+      height: 110px !important;
+      padding: 6px !important;
+      border-radius: 12px !important;
+      margin-bottom: 8px !important;
+    }
+    .repo-btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 11px !important;
+      padding: 6px 8px !important;
+      word-break: break-all;
+    }
+
+    /* Slide 16 Quote Banner */
+    .card-closing-quote {
+      padding: 14px 16px !important;
+    }
+    .card-closing-quote p {
+      font-size: 14.5px !important;
+    }
+
+    /* Slide 17 Contact & Bio */
+    .speaker-header-flex {
+      gap: 12px !important;
+    }
+    .speaker-avatar-img {
+      width: 60px !important;
+      height: 60px !important;
+    }
+    .contact-qr-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 8px !important;
+    }
+    .contact-qr-grid .qr-box {
+      width: 75px !important;
+      height: 75px !important;
+      padding: 4px !important;
+      margin-bottom: 6px !important;
+      border-radius: 8px !important;
+    }
+    .contact-qr-grid h4 {
+      font-size: 13px !important;
+    }
+    .contact-qr-grid p {
+      font-size: 9.5px !important;
+    }
+    .contact-qr-grid .repo-btn {
+      padding: 4px 6px !important;
+      font-size: 10.5px !important;
+    }
+    .contact-email-grid {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .contact-qr-grid {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+    .contact-qr-grid .qr-box {
+      width: 100px !important;
+      height: 100px !important;
+    }
+  }
+
+  /* ── Print & PDF Export System ── */
+  @media print {
+    @page {
+      size: 1920px 1080px;
+      margin: 0;
+    }
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    html, body {
+      width: 1920px !important;
+      height: auto !important;
+      min-height: 100% !important;
+      background: #070d18 !important;
+      overflow: visible !important;
+      font-size: 20px !important;
+    }
+    .ambient-glow, .ambient-glow-2, .top-progress, .nav-footer-hint, .nav-controller {
+      display: none !important;
+    }
+    .deck {
+      height: auto !important;
+      width: 1920px !important;
+      max-width: 1920px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: visible !important;
+    }
+    .slide {
+      position: relative !important;
+      inset: auto !important;
+      width: 1920px !important;
+      height: 1080px !important;
+      max-height: 1080px !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 50px 90px !important;
+      box-sizing: border-box !important;
+      border: none !important;
+      margin: 0 !important;
+      background: #070d18 !important;
+      overflow: hidden !important;
+    }
+    .slide-container {
+      max-width: 1600px !important;
+      margin: auto !important;
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+  }
+
+</style>
+</head>
+<body class="mode-slides">
+
+<div class="ambient-glow"></div>
+<div class="ambient-glow-2"></div>
+<div class="top-progress" id="progressBar"></div>
+
+<div class="nav-footer-hint" id="navHint">
+  <span>Navigate with <kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd> | Press <kbd>F</kbd> for Fullscreen</span>
+</div>
+
+<div class="nav-controller">
+  <button id="prevBtn" title="Previous Slide (Left Arrow)">◀</button>
+  <div class="slide-dots" id="dotsContainer"></div>
+  <span id="slideCount" style="font-size: 17px; font-weight: 800; color: var(--text-muted); min-width: 60px; text-align: center;">1 / 15</span>
+  <button id="nextBtn" title="Next Slide (Right Arrow)">▶</button>
+  <button id="toggleModeBtn" class="btn-mode-toggle" title="Switch to Continuous Scroll View">📜 Scroll View</button>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Hero Title -->
+  <div class="slide active">
+    <div class="slide-container" style="text-align: center; align-items: center;">
+      <div class="badge purple">🚀 Beyond The Chat Window</div>
+      <h1 class="hero-title">Building Your Autonomous AI Workforce</h1>
+      <p class="lead-text" style="font-size: 28px; max-width: 1200px; margin: 0 auto 40px auto; color: #cbd5e1;">
+        How non-technical teams turn chaotic AI chat sessions into automated specialist departments — cutting costs by 90% while multiplying throughput.
+      </p>
+
+      <div class="grid-3" style="text-align: left; width: 100%;">
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div style="font-size: 38px; margin-bottom: 12px;">🧩</div>
+          <h3 style="color: var(--accent);">1. Skill Forge</h3>
+          <p>Package your repetitive daily workflows into structured, reusable Standard Operating Procedures (SOPs).</p>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--purple);">
+          <div style="font-size: 38px; margin-bottom: 12px;">👑</div>
+          <h3 style="color: var(--purple);">2. Orchestrators</h3>
+          <p>Deploy a Manager Agent that coordinates specialized subagents with zero context confusion.</p>
+        </div>
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div style="font-size: 38px; margin-bottom: 12px;">⚡</div>
+          <h3 style="color: var(--green);">3. Smart Routing</h3>
+          <p>Route each subtask to the right model tier so you never pay frontier prices for mechanical work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: The Chat Window Trap -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge rose">⚠️ The Common Bottleneck</div>
+      <h2 class="slide-heading">The "Chat Window Trap"</h2>
+      <p class="lead-text">Why chatting in a single box breaks down as soon as business workflows become multi-step.</p>
+
+      <div class="grid-2">
+        <div class="card card-danger">
+          <div class="badge rose" style="margin-bottom: 12px;">THE CHATBOT TRAP</div>
+          <h3 style="color: var(--rose);">Single Chat Window</h3>
+          <ul>
+            <li><span class="icon-cross">✕</span> <span><strong>The Copy-Paste Glue:</strong> You waste hours manually jumping between ChatGPT, SEO tools, spreadsheets, and CMS dashboards.</span></li>
+            <li><span class="icon-cross">✕</span> <span><strong>Context Confusion:</strong> Asking one chat to do research, drafting, formatting, and QA leads to hallucinations and diluted tone.</span></li>
+            <li><span class="icon-cross">✕</span> <span><strong>Massive Cost Waste:</strong> Paying \$75/M flagship tokens for simple bullet points and HTML formatting.</span></li>
+          </ul>
+        </div>
+
+        <div class="card card-success">
+          <div class="badge green" style="margin-bottom: 12px;">THE AUTOMATED TEAM</div>
+          <h3 style="color: var(--green);">Autonomous AI Workforce</h3>
+          <ul>
+            <li><span class="icon-check">✓</span> <span><strong>1-Click Pipeline:</strong> Initiate once; agents pass data and deliverables directly to one another hands-free.</span></li>
+            <li><span class="icon-check">✓</span> <span><strong>Specialist Isolation:</strong> Each subagent gets a clean context and focuses 100% on its designated domain.</span></li>
+            <li><span class="icon-check">✓</span> <span><strong>88% Cost Reduction:</strong> Frontier brains for creative writing; fast \$0.50 models for data fetching and formatting.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="quote-callout">
+        <strong>The Problem:</strong> You are acting as the human middleware between disconnected tools.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: The Prompter vs The Architect -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge purple">🧠 The Mental Shift</div>
+      <h2 class="slide-heading">The Prompter vs. The System Architect</h2>
+      <p class="lead-text">The biggest productivity leap isn't writing clever prompts — it's building reusable systems.</p>
+
+      <div class="grid-2">
+        <div class="card" style="border-top: 6px solid var(--rose);">
+          <div class="badge rose" style="margin-bottom: 12px;">THE PROMPTER MINDSET</div>
+          <h3 style="color: #fff; font-size: 30px;">The Prompter</h3>
+          <p style="margin-bottom: 20px;">Treats AI as a chat partner to supervise every second.</p>
+          <ul>
+            <li><span class="icon-cross">✕</span> <span>Types 500-word custom prompts every single morning.</span></li>
+            <li><span class="icon-cross">✕</span> <span>Manually babysits outputs line-by-line looking for errors.</span></li>
+            <li><span class="icon-cross">✕</span> <span>Linear output: 1 hour of human work = 1 deliverable.</span></li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div class="badge green" style="margin-bottom: 12px;">THE ARCHITECT MINDSET</div>
+          <h3 style="color: #fff; font-size: 30px;">The System Architect</h3>
+          <p style="margin-bottom: 20px;">Treats AI as a team of trained specialists to orchestrate.</p>
+          <ul>
+            <li><span class="icon-check">✓</span> <span>Packages the workflow once into a permanent Standard Operating Procedure.</span></li>
+            <li><span class="icon-check">✓</span> <span>Automates quality checks so the system self-corrects flaws.</span></li>
+            <li><span class="icon-check">✓</span> <span>Exponential output: 1 button click = 10 complete deliverables.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="quote-callout">
+        <strong>Takeaway:</strong> Don't work <em>for</em> the AI by typing prompts all day. Make the AI work for you by building a team.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: The 2 Core Frameworks -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge purple">🛠️ The Two Essential Capabilities</div>
+      <h2 class="slide-heading">Skill Forge &amp; AI Delegation</h2>
+      <p class="lead-text">Two independent frameworks that combine to build reliable, hands-free production lines.</p>
+
+      <div class="grid-2">
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div class="badge" style="margin: 0;">FRAMEWORK 1</div>
+            <a href="https://github.com/AgriciDaniel/skill-forge" target="_blank" class="repo-btn" style="font-size: 13px; padding: 6px 12px;">
+              <span>⭐ GitHub Repo</span>
+            </a>
+          </div>
+          <h3 style="color: var(--accent); font-size: 34px;">Skill Forge</h3>
+          <p style="font-weight: 800; color: #ffffff; font-size: 24px; margin-bottom: 14px;">The "Training Department" for Your AI</p>
+          <p style="margin-bottom: 20px;">Packages workflows, brand voice, step-by-step logic, and quality rules into standard, reusable SOP files.</p>
+          <ul style="border-top: 1.5px solid var(--border); padding-top: 18px;">
+            <li><span class="icon-check">•</span> <span>Turns chaotic human prompts into permanent, standardized instructions</span></li>
+            <li><span class="icon-check">•</span> <span>Defines strict inputs, outputs, and automated quality gates</span></li>
+            <li><span class="icon-check">•</span> <span>Guarantees 100% consistency across every single run</span></li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div class="badge green" style="margin: 0;">FRAMEWORK 2</div>
+            <a href="https://github.com/MostaDaoud/ai-delegation" target="_blank" class="repo-btn" style="font-size: 13px; padding: 6px 12px;">
+              <span>⭐ GitHub Repo</span>
+            </a>
+          </div>
+          <h3 style="color: var(--green); font-size: 34px;">AI Delegation</h3>
+          <p style="font-weight: 800; color: #ffffff; font-size: 24px; margin-bottom: 14px;">The "Operations &amp; Cost Manager"</p>
+          <p style="margin-bottom: 20px;">Determines how tasks are distributed across agents and routes each step to the most cost-effective model.</p>
+          <ul style="border-top: 1.5px solid var(--border); padding-top: 18px;">
+            <li><span class="icon-check">•</span> <span>Enforces the <em>"Manager Never Writes"</em> rule to keep context clean</span></li>
+            <li><span class="icon-check">•</span> <span>Automates quality evaluation and surgical rework</span></li>
+            <li><span class="icon-check">•</span> <span>Calculates exact cost savings and optimal model tiers</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: The 4 Complexity Tiers of Skill Forge (NEW) -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge accent">🏗️ Skill Architecture</div>
+      <h2 class="slide-heading">The 4 Complexity Tiers of Skill Forge</h2>
+      <p class="lead-text">Not every problem requires a swarm of agents. Skill Forge categorizes AI workflows into 4 progressive tiers based on complexity, determinism, and scale.</p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        
+        <!-- Tier 1 -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge" style="font-size: 13px; padding: 4px 12px; margin-bottom: 10px;">TIER 1 • MINIMAL</div>
+            <h3 style="color: var(--accent); font-size: 24px; margin-bottom: 6px;">Single Skill</h3>
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-dim); margin-bottom: 12px;">1 SKILL.md (&lt;200 lines)</p>
+            <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Encapsulates repetitive prompts, voice rules, and formatting into a single on-demand capability.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px;">
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Zero sub-skills or scripts</span></li>
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Lightweight token footprint</span></li>
+              <li style="font-size: 15px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>E.g., Tone &amp; Style Editor</span></li>
+            </ul>
+          </div>
+          <div style="background: rgba(56, 189, 248, 0.1); border-radius: 8px; padding: 8px 12px; text-align: center; margin-top: 14px;">
+            <strong style="color: var(--accent); font-size: 13px;">Use: Simple Workflows</strong>
+          </div>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="card" style="border-top: 6px solid var(--green); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge green" style="font-size: 13px; padding: 4px 12px; margin-bottom: 10px;">TIER 2 • HYBRID</div>
+            <h3 style="color: var(--green); font-size: 24px; margin-bottom: 6px;">Skill + Scripts</h3>
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-dim); margin-bottom: 12px;">SKILL.md + scripts/</p>
+            <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Combines LLM reasoning with deterministic code. Python/Bash handles exact math, APIs, or data parsing.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px;">
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Deterministic execution</span></li>
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Zero token waste on math</span></li>
+              <li style="font-size: 15px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>E.g., CSV Data Validator</span></li>
+            </ul>
+          </div>
+          <div style="background: rgba(74, 222, 128, 0.1); border-radius: 8px; padding: 8px 12px; text-align: center; margin-top: 14px;">
+            <strong style="color: var(--green); font-size: 13px;">Use: Fragile Operations</strong>
+          </div>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="card" style="border-top: 6px solid var(--amber); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge amber" style="font-size: 13px; padding: 4px 12px; margin-bottom: 10px;">TIER 3 • MODULAR</div>
+            <h3 style="color: var(--amber); font-size: 24px; margin-bottom: 6px;">Multi-Skill Hub</h3>
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-dim); margin-bottom: 12px;">Main router + sub-skills</p>
+            <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Handles multi-faceted domains. A main skill analyzes the request and dynamically activates domain sub-skills.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px;">
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Modular sub-skill routing</span></li>
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Shared reference knowledge</span></li>
+              <li style="font-size: 15px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>E.g., Full SEO Audit Suite</span></li>
+            </ul>
+          </div>
+          <div style="background: rgba(251, 191, 36, 0.1); border-radius: 8px; padding: 8px 12px; text-align: center; margin-top: 14px;">
+            <strong style="color: var(--amber); font-size: 13px;">Use: Multi-Workflow Domains</strong>
+          </div>
+        </div>
+
+        <!-- Tier 4 -->
+        <div class="card" style="border-top: 6px solid var(--purple); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge purple" style="font-size: 13px; padding: 4px 12px; margin-bottom: 10px;">TIER 4 • ENTERPRISE</div>
+            <h3 style="color: var(--purple); font-size: 24px; margin-bottom: 6px;">Full Ecosystem</h3>
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-dim); margin-bottom: 12px;">Orchestrator + Subagents + Scripts</p>
+            <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Autonomous production system with parallel subagent delegation, isolated workspaces, and strict QA gates.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px;">
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Parallel subagent execution</span></li>
+              <li style="font-size: 15px; margin-bottom: 8px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>Self-correcting QA loops</span></li>
+              <li style="font-size: 15px;"><span class="icon-check" style="width: 20px; height: 20px; font-size: 12px;">•</span> <span>E.g., Claude SEO Suite (/seo audit)</span></li>
+            </ul>
+          </div>
+          <div style="background: rgba(192, 132, 252, 0.1); border-radius: 8px; padding: 8px 12px; text-align: center; margin-top: 14px;">
+            <strong style="color: var(--purple); font-size: 13px;">Use: Autonomous Workforces</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card card-summary-row" style="background: rgba(56, 189, 248, 0.08); border-color: var(--accent); display: flex; align-items: center; justify-content: space-between; padding: 16px 26px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">💡</span>
+          <span style="color: #cbd5e1; font-size: 17px;">
+            <strong>Progressive Disclosure Principle:</strong> Level 1 (Metadata triggers) → Level 2 (Core SOP instructions) → Level 3 (On-demand scripts &amp; deep references).
+          </span>
+        </div>
+        <div class="badge" style="margin: 0; font-size: 14px; flex-shrink: 0;">Zero Token Waste</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: The Anatomy of an AI Workforce (NEW) -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge purple">🧩 Workforce Anatomy</div>
+      <h2 class="slide-heading">Orchestrators, Agents, Subagents &amp; Scripts Demystified</h2>
+      <p class="lead-text">To build reliable AI systems, understand the exact roles, memory boundaries, and execution models of each building block.</p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        
+        <!-- Orchestrator -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">👑</span>
+              <div>
+                <h3 style="color: var(--accent); font-size: 22px; margin: 0;">Orchestrator</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">The Conductor / Lead</span>
+              </div>
+            </div>
+            <p style="font-size: 16px; color: #fff; font-weight: 700; margin-bottom: 8px;">Maintains context &amp; coordinates the mission.</p>
+            <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Decomposes user requests into discrete milestones, routes work to specialists, and enforces quality gates.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 13.5px; color: #e2e8f0;">
+            <strong>Golden Law:</strong> Conducts, aggregates, and verifies — <em>never generates raw text directly</em>.
+          </div>
+        </div>
+
+        <!-- Agent -->
+        <div class="card" style="border-top: 6px solid var(--green); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">🤖</span>
+              <div>
+                <h3 style="color: var(--green); font-size: 22px; margin: 0;">Agent</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">The Domain Specialist</span>
+              </div>
+            </div>
+            <p style="font-size: 16px; color: #fff; font-weight: 700; margin-bottom: 8px;">Equipped with a persona, rules &amp; tools.</p>
+            <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">An LLM instance tailored for a specific discipline (e.g. SEO Strategist, Copywriter, Python Refactorer).</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(74, 222, 128, 0.1); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; font-size: 13.5px; color: #e2e8f0;">
+            <strong>Strength:</strong> Deep domain mastery without carrying unrelated operational baggage.
+          </div>
+        </div>
+
+        <!-- Subagent -->
+        <div class="card" style="border-top: 6px solid var(--purple); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">⚡</span>
+              <div>
+                <h3 style="color: var(--purple); font-size: 22px; margin: 0;">Subagent</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">The Ephemeral Delegate</span>
+              </div>
+            </div>
+            <p style="font-size: 16px; color: #fff; font-weight: 700; margin-bottom: 8px;">Fresh, isolated context per task.</p>
+            <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Spawned by the orchestrator for a bounded sub-task. It finishes, returns clean output, and terminates.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(192, 132, 252, 0.1); border-left: 3px solid var(--purple); border-radius: 0 8px 8px 0; font-size: 13.5px; color: #e2e8f0;">
+            <strong>Superpower:</strong> Zero context pollution or memory degradation in long multi-step workflows.
+          </div>
+        </div>
+
+        <!-- Script / Tool -->
+        <div class="card" style="border-top: 6px solid var(--amber); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">⚙️</span>
+              <div>
+                <h3 style="color: var(--amber); font-size: 22px; margin: 0;">Script / Tools</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">Deterministic Code (MCP)</span>
+              </div>
+            </div>
+            <p style="font-size: 16px; color: #fff; font-weight: 700; margin-bottom: 8px;">Non-probabilistic exact execution.</p>
+            <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">Python, CLI utilities, API clients, and MCP servers that execute math, file parsing, and live data queries.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(251, 191, 36, 0.1); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; font-size: 13.5px; color: #e2e8f0;">
+            <strong>Secret:</strong> 100% mathematical accuracy, zero hallucinations, 2ms execution, $0.00 token cost.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card card-summary-row" style="background: rgba(192, 132, 252, 0.08); border-color: var(--purple); display: flex; align-items: center; justify-content: space-between; padding: 16px 26px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">🚀</span>
+          <span style="color: #cbd5e1; font-size: 17px;">
+            <strong>The Formula for AI Reliability:</strong> Use <em>Probabilistic Subagents</em> for thinking &amp; drafting, and <em>Deterministic Scripts</em> for testing &amp; validation.
+          </span>
+        </div>
+        <div class="badge purple" style="margin: 0; font-size: 14px; flex-shrink: 0;">100% Reliable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Real-Life Case Study (Overview) -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge green">💡 Real-Life Case Study</div>
+      <h2 class="slide-heading">The Autonomous SEO Engine (<code style="color: var(--accent); font-family: 'JetBrains Mono';">/seo audit</code>)</h2>
+      <p class="lead-text">Comparing the manual human agency ordeal to a fully hands-free multi-agent SEO analysis.</p>
+
+      <div class="grid-2" style="margin-bottom: 24px;">
+        <div class="card card-danger">
+          <h3 style="color: var(--rose);">The Old Manual Agency Way (15–20 Hours / $2,000)</h3>
+          <ul>
+            <li><span class="icon-cross">1.</span> <span>Crawl site in Screaming Frog &amp; Ahrefs; export 5 messy CSV spreadsheets.</span></li>
+            <li><span class="icon-cross">2.</span> <span>Paste URLs into Lighthouse &amp; Schema validators one-by-one looking for errors.</span></li>
+            <li><span class="icon-cross">3.</span> <span>Manually read 30 pages to evaluate search intent, E-E-A-T &amp; AI answer citability.</span></li>
+            <li><span class="icon-cross">4.</span> <span>Spend 2 days assembling a 60-page generic Word document for the client.</span></li>
+          </ul>
+        </div>
+
+        <div class="card card-success">
+          <h3 style="color: var(--green);">The Autonomous Multi-Agent Way (3 Minutes / $0.40)</h3>
+          <ul>
+            <li><span class="icon-check">1.</span> <span>User types: <code>/seo audit https://example.com</code></span></li>
+            <li><span class="icon-check">2.</span> <span><strong>Crawl &amp; Render Tool</strong> (Playwright) extracts full DOM, CWV &amp; indexability.</span></li>
+            <li><span class="icon-check">3.</span> <span><strong>15 Specialist Subagents</strong> fan out in parallel (Technical, E-E-A-T, Schema, GEO).</span></li>
+            <li><span class="icon-check">4.</span> <span><strong>Quality Gates</strong> enforce testability — rejecting vague or hallucinated advice.</span></li>
+            <li><span class="icon-check">5.</span> <span><strong>Orchestrator</strong> outputs 0–100 Health Score, Action Plan &amp; executive PDF.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card card-summary-row" style="background: rgba(56, 189, 248, 0.08); border-color: var(--accent); display: flex; align-items: center; justify-content: space-between; padding: 18px 30px;">
+        <div>
+          <strong style="color: #fff; font-size: 20px;">The Result:</strong>
+          <span style="color: var(--text-muted); font-size: 18px; margin-left: 10px;">Zero manual spreadsheet stitching, 100% falsifiable &amp; testable recommendations, and 90% cheaper.</span>
+        </div>
+        <div class="badge green" style="margin: 0; font-size: 16px;">100% Hands-Free</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Inside the 4-Phase Pipeline -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge green">🔍 Pipeline Breakdown</div>
+      <h2 class="slide-heading">Inside the Multi-Agent SEO Production Line</h2>
+      <p class="lead-text">Every specialist agent has a single responsibility, strict inputs &amp; outputs, and an assigned model tier.</p>
+
+      <!-- Manager Bar -->
+      <div class="manager-bar" style="background: linear-gradient(90deg, #1e3a8a, #0f172a); border: 2px solid var(--accent); border-radius: 16px; padding: 18px 26px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span style="font-size: 26px;">👑</span>
+          <div>
+            <strong style="font-size: 22px; color: #fff;">SEO ORCHESTRATOR MANAGER (/seo audit)</strong>
+            <p style="font-size: 16px; color: var(--text-muted); margin: 0;">Coordinates up to 15 parallel specialists, aggregates category scores into 0–100 health score, never audits inline.</p>
+          </div>
+        </div>
+        <div class="badge purple" style="margin: 0;">Tier: Mid / Orchestrator</div>
+      </div>
+
+      <!-- 4 Specialist Pillars Grid -->
+      <div class="grid-4">
+        <!-- Pillar 1 -->
+        <div class="phase-card" style="border-top: 5px solid var(--green);">
+          <div>
+            <div class="phase-header">
+              <span class="phase-title">PILLAR 1</span>
+              <span style="font-size: 13px; color: var(--green); font-weight: 800;">TECHNICAL</span>
+            </div>
+            <div class="phase-agent">seo-technical + crawler</div>
+            <ul class="phase-actions">
+              <li>Playwright Chromium crawl</li>
+              <li>Robots, sitemaps &amp; canonicals</li>
+              <li>Core Web Vitals (LCP, INP, CLS)</li>
+              <li>Security &amp; header inspection</li>
+            </ul>
+          </div>
+          <div class="phase-tier-badge tier-cheap">
+            <strong>Cheap Model (Flash/Haiku)</strong>
+            <span>DOM &amp; Crawl Parsing = $0.50/M</span>
+          </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="phase-card" style="border-top: 5px solid var(--purple);">
+          <div>
+            <div class="phase-header">
+              <span class="phase-title">PILLAR 2</span>
+              <span style="font-size: 13px; color: var(--purple); font-weight: 800;">E-E-A-T ★</span>
+            </div>
+            <div class="phase-agent">seo-content</div>
+            <ul class="phase-actions">
+              <li>Experience &amp; Authority audit</li>
+              <li>Search intent &amp; depth check</li>
+              <li>Thin &amp; duplicate content audit</li>
+              <li>Primary-source verification</li>
+            </ul>
+          </div>
+          <div class="phase-tier-badge tier-frontier">
+            <strong>Frontier Model (Opus/Pro)</strong>
+            <span>Deep Semantic Reasoning = $75/M</span>
+          </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="phase-card" style="border-top: 5px solid var(--amber);">
+          <div>
+            <div class="phase-header">
+              <span class="phase-title">PILLAR 3</span>
+              <span style="font-size: 13px; color: var(--amber); font-weight: 800;">SCHEMA &amp; GEO</span>
+            </div>
+            <div class="phase-agent">seo-schema + seo-geo</div>
+            <ul class="phase-actions">
+              <li>Schema.org JSON-LD validator</li>
+              <li>AI Answer Engine citability</li>
+              <li>llms.txt &amp; AI bot access audit</li>
+              <li>Rich snippet opportunity maps</li>
+            </ul>
+          </div>
+          <div class="phase-tier-badge tier-mid">
+            <strong>Mid Model (Sonnet/Flash)</strong>
+            <span>Structured Data &amp; AI SEO = $10/M</span>
+          </div>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="phase-card" style="border-top: 5px solid var(--accent);">
+          <div>
+            <div class="phase-header">
+              <span class="phase-title">PILLAR 4</span>
+              <span style="font-size: 13px; color: var(--accent); font-weight: 800;">ACTION PLAN ★</span>
+            </div>
+            <div class="phase-agent">seo-audit + reporter</div>
+            <ul class="phase-actions">
+              <li>0–100 SEO Health Score</li>
+              <li>Prioritized Roadmap (Crit/High)</li>
+              <li>Falsifiable verification tests</li>
+              <li>Automated executive PDF report</li>
+            </ul>
+          </div>
+          <div class="phase-tier-badge tier-frontier">
+            <strong>Frontier Model (Opus/Pro)</strong>
+            <span>Strategic Synthesis = $75/M</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Autonomous Quality Control -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge amber">🛡️ Autonomous Quality Control</div>
+      <h2 class="slide-heading">The Magic of Self-Correcting Quality Gates</h2>
+      <p class="lead-text">How the SEO orchestrator automatically rejects hand-waving advice and verifies every recommendation.</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--amber);">
+          <div style="font-size: 32px; margin-bottom: 8px;">📊</div>
+          <h3 style="color: #fff; font-size: 24px;">1. Falsifiability Gate</h3>
+          <p style="font-size: 17px; margin-bottom: 14px;">The Orchestrator audits subagent findings: every item must have a specific URL, root cause, and testable pass/fail check.</p>
+          <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 10px; padding: 10px 14px; color: #fca5a5; font-weight: 700; font-size: 15px;">
+            ⚠️ Rejected: "Improve site speed" is too vague (No metric or file specified)
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--purple);">
+          <div style="font-size: 32px; margin-bottom: 8px;">🔧</div>
+          <h3 style="color: #fff; font-size: 24px;">2. Surgical Re-Audit</h3>
+          <p style="font-size: 17px; margin-bottom: 14px;">The Manager triggers <strong>seo-performance</strong> with strict parameters to pinpoint the exact render-blocking script and LCP element.</p>
+          <div style="background: rgba(192, 132, 252, 0.15); border: 1px solid #c084fc; border-radius: 10px; padding: 10px 14px; color: #e9d5ff; font-weight: 700; font-size: 15px;">
+            ⚡ Pinpointed: Defer `app.js` (480ms) + preload hero image (LCP improved by 1.2s)
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div style="font-size: 32px; margin-bottom: 8px;">✅</div>
+          <h3 style="color: #fff; font-size: 24px;">3. Quality Gate Passed</h3>
+          <p style="font-size: 17px; margin-bottom: 14px;">Findings pass syntax linting &amp; evidence checks. The Manager compiles the final prioritized audit roadmap.</p>
+          <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; border-radius: 10px; padding: 10px 14px; color: #86efac; font-weight: 700; font-size: 15px;">
+            🎉 Verified: 100% testable action items ready for developer execution
+          </div>
+        </div>
+      </div>
+
+      <div class="quote-callout">
+        <strong>The Rule:</strong> Never accept generic AI hallucinations. Build automated quality gates that demand evidence, testable verification steps, and exact code fixes.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Real-World Results & Client Testimonials -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge green">🌟 Real-World Results &amp; Client Proof</div>
+      <h2 class="slide-heading">Direct Business Impact: Inbound Clients via AI Search</h2>
+      <p class="lead-text">What happens when your autonomous pipeline consistently publishes authoritative, high-ranking content.</p>
+
+      <div class="grid-testimonial">
+        <!-- Left: Client Photo & Highlights -->
+        <div class="card" style="border-top: 6px solid var(--accent); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px 24px; justify-content: space-between;">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <div class="testimonial-avatar-box" style="position: relative; width: 180px; height: 180px; margin-bottom: 16px;">
+              <img src="assets/client-photo.jpg" alt="Client Testimonial" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--accent); box-shadow: 0 12px 32px rgba(56, 189, 248, 0.35);" />
+              <div style="position: absolute; bottom: 6px; right: 10px; background: #22c55e; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--bg-card);" title="Active Real-World Results"></div>
+            </div>
+            <div class="badge green" style="margin-bottom: 10px; font-size: 13px; padding: 6px 14px;">✓ Verified Client Result</div>
+            <p style="font-size: 16px; color: var(--text-muted); line-height: 1.45;">Direct qualified leads and professional referrals driven by autonomous AI workflows.</p>
+          </div>
+
+          <div style="width: 100%; border-top: 1px solid var(--border); padding-top: 16px; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; text-align: left;">
+            <div style="font-size: 14px; color: #86efac; display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: bold;">⚡</span> Relocation Buyer Call
+            </div>
+            <div style="font-size: 14px; color: #c084fc; display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: bold;">⚡</span> Out-of-State Realtor Referral
+            </div>
+            <div style="font-size: 14px; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: bold;">⚡</span> Organic ChatGPT Discovery
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: The 2 Testimonial Cards -->
+        <div style="display: flex; flex-direction: column; gap: 18px; justify-content: space-between;">
+          
+          <!-- Testimonial 1 -->
+          <div class="card" style="border-left: 6px solid var(--green); padding: 22px 26px; background: linear-gradient(135deg, rgba(14, 23, 42, 0.95) 0%, rgba(13, 34, 28, 0.5) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="badge green" style="margin: 0; font-size: 13px; padding: 4px 12px;">💬 Client Feedback 1 • Inbound Buyer Call</span>
+              <span style="font-size: 24px; color: var(--green); line-height: 1;">“</span>
+            </div>
+            <p style="font-size: 17px; line-height: 1.55; color: #f8fafc; font-style: italic; margin-bottom: 10px;">
+              “Thank you for sending this over. I really appreciate everything you’re doing, and I especially want to recognize that your work is the reason I’m starting to show up in ChatGPT searches.”
+            </p>
+            <p style="font-size: 17px; line-height: 1.55; color: #cbd5e1; font-style: italic; margin: 0;">
+              “This past weekend, I received a call from a client who found me through ChatGPT. He’s relocating from Florida to the Fredericksburg area for a job at one of the local data centers. That was really exciting and made the results you’re getting for me feel very real, so thank you!”
+            </p>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="card" style="border-left: 6px solid var(--purple); padding: 22px 26px; background: linear-gradient(135deg, rgba(14, 23, 42, 0.95) 0%, rgba(28, 14, 34, 0.5) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="badge purple" style="margin: 0; font-size: 13px; padding: 4px 12px;">💬 Client Feedback 2 • Realtor Referral</span>
+              <span style="font-size: 24px; color: var(--purple); line-height: 1;">“</span>
+            </div>
+            <p style="font-size: 17px; line-height: 1.55; color: #f8fafc; font-style: italic; margin: 0;">
+              “Hey! I wanted to share something exciting with you! I got a call today from a Realtor in Alabama who is referring a client/friend to me, and he told me he found me through ChatGPT.”
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="quote-callout" style="margin-top: 20px; padding: 16px 24px; font-size: 18px;">
+        <strong>The Takeaway:</strong> Autonomous content pipelines don't just generate articles — they establish authority that LLMs cite and recommend to high-intent clients looking for local expertise.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: The "Manager Never Writes" Principle -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge amber">👑 The Golden Rule</div>
+      <h2 class="slide-heading">Why the Manager Never Writes</h2>
+      <p class="lead-text">The critical system principle that keeps complex multi-agent analysis completely reliable at scale.</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div style="font-size: 38px; margin-bottom: 12px;">🧠</div>
+          <h3 style="color: var(--accent);">1. Clean Headspace</h3>
+          <p>When an AI inspects 500 pages of raw HTML, its context window gets flooded. A dedicated manager delegates pages to worker agents, keeping its context clean to synthesize high-level strategy without hallucination.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--purple);">
+          <div style="font-size: 38px; margin-bottom: 12px;">🛡️</div>
+          <h3 style="color: var(--purple);">2. Objective Verification</h3>
+          <p>An agent that generates Schema markup will assume it's valid. Delegating validation to independent deterministic tools (Playwright / JSON-LD linters) guarantees 100% unbiased, syntax-perfect execution.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div style="font-size: 38px; margin-bottom: 12px;">🔄</div>
+          <h3 style="color: var(--green);">3. Surgical Retries</h3>
+          <p>If the technical audit passes but Schema markup fails, the manager only re-spawns the <strong>seo-schema</strong> subagent with the exact syntax error, preventing expensive full-site re-audits.</p>
+        </div>
+      </div>
+
+      <div class="quote-callout">
+        <strong>The General Contractor Metaphor:</strong> A General Contractor does not pour concrete, wire electrical panels, or paint drywall. The Contractor inspects blueprints, coordinates licensed specialists, and enforces building code compliance.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Cost Math & ROI -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge green">💰 The Cost Revolution</div>
+      <h2 class="slide-heading">Why Model Routing Saves 85–90%</h2>
+      <p class="lead-text">Comparing monthly operational costs for 100 full-site deep SEO audits.</p>
+
+      <div class="card" style="margin-bottom: 28px; padding: 32px 36px;">
+        <div style="margin-bottom: 24px;">
+          <div class="cost-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <strong style="font-size: 22px; color: #fca5a5;">APPROACH A: The "All-in-One Chat" (Always Frontier / Opus / Pro)</strong>
+              <p style="font-size: 16px; color: var(--text-muted); margin: 0;">Running research, outlining, writing, QA, and HTML formatting on \$75/M tokens</p>
+            </div>
+            <span style="font-size: 28px; font-weight: 900; color: #f87171;">\$250.00 / mo</span>
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.2); border: 1.5px solid #ef4444; border-radius: 12px; height: 38px; width: 100%; display: flex; align-items: center; padding: 0 16px;">
+            <span style="font-size: 15px; font-weight: 800; color: #fff;">100% High-Cost Frontier Model Usage (High Waste on Mechanical Work)</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="cost-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <strong style="font-size: 22px; color: #86efac;">APPROACH B: Smart Delegation (Skill Forge + AI Delegation)</strong>
+              <p style="font-size: 16px; color: var(--text-muted); margin: 0;">Frontier ONLY for E-E-A-T analysis &amp; executive roadmap (20%), Cheap/Fast for HTML parsing &amp; stats (80%)</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span class="badge green" style="margin: 0; font-size: 15px;">⚡ 88.6% SAVINGS</span>
+              <span style="font-size: 28px; font-weight: 900; color: #4ade80;">\$28.50 / mo</span>
+            </div>
+          </div>
+          <div style="background: rgba(34, 197, 94, 0.25); border: 1.5px solid #22c55e; border-radius: 12px; height: 38px; width: 12%; min-width: 160px; display: flex; align-items: center; padding: 0 16px;">
+            <span style="font-size: 15px; font-weight: 800; color: #fff;">Smart Routing</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div style="font-size: 30px; font-weight: 900; color: var(--accent); margin-bottom: 6px;">1. Zero Quality Loss</div>
+          <p>The deep E-E-A-T analysis and strategic synthesis are still done by the best model in the world. Only repetitive mechanical crawl tasks are offloaded.</p>
+        </div>
+        <div class="card">
+          <div style="font-size: 30px; font-weight: 900; color: var(--green); margin-bottom: 6px;">2. 5x Faster Speed</div>
+          <p>Cheap models (Flash / Haiku) respond in milliseconds, making data fetching and formatting feel instantaneous.</p>
+        </div>
+        <div class="card">
+          <div style="font-size: 30px; font-weight: 900; color: var(--amber); margin-bottom: 6px;">3. Predictable Scale</div>
+          <p>Produce 10x more content, reports, or research summaries without your AI budget exploding exponentially.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Model Tiers Demystified -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge">🧮 Model Tiers Demystified</div>
+      <h2 class="slide-heading">Frontier vs Fast Models: The Real Breakdown</h2>
+      <p class="lead-text">How to choose the right AI brain for each specific business responsibility.</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--purple);">
+          <div class="badge purple" style="margin-bottom: 12px;">FRONTIER TIER</div>
+          <h3 style="color: #fff; font-size: 30px;">Top-Tier Intelligence</h3>
+          <p style="color: var(--amber); font-weight: 800; font-size: 24px; margin-bottom: 16px;">\$15 – \$75 / Million Tokens</p>
+          <p style="margin-bottom: 16px; font-style: italic; color: #cbd5e1; font-size: 21px;">Claude Opus, GPT-4o / O3, Gemini Pro</p>
+          <p style="font-size: 20px;"><strong style="color:#fff;">Best for:</strong> Nuanced creative writing, executive strategy, brand voice tone, complex reasoning.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div class="badge" style="margin-bottom: 12px;">MID TIER</div>
+          <h3 style="color: #fff; font-size: 30px;">Balanced Workhorses</h3>
+          <p style="color: var(--accent); font-weight: 800; font-size: 24px; margin-bottom: 16px;">\$3 – \$15 / Million Tokens</p>
+          <p style="margin-bottom: 16px; font-style: italic; color: #cbd5e1; font-size: 21px;">Claude Sonnet, Gemini Flash Thinking</p>
+          <p style="font-size: 20px;"><strong style="color:#fff;">Best for:</strong> Orchestrator management, editorial QA review, deep research synthesis.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div class="badge green" style="margin-bottom: 12px;">FAST / CHEAP TIER</div>
+          <h3 style="color: #fff; font-size: 30px;">High-Speed Executors</h3>
+          <p style="color: var(--green); font-weight: 800; font-size: 24px; margin-bottom: 16px;">\$0.10 – \$1.00 / Million Tokens</p>
+          <p style="margin-bottom: 16px; font-style: italic; color: #cbd5e1; font-size: 21px;">Gemini Flash, Claude Haiku, GPT-4o-mini</p>
+          <p style="font-size: 20px;"><strong style="color:#fff;">Best for:</strong> API querying, HTML formatting, data extraction, keyword categorization.</p>
+        </div>
+      </div>
+
+      <div class="quote-callout">
+        <strong>The Key Insight:</strong> In our real-life blog workflow, 75% of the total tokens are mechanical (API responses and HTML tags). Routing those to cheap models is what drops costs from <strong>\$250 to \$28</strong>.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: 3 Other Everyday Workforces -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge purple">🏢 Practical Business Applications</div>
+      <h2 class="slide-heading">3 Other Workforces Anyone Can Build</h2>
+      <p class="lead-text">This isn't just for SEO audits — you can automate almost any multi-step business process.</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div style="font-size: 36px; margin-bottom: 10px;">🎯</div>
+          <h3 style="color: var(--accent); font-size: 24px;">Lead Enrichment &amp; Outreach</h3>
+          <p style="font-size: 18px; margin-bottom: 14px;"><strong>Agents:</strong> Scraper ➔ Company Analyst ➔ Personalized Email Writer ➔ CRM Sync.</p>
+          <p style="font-size: 16px; color: #cbd5e1;">Turn a raw list of URLs into highly personalized, researched outreach emails in your CRM automatically.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div style="font-size: 36px; margin-bottom: 10px;">🎧</div>
+          <h3 style="color: var(--green); font-size: 24px;">Customer Support QA Audit</h3>
+          <p style="font-size: 18px; margin-bottom: 14px;"><strong>Agents:</strong> Ticket Parser ➔ Compliance Auditor ➔ Sentiment Scorer ➔ Executive Digest.</p>
+          <p style="font-size: 16px; color: #cbd5e1;">Review 1,000 support tickets weekly for tone and policy compliance without human auditors.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--amber);">
+          <div style="font-size: 36px; margin-bottom: 10px;">📊</div>
+          <h3 style="color: var(--amber); font-size: 24px;">Weekly Competitor Intel</h3>
+          <p style="font-size: 18px; margin-bottom: 14px;"><strong>Agents:</strong> Web Monitor ➔ Pricing Extractor ➔ Feature Gap Analyst ➔ Slide Generator.</p>
+          <p style="font-size: 16px; color: #cbd5e1;">Wake up Monday morning with an executive brief on competitor pricing and product releases.</p>
+        </div>
+      </div>
+
+      <div class="quote-callout">
+        <strong>The Pattern:</strong> Any job where you currently copy-paste between 3 tabs can become a 1-click autonomous skill.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Decision Matrix -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge amber">🧭 Practical Guidance</div>
+      <h2 class="slide-heading">When to Chat vs When to Build a Skill</h2>
+      <p class="lead-text">A simple rule of thumb for deciding when single chat works vs when to delegate.</p>
+
+      <div class="grid-2">
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div class="badge" style="margin-bottom: 12px;">💬 QUICK &amp; ONE-OFF</div>
+          <h3 style="color: var(--accent); font-size: 32px;">When to Use a Single Chat</h3>
+          <p style="margin-bottom: 20px;">Use standard ChatGPT / Claude when tasks are exploratory or quick.</p>
+          <ul>
+            <li><span class="icon-check">1</span> <span><strong>Brainstorming &amp; Ideation:</strong> Throwing messy ideas back and forth with AI.</span></li>
+            <li><span class="icon-check">2</span> <span><strong>Quick Q&amp;A or One-Off Emails:</strong> Tasks taking under 1 minute to explain and finish.</span></li>
+            <li><span class="icon-check">3</span> <span><strong>Evolving, Undefined Goals:</strong> When you don't know what the final deliverable is yet.</span></li>
+          </ul>
+          <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; margin-top: 24px;">
+            <strong style="color: #fff; font-size: 18px;">Recommended Action:</strong>
+            <p style="font-size: 16px; margin: 4px 0 0 0; color: #cbd5e1;">Open your chat window, type a quick prompt, get an immediate answer.</p>
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div class="badge green" style="margin-bottom: 12px;">⚡ REPEATABLE &amp; MULTI-STEP</div>
+          <h3 style="color: var(--green); font-size: 32px;">When to Build a Skill &amp; Delegate</h3>
+          <p style="margin-bottom: 20px;">Where packaging into a skill creates compounding 10x leverage.</p>
+          <ul>
+            <li><span class="icon-check">1</span> <span><strong>Multi-Step Workflows:</strong> Crawl → Technical Audit → E-E-A-T Review → Schema Validation → Action Plan.</span></li>
+            <li><span class="icon-check">2</span> <span><strong>Strict Quality &amp; Brand Standards:</strong> When an automated reviewer is needed to guarantee 90+ score.</span></li>
+            <li><span class="icon-check">3</span> <span><strong>Tasks You Do &gt;2x a Week:</strong> Turn repetitive human time into 1-click execution.</span></li>
+          </ul>
+          <div style="background: rgba(74, 222, 128, 0.1); border: 1px solid var(--green); border-radius: 12px; padding: 14px 18px; margin-top: 24px;">
+            <strong style="color: #fff; font-size: 18px;">Recommended Action:</strong>
+            <p style="font-size: 16px; margin: 4px 0 0 0; color: #cbd5e1;">Package SOP with Skill Forge + assign model tiers with AI Delegation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: 4-Step Playbook -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge green">🚀 Implementation Guide</div>
+      <h2 class="slide-heading">The 4-Step Playbook for Anyone</h2>
+      <p class="lead-text">How non-technical creators and teams transition from manual prompt chains to automated pipelines.</p>
+
+      <div class="grid-4">
+        <div class="card" style="border-top: 6px solid var(--accent); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge" style="margin-bottom: 10px;">STEP 1</div>
+            <h3 style="color: var(--accent); font-size: 24px;">Package SOP</h3>
+            <p style="font-size: 17px; margin-bottom: 16px;">Write down the exact steps, inputs, brand voice, and rules using <strong>Skill Forge</strong>.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 16px;">
+              <li style="font-size: 16px; margin-bottom: 8px;">• Define clear inputs/outputs</li>
+              <li style="font-size: 16px; margin-bottom: 8px;">• Embed brand guidelines</li>
+              <li style="font-size: 16px;">• Break into phases</li>
+            </ul>
+          </div>
+          <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin-top: 16px; text-align: center;">
+            <strong style="color: #fff; font-size: 15px;">✓ Reusable SOP Built</strong>
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--purple); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge purple" style="margin-bottom: 10px;">STEP 2</div>
+            <h3 style="color: var(--purple); font-size: 24px;">Assign Manager</h3>
+            <p style="font-size: 17px; margin-bottom: 16px;">Create a dedicated Orchestrator that delegates each phase cleanly.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 16px;">
+              <li style="font-size: 16px; margin-bottom: 8px;">• Manager never writes</li>
+              <li style="font-size: 16px; margin-bottom: 8px;">• Spawns isolated workers</li>
+              <li style="font-size: 16px;">• Clean data handoffs</li>
+            </ul>
+          </div>
+          <div style="background: rgba(192, 132, 252, 0.1); border: 1px solid var(--purple); border-radius: 10px; padding: 10px 14px; margin-top: 16px; text-align: center;">
+            <strong style="color: #fff; font-size: 15px;">✓ Zero Hallucinations</strong>
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge green" style="margin-bottom: 10px;">STEP 3</div>
+            <h3 style="color: var(--green); font-size: 24px;">Route Models</h3>
+            <p style="font-size: 17px; margin-bottom: 16px;">Use <strong>AI Delegation</strong> to assign the most cost-effective model tier to each subagent.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 16px;">
+              <li style="font-size: 16px; margin-bottom: 8px;">• Research ➔ \$0.50 model</li>
+              <li style="font-size: 16px; margin-bottom: 8px;">• Drafting ➔ Frontier model</li>
+              <li style="font-size: 16px;">• Publishing ➔ Fast model</li>
+            </ul>
+          </div>
+          <div style="background: rgba(74, 222, 128, 0.1); border: 1px solid var(--green); border-radius: 10px; padding: 10px 14px; margin-top: 16px; text-align: center;">
+            <strong style="color: #fff; font-size: 15px;">✓ 90% Cost Cut</strong>
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--amber); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="badge amber" style="margin-bottom: 10px;">STEP 4</div>
+            <h3 style="color: var(--amber); font-size: 24px;">1-Click Scale</h3>
+            <p style="font-size: 17px; margin-bottom: 16px;">Trigger the whole workflow with a single command and let the system run.</p>
+            <ul style="border-top: 1px solid var(--border); padding-top: 12px; font-size: 16px;">
+              <li style="font-size: 16px; margin-bottom: 8px;">• 1-click execution</li>
+              <li style="font-size: 16px; margin-bottom: 8px;">• Automated QA check</li>
+              <li style="font-size: 16px;">• 10x weekly output</li>
+            </ul>
+          </div>
+          <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid var(--amber); border-radius: 10px; padding: 10px 14px; margin-top: 16px; text-align: center;">
+            <strong style="color: #fff; font-size: 15px;">✓ Pure Leverage</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: Open Source Repositories & QR Codes (NEW) -->
+  <div class="slide">
+    <div class="slide-container" style="text-align: center; align-items: center;">
+      <div class="badge green">📱 Scan &amp; Star on GitHub</div>
+      <h2 class="slide-heading" style="font-size: 44px; margin-bottom: 6px;">Open Source Repositories &amp; Skills</h2>
+      <p class="lead-text" style="font-size: 21px; margin-bottom: 30px; color: #cbd5e1;">
+        Scan the QR codes with your phone or click the links to explore, star, and install the open-source frameworks.
+      </p>
+
+      <div class="grid-4" style="text-align: center; width: 100%;">
+
+        <!-- Repo 1: ai-delegation -->
+        <div class="card" style="border-top: 6px solid var(--green); padding: 20px 14px;">
+          <div class="qr-box" style="width: 140px; height: 140px; margin-bottom: 12px; padding: 8px;">
+            <!-- QR SVG: ai-delegation -->
+            <svg viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM13,2H14V3H13zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM25,2H26V3H25zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM31,2H32V3H31zM32,2H33V3H32zM33,2H34V3H33zM34,2H35V3H34zM2,3H3V4H2zM8,3H9V4H8zM14,3H15V4H14zM17,3H18V4H17zM20,3H21V4H20zM22,3H23V4H22zM23,3H24V4H23zM28,3H29V4H28zM34,3H35V4H34zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM10,4H11V5H10zM12,4H13V5H12zM13,4H14V5H13zM14,4H15V5H14zM16,4H17V5H16zM17,4H18V5H17zM18,4H19V5H18zM21,4H22V5H21zM22,4H23V5H22zM23,4H24V5H23zM24,4H25V5H24zM28,4H29V5H28zM30,4H31V5H30zM31,4H32V5H31zM32,4H33V5H32zM34,4H35V5H34zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM12,5H13V6H12zM14,5H15V6H14zM17,5H18V6H17zM20,5H21V6H20zM21,5H22V6H21zM23,5H24V6H23zM26,5H27V6H26zM28,5H29V6H28zM30,5H31V6H30zM31,5H32V6H31zM32,5H33V6H32zM34,5H35V6H34zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM11,6H12V7H11zM13,6H14V7H13zM14,6H15V7H14zM15,6H16V7H15zM16,6H17V7H16zM17,6H18V7H17zM18,6H19V7H18zM22,6H23V7H22zM23,6H24V7H23zM24,6H25V7H24zM28,6H29V7H28zM30,6H31V7H30zM31,6H32V7H31zM32,6H33V7H32zM34,6H35V7H34zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM11,7H12V8H11zM12,7H13V8H12zM15,7H16V8H15zM16,7H17V8H16zM19,7H20V8H19zM20,7H21V8H20zM21,7H22V8H21zM25,7H26V8H25zM26,7H27V8H26zM28,7H29V8H28zM34,7H35V8H34zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM26,8H27V9H26zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM31,8H32V9H31zM32,8H33V9H32zM33,8H34V9H33zM34,8H35V9H34zM10,9H11V10H10zM11,9H12V10H11zM12,9H13V10H12zM13,9H14V10H13zM16,9H17V10H16zM18,9H19V10H18zM21,9H22V10H21zM22,9H23V10H22zM23,9H24V10H23zM25,9H26V10H25zM2,10H3V11H2zM4,10H5V11H4zM5,10H6V11H5zM6,10H7V11H6zM7,10H8V11H7zM8,10H9V11H8zM11,10H12V11H11zM13,10H14V11H13zM15,10H16V11H15zM16,10H17V11H16zM19,10H20V11H19zM21,10H22V11H21zM25,10H26V11H25zM28,10H29V11H28zM29,10H30V11H29zM30,10H31V11H30zM31,10H32V11H31zM32,10H33V11H32zM3,11H4V12H3zM4,11H5V12H4zM7,11H8V12H7zM9,11H10V12H9zM12,11H13V12H12zM13,11H14V12H13zM14,11H15V12H14zM15,11H16V12H15zM18,11H19V12H18zM19,11H20V12H19zM21,11H22V12H21zM22,11H23V12H22zM25,11H26V12H25zM28,11H29V12H28zM29,11H30V12H29zM31,11H32V12H31zM32,11H33V12H32zM34,11H35V12H34zM2,12H3V13H2zM3,12H4V13H3zM6,12H7V13H6zM8,12H9V13H8zM10,12H11V13H10zM11,12H12V13H11zM12,12H13V13H12zM13,12H14V13H13zM15,12H16V13H15zM16,12H17V13H16zM17,12H18V13H17zM18,12H19V13H18zM19,12H20V13H19zM22,12H23V13H22zM24,12H25V13H24zM26,12H27V13H26zM30,12H31V13H30zM32,12H33V13H32zM33,12H34V13H33zM2,13H3V14H2zM4,13H5V14H4zM6,13H7V14H6zM7,13H8V14H7zM9,13H10V14H9zM10,13H11V14H10zM11,13H12V14H11zM12,13H13V14H12zM13,13H14V14H13zM14,13H15V14H14zM15,13H16V14H15zM17,13H18V14H17zM18,13H19V14H18zM19,13H20V14H19zM20,13H21V14H20zM22,13H23V14H22zM26,13H27V14H26zM27,13H28V14H27zM30,13H31V14H30zM31,13H32V14H31zM32,13H33V14H32zM33,13H34V14H33zM3,14H4V15H3zM4,14H5V15H4zM5,14H6V15H5zM6,14H7V15H6zM8,14H9V15H8zM12,14H13V15H12zM13,14H14V15H13zM16,14H17V15H16zM17,14H18V15H17zM18,14H19V15H18zM21,14H22V15H21zM22,14H23V15H22zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM27,14H28V15H27zM29,14H30V15H29zM30,14H31V15H30zM31,14H32V15H31zM33,14H34V15H33zM34,14H35V15H34zM10,15H11V16H10zM12,15H13V16H12zM13,15H14V16H13zM15,15H16V16H15zM17,15H18V16H17zM20,15H21V16H20zM26,15H27V16H26zM27,15H28V16H27zM28,15H29V16H28zM31,15H32V16H31zM32,15H33V16H32zM33,15H34V16H33zM34,15H35V16H34zM3,16H4V17H3zM4,16H5V17H4zM7,16H8V17H7zM8,16H9V17H8zM12,16H13V17H12zM13,16H14V17H13zM14,16H15V17H14zM15,16H16V17H15zM17,16H18V17H17zM18,16H19V17H18zM22,16H23V17H22zM24,16H25V17H24zM26,16H27V17H26zM27,16H28V17H27zM28,16H29V17H28zM30,16H31V17H30zM32,16H33V17H32zM33,16H34V17H33zM3,17H4V18H3zM5,17H6V18H5zM7,17H8V18H7zM9,17H10V18H9zM12,17H13V18H12zM15,17H16V18H15zM17,17H18V18H17zM20,17H21V18H20zM23,17H24V18H23zM25,17H26V18H25zM27,17H28V18H27zM28,17H29V18H28zM31,17H32V18H31zM32,17H33V18H32zM2,18H3V19H2zM4,18H5V19H4zM7,18H8V19H7zM8,18H9V19H8zM16,18H17V19H16zM17,18H18V19H17zM18,18H19V19H18zM19,18H20V19H19zM24,18H25V19H24zM25,18H26V19H25zM26,18H27V19H26zM27,18H28V19H27zM29,18H30V19H29zM30,18H31V19H30zM34,18H35V19H34zM2,19H3V20H2zM6,19H7V20H6zM9,19H10V20H9zM10,19H11V20H10zM11,19H12V20H11zM18,19H19V20H18zM20,19H21V20H20zM22,19H23V20H22zM23,19H24V20H23zM25,19H26V20H25zM28,19H29V20H28zM29,19H30V20H29zM31,19H32V20H31zM32,19H33V20H32zM34,19H35V20H34zM2,20H3V21H2zM3,20H4V21H3zM6,20H7V21H6zM8,20H9V21H8zM9,20H10V21H9zM10,20H11V21H10zM11,20H12V21H11zM12,20H13V21H12zM15,20H16V21H15zM16,20H17V21H16zM17,20H18V21H17zM18,20H19V21H18zM20,20H21V21H20zM22,20H23V21H22zM23,20H24V21H23zM26,20H27V21H26zM27,20H28V21H27zM29,20H30V21H29zM30,20H31V21H30zM32,20H33V21H32zM5,21H6V22H5zM7,21H8V22H7zM16,21H17V22H16zM18,21H19V22H18zM21,21H22V22H21zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM29,21H30V22H29zM30,21H31V22H30zM31,21H32V22H31zM32,21H33V22H32zM33,21H34V22H33zM3,22H4V23H3zM8,22H9V23H8zM13,22H14V23H13zM20,22H21V23H20zM21,22H22V23H21zM23,22H24V23H23zM26,22H27V23H26zM27,22H28V23H27zM29,22H30V23H29zM30,22H31V23H30zM31,22H32V23H31zM34,22H35V23H34zM2,23H3V24H2zM3,23H4V24H3zM6,23H7V24H6zM7,23H8V24H7zM9,23H10V24H9zM11,23H12V24H11zM13,23H14V24H13zM16,23H17V24H16zM17,23H18V24H17zM18,23H19V24H18zM22,23H23V24H22zM23,23H24V24H23zM24,23H25V24H24zM25,23H26V24H25zM28,23H29V24H28zM31,23H32V24H31zM32,23H33V24H32zM34,23H35V24H34zM2,24H3V25H2zM6,24H7V25H6zM7,24H8V25H7zM8,24H9V25H8zM10,24H11V25H10zM12,24H13V25H12zM16,24H17V25H16zM20,24H21V25H20zM21,24H22V25H21zM27,24H28V25H27zM31,24H32V25H31zM32,24H33V25H32zM33,24H34V25H33zM2,25H3V26H2zM6,25H7V26H6zM11,25H12V26H11zM15,25H16V26H15zM16,25H17V26H16zM18,25H19V26H18zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM27,25H28V26H27zM28,25H29V26H28zM31,25H32V26H31zM32,25H33V26H32zM33,25H34V26H33zM34,25H35V26H34zM2,26H3V27H2zM4,26H5V27H4zM6,26H7V27H6zM8,26H9V27H8zM10,26H11V27H10zM11,26H12V27H11zM12,26H13V27H12zM15,26H16V27H15zM21,26H22V27H21zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26zM27,26H28V27H27zM28,26H29V27H28zM29,26H30V27H29zM30,26H31V27H30zM34,26H35V27H34zM10,27H11V28H10zM12,27H13V28H12zM13,27H14V28H13zM16,27H17V28H16zM18,27H19V28H18zM19,27H20V28H19zM20,27H21V28H20zM21,27H22V28H21zM25,27H26V28H25zM26,27H27V28H26zM30,27H31V28H30zM32,27H33V28H32zM34,27H35V28H34zM2,28H3V29H2zM3,28H4V29H3zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM7,28H8V29H7zM8,28H9V29H8zM11,28H12V29H11zM13,28H14V29H13zM15,28H16V29H15zM16,28H17V29H16zM17,28H18V29H17zM18,28H19V29H18zM19,28H20V29H19zM22,28H23V29H22zM24,28H25V29H24zM25,28H26V29H25zM26,28H27V29H26zM28,28H29V29H28zM30,28H31V29H30zM32,28H33V29H32zM33,28H34V29H33zM2,29H3V30H2zM8,29H9V30H8zM10,29H11V30H10zM11,29H12V30H11zM13,29H14V30H13zM17,29H18V30H17zM19,29H20V30H19zM20,29H21V30H20zM22,29H23V30H22zM25,29H26V30H25zM26,29H27V30H26zM30,29H31V30H30zM31,29H32V30H31zM32,29H33V30H32zM33,29H34V30H33zM2,30H3V31H2zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM8,30H9V31H8zM10,30H11V31H10zM11,30H12V31H11zM13,30H14V31H13zM14,30H15V31H14zM17,30H18V31H17zM18,30H19V31H18zM21,30H22V31H21zM22,30H23V31H22zM23,30H24V31H23zM24,30H25V31H24zM26,30H27V31H26zM27,30H28V31H27zM28,30H29V31H28zM29,30H30V31H29zM30,30H31V31H30zM31,30H32V31H31zM2,31H3V32H2zM4,31H5V32H4zM5,31H6V32H5zM6,31H7V32H6zM8,31H9V32H8zM10,31H11V32H10zM11,31H12V32H11zM12,31H13V32H12zM13,31H14V32H13zM14,31H15V32H14zM15,31H16V32H15zM17,31H18V32H17zM20,31H21V32H20zM25,31H26V32H25zM26,31H27V32H26zM27,31H28V32H27zM30,31H31V32H30zM31,31H32V32H31zM34,31H35V32H34zM2,32H3V33H2zM4,32H5V33H4zM5,32H6V33H5zM6,32H7V33H6zM8,32H9V33H8zM10,32H11V33H10zM11,32H12V33H11zM14,32H15V33H14zM15,32H16V33H15zM16,32H17V33H16zM17,32H18V33H17zM18,32H19V33H18zM22,32H23V33H22zM24,32H25V33H24zM28,32H29V33H28zM29,32H30V33H29zM32,32H33V33H32zM2,33H3V34H2zM8,33H9V34H8zM11,33H12V34H11zM16,33H17V34H16zM17,33H18V34H17zM20,33H21V34H20zM23,33H24V34H23zM24,33H25V34H24zM28,33H29V34H28zM30,33H31V34H30zM31,33H32V34H31zM32,33H33V34H32zM2,34H3V35H2zM3,34H4V35H3zM4,34H5V35H4zM5,34H6V35H5zM6,34H7V35H6zM7,34H8V35H7zM8,34H9V35H8zM10,34H11V35H10zM11,34H12V35H11zM15,34H16V35H15zM17,34H18V35H17zM19,34H20V35H19zM24,34H25V35H24zM25,34H26V35H25zM26,34H27V35H26zM27,34H28V35H27zM29,34H30V35H29zM33,34H34V35H33z" fill="#000"/></svg>
+          </div>
+          <h3 style="color: var(--green); font-size: 21px; margin-bottom: 4px;">ai-delegation</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">by <strong>MostaDaoud</strong></p>
+          <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px; min-height: 38px;">Multi-agent orchestrator &amp; 90% cost savings engine.</p>
+          <a href="https://github.com/MostaDaoud/ai-delegation" target="_blank" class="repo-btn" style="padding: 7px 10px; font-size: 12px;">
+            <span>github.com/MostaDaoud/ai-delegation</span>
+          </a>
+        </div>
+
+        <!-- Repo 2: claude-seo -->
+        <div class="card" style="border-top: 6px solid var(--amber); padding: 20px 14px;">
+          <div class="qr-box" style="width: 140px; height: 140px; margin-bottom: 12px; padding: 8px;">
+            <!-- QR SVG: claude-seo -->
+            <svg viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM11,2H12V3H11zM12,2H13V3H12zM16,2H17V3H16zM17,2H18V3H17zM19,2H20V3H19zM20,2H21V3H20zM21,2H22V3H21zM24,2H25V3H24zM25,2H26V3H25zM26,2H27V3H26zM27,2H28V3H27zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM2,3H3V4H2zM8,3H9V4H8zM16,3H17V4H16zM17,3H18V4H17zM19,3H20V4H19zM24,3H25V4H24zM30,3H31V4H30zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM11,4H12V5H11zM12,4H13V5H12zM19,4H20V5H19zM21,4H22V5H21zM24,4H25V5H24zM26,4H27V5H26zM27,4H28V5H27zM28,4H29V5H28zM30,4H31V5H30zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM13,5H14V6H13zM14,5H15V6H14zM16,5H17V6H16zM17,5H18V6H17zM18,5H19V6H18zM20,5H21V6H20zM21,5H22V6H21zM22,5H23V6H22zM24,5H25V6H24zM26,5H27V6H26zM27,5H28V6H27zM28,5H29V6H28zM30,5H31V6H30zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM11,6H12V7H11zM12,6H13V7H12zM13,6H14V7H13zM15,6H16V7H15zM16,6H17V7H16zM17,6H18V7H17zM18,6H19V7H18zM20,6H21V7H20zM24,6H25V7H24zM26,6H27V7H26zM27,6H28V7H27zM28,6H29V7H28zM30,6H31V7H30zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM13,7H14V8H13zM15,7H16V8H15zM17,7H18V8H17zM18,7H19V8H18zM19,7H20V8H19zM21,7H22V8H21zM24,7H25V8H24zM30,7H31V8H30zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM25,8H26V9H25zM26,8H27V9H26zM27,8H28V9H27zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM16,9H17V10H16zM17,9H18V10H17zM18,9H19V10H18zM19,9H20V10H19zM20,9H21V10H20zM21,9H22V10H21zM22,9H23V10H22zM2,10H3V11H2zM5,10H6V11H5zM7,10H8V11H7zM8,10H9V11H8zM10,10H11V11H10zM11,10H12V11H11zM13,10H14V11H13zM15,10H16V11H15zM18,10H19V11H18zM23,10H24V11H23zM25,10H26V11H25zM2,11H3V12H2zM6,11H7V12H6zM7,11H8V12H7zM9,11H10V12H9zM10,11H11V12H10zM11,11H12V12H11zM13,11H14V12H13zM14,11H15V12H14zM18,11H19V12H18zM22,11H23V12H22zM24,11H25V12H24zM27,11H28V12H27zM30,11H31V12H30zM2,12H3V13H2zM3,12H4V13H3zM4,12H5V13H4zM7,12H8V13H7zM8,12H9V13H8zM9,12H10V13H9zM11,12H12V13H11zM14,12H15V13H14zM15,12H16V13H15zM20,12H21V13H20zM21,12H22V13H21zM23,12H24V13H23zM26,12H27V13H26zM27,12H28V13H27zM28,12H29V13H28zM29,12H30V13H29zM4,13H5V14H4zM6,13H7V14H6zM7,13H8V14H7zM9,13H10V14H9zM10,13H11V14H10zM11,13H12V14H11zM13,13H14V14H13zM14,13H15V14H14zM15,13H16V14H15zM17,13H18V14H17zM18,13H19V14H18zM20,13H21V14H20zM21,13H22V14H21zM22,13H23V14H22zM26,13H27V14H26zM28,13H29V14H28zM29,13H30V14H29zM4,14H5V15H4zM6,14H7V15H6zM8,14H9V15H8zM14,14H15V15H14zM15,14H16V15H15zM17,14H18V15H17zM18,14H19V15H18zM22,14H23V15H22zM23,14H24V15H23zM24,14H25V15H24zM27,14H28V15H27zM29,14H30V15H29zM30,14H31V15H30zM3,15H4V16H3zM4,15H5V16H4zM5,15H6V16H5zM9,15H10V16H9zM11,15H12V16H11zM12,15H13V16H12zM13,15H14V16H13zM16,15H17V16H16zM19,15H20V16H19zM22,15H23V16H22zM23,15H24V16H23zM5,16H6V17H5zM8,16H9V17H8zM10,16H11V17H10zM12,16H13V17H12zM15,16H16V17H15zM19,16H20V17H19zM22,16H23V17H22zM24,16H25V17H24zM25,16H26V17H25zM26,16H27V17H26zM27,16H28V17H27zM28,16H29V17H28zM29,16H30V17H29zM30,16H31V17H30zM2,17H3V18H2zM7,17H8V18H7zM9,17H10V18H9zM12,17H13V18H12zM15,17H16V18H15zM16,17H17V18H16zM19,17H20V18H19zM22,17H23V18H22zM23,17H24V18H23zM24,17H25V18H24zM27,17H28V18H27zM29,17H30V18H29zM4,18H5V19H4zM5,18H6V19H5zM8,18H9V19H8zM11,18H12V19H11zM14,18H15V19H14zM19,18H20V19H19zM22,18H23V19H22zM25,18H26V19H25zM29,18H30V19H29zM3,19H4V20H3zM4,19H5V20H4zM6,19H7V20H6zM11,19H12V20H11zM12,19H13V20H12zM13,19H14V20H13zM15,19H16V20H15zM16,19H17V20H16zM18,19H19V20H18zM22,19H23V20H22zM23,19H24V20H23zM24,19H25V20H24zM25,19H26V20H25zM27,19H28V20H27zM30,19H31V20H30zM2,20H3V21H2zM5,20H6V21H5zM7,20H8V21H7zM8,20H9V21H8zM9,20H10V21H9zM12,20H13V21H12zM14,20H15V21H14zM20,20H21V21H20zM23,20H24V21H23zM25,20H26V21H25zM26,20H27V21H26zM29,20H30V21H29zM30,20H31V21H30zM10,21H11V22H10zM11,21H12V22H11zM13,21H14V22H13zM14,21H15V22H14zM16,21H17V22H16zM19,21H20V22H19zM20,21H21V22H20zM22,21H23V22H22zM23,21H24V22H23zM25,21H26V22H25zM26,21H27V22H26zM29,21H30V22H29zM30,21H31V22H30zM2,22H3V23H2zM4,22H5V23H4zM7,22H8V23H7zM8,22H9V23H8zM13,22H14V23H13zM14,22H15V23H14zM15,22H16V23H15zM16,22H17V23H16zM17,22H18V23H17zM18,22H19V23H18zM21,22H22V23H21zM22,22H23V23H22zM23,22H24V23H23zM24,22H25V23H24zM25,22H26V23H25zM26,22H27V23H26zM28,22H29V23H28zM10,23H11V24H10zM13,23H14V24H13zM14,23H15V24H14zM21,23H22V24H21zM22,23H23V24H22zM26,23H27V24H26zM28,23H29V24H28zM29,23H30V24H29zM30,23H31V24H30zM2,24H3V25H2zM3,24H4V25H3zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM7,24H8V25H7zM8,24H9V25H8zM11,24H12V25H11zM12,24H13V25H12zM13,24H14V25H13zM19,24H20V25H19zM22,24H23V25H22zM24,24H25V25H24zM26,24H27V25H26zM29,24H30V25H29zM2,25H3V26H2zM8,25H9V26H8zM10,25H11V26H10zM11,25H12V26H11zM13,25H14V26H13zM15,25H16V26H15zM17,25H18V26H17zM18,25H19V26H18zM22,25H23V26H22zM26,25H27V26H26zM27,25H28V26H27zM28,25H29V26H28zM29,25H30V26H29zM30,25H31V26H30zM2,26H3V27H2zM4,26H5V27H4zM5,26H6V27H5zM6,26H7V27H6zM8,26H9V27H8zM11,26H12V27H11zM12,26H13V27H12zM13,26H14V27H13zM16,26H17V27H16zM17,26H18V27H17zM18,26H19V27H18zM19,26H20V27H19zM22,26H23V27H22zM23,26H24V27H23zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26zM2,27H3V28H2zM4,27H5V28H4zM5,27H6V28H5zM6,27H7V28H6zM8,27H9V28H8zM10,27H11V28H10zM11,27H12V28H11zM15,27H16V28H15zM21,27H22V28H21zM22,27H23V28H22zM24,27H25V28H24zM25,27H26V28H25zM26,27H27V28H26zM27,27H28V28H27zM28,27H29V28H28zM29,27H30V28H29zM2,28H3V29H2zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM8,28H9V29H8zM12,28H13V29H12zM14,28H15V29H14zM16,28H17V29H16zM19,28H20V29H19zM20,28H21V29H20zM21,28H22V29H21zM22,28H23V29H22zM26,28H27V29H26zM27,28H28V29H27zM28,28H29V29H28zM30,28H31V29H30zM2,29H3V30H2zM8,29H9V30H8zM12,29H13V30H12zM15,29H16V30H15zM17,29H18V30H17zM18,29H19V30H18zM19,29H20V30H19zM20,29H21V30H20zM21,29H22V30H21zM22,29H23V30H22zM23,29H24V30H23zM26,29H27V30H26zM29,29H30V30H29zM2,30H3V31H2zM3,30H4V31H3zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM7,30H8V31H7zM8,30H9V31H8zM10,30H11V31H10zM11,30H12V31H11zM12,30H13V31H12zM13,30H14V31H13zM14,30H15V31H14zM16,30H17V31H16zM19,30H20V31H19zM22,30H23V31H22zM23,30H24V31H23zM24,30H25V31H24zM25,30H26V31H25zM26,30H27V31H26zM27,30H28V31H27zM29,30H30V31H29z" fill="#000"/></svg>
+          </div>
+          <h3 style="color: var(--amber); font-size: 21px; margin-bottom: 4px;">claude-seo</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">by <strong>AgriciDaniel</strong></p>
+          <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px; min-height: 38px;">Multi-agent SEO audit &amp; AI search engine.</p>
+          <a href="https://github.com/AgriciDaniel/claude-seo" target="_blank" class="repo-btn" style="padding: 7px 10px; font-size: 12px;">
+            <span>github.com/AgriciDaniel/claude-seo</span>
+          </a>
+        </div>
+
+        <!-- Repo 3: skill-forge -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 20px 14px;">
+          <div class="qr-box" style="width: 140px; height: 140px; margin-bottom: 12px; padding: 8px;">
+            <!-- QR SVG: skill-forge -->
+            <svg viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM11,2H12V3H11zM13,2H14V3H13zM18,2H19V3H18zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM25,2H26V3H25zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM31,2H32V3H31zM32,2H33V3H32zM33,2H34V3H33zM34,2H35V3H34zM2,3H3V4H2zM8,3H9V4H8zM12,3H13V4H12zM13,3H14V4H13zM17,3H18V4H17zM18,3H19V4H18zM20,3H21V4H20zM22,3H23V4H22zM23,3H24V4H23zM28,3H29V4H28zM34,3H35V4H34zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM10,4H11V5H10zM14,4H15V5H14zM16,4H17V5H16zM17,4H18V5H17zM21,4H22V5H21zM22,4H23V5H22zM23,4H24V5H23zM24,4H25V5H24zM28,4H29V5H28zM30,4H31V5H30zM31,4H32V5H31zM32,4H33V5H32zM34,4H35V5H34zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM14,5H15V6H14zM20,5H21V6H20zM23,5H24V6H23zM26,5H27V6H26zM28,5H29V6H28zM30,5H31V6H30zM31,5H32V6H31zM32,5H33V6H32zM34,5H35V6H34zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM14,6H15V7H14zM16,6H17V7H16zM17,6H18V7H17zM18,6H19V7H18zM22,6H23V7H22zM23,6H24V7H23zM24,6H25V7H24zM28,6H29V7H28zM30,6H31V7H30zM31,6H32V7H31zM32,6H33V7H32zM34,6H35V7H34zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM16,7H17V8H16zM19,7H20V8H19zM20,7H21V8H20zM21,7H22V8H21zM25,7H26V8H25zM26,7H27V8H26zM28,7H29V8H28zM34,7H35V8H34zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM26,8H27V9H26zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM31,8H32V9H31zM32,8H33V9H32zM33,8H34V9H33zM34,8H35V9H34zM10,9H11V10H10zM11,9H12V10H11zM14,9H15V10H14zM16,9H17V10H16zM18,9H19V10H18zM20,9H21V10H20zM21,9H22V10H21zM22,9H23V10H22zM23,9H24V10H23zM25,9H26V10H25zM2,10H3V11H2zM4,10H5V11H4zM5,10H6V11H5zM6,10H7V11H6zM7,10H8V11H7zM8,10H9V11H8zM14,10H15V11H14zM15,10H16V11H15zM16,10H17V11H16zM19,10H20V11H19zM21,10H22V11H21zM25,10H26V11H25zM28,10H29V11H28zM29,10H30V11H29zM30,10H31V11H30zM31,10H32V11H31zM32,10H33V11H32zM2,11H3V12H2zM3,11H4V12H3zM5,11H6V12H5zM7,11H8V12H7zM9,11H10V12H9zM11,11H12V12H11zM12,11H13V12H12zM13,11H14V12H13zM14,11H15V12H14zM15,11H16V12H15zM18,11H19V12H18zM19,11H20V12H19zM20,11H21V12H20zM21,11H22V12H21zM22,11H23V12H22zM25,11H26V12H25zM28,11H29V12H28zM29,11H30V12H29zM31,11H32V12H31zM32,11H33V12H32zM34,11H35V12H34zM3,12H4V13H3zM6,12H7V13H6zM7,12H8V13H7zM8,12H9V13H8zM9,12H10V13H9zM11,12H12V13H11zM13,12H14V13H13zM15,12H16V13H15zM16,12H17V13H16zM17,12H18V13H17zM19,12H20V13H19zM22,12H23V13H22zM24,12H25V13H24zM26,12H27V13H26zM27,12H28V13H27zM30,12H31V13H30zM32,12H33V13H32zM33,12H34V13H33zM2,13H3V14H2zM3,13H4V14H3zM4,13H5V14H4zM5,13H6V14H5zM6,13H7V14H6zM7,13H8V14H7zM9,13H10V14H9zM11,13H12V14H11zM12,13H13V14H12zM14,13H15V14H14zM15,13H16V14H15zM18,13H19V14H18zM19,13H20V14H19zM20,13H21V14H20zM26,13H27V14H26zM28,13H29V14H28zM30,13H31V14H30zM31,13H32V14H31zM32,13H33V14H32zM33,13H34V14H33zM34,13H35V14H34zM2,14H3V15H2zM3,14H4V15H3zM6,14H7V15H6zM7,14H8V15H7zM8,14H9V15H8zM10,14H11V15H10zM12,14H13V15H12zM16,14H17V15H16zM18,14H19V15H18zM22,14H23V15H22zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM27,14H28V15H27zM29,14H30V15H29zM30,14H31V15H30zM31,14H32V15H31zM3,15H4V16H3zM4,15H5V16H4zM7,15H8V16H7zM10,15H11V16H10zM11,15H12V16H11zM13,15H14V16H13zM15,15H16V16H15zM17,15H18V16H17zM19,15H20V16H19zM20,15H21V16H20zM26,15H27V16H26zM28,15H29V16H28zM33,15H34V16H33zM34,15H35V16H34zM2,16H3V17H2zM4,16H5V17H4zM6,16H7V17H6zM7,16H8V17H7zM8,16H9V17H8zM13,16H14V17H13zM15,16H16V17H15zM17,16H18V17H17zM18,16H19V17H18zM20,16H21V17H20zM22,16H23V17H22zM24,16H25V17H24zM27,16H28V17H27zM28,16H29V17H28zM31,16H32V17H31zM33,16H34V17H33zM4,17H5V18H4zM6,17H7V18H6zM9,17H10V18H9zM14,17H15V18H14zM17,17H18V18H17zM23,17H24V18H23zM27,17H28V18H27zM28,17H29V18H28zM30,17H31V18H30zM31,17H32V18H31zM32,17H33V18H32zM2,18H3V19H2zM4,18H5V19H4zM5,18H6V19H5zM6,18H7V19H6zM7,18H8V19H7zM8,18H9V19H8zM9,18H10V19H9zM10,18H11V19H10zM11,18H12V19H11zM13,18H14V19H13zM15,18H16V19H15zM16,18H17V19H16zM17,18H18V19H17zM19,18H20V19H19zM24,18H25V19H24zM26,18H27V19H26zM27,18H28V19H27zM29,18H30V19H29zM30,18H31V19H30zM34,18H35V19H34zM2,19H3V20H2zM3,19H4V20H3zM5,19H6V20H5zM7,19H8V20H7zM11,19H12V20H11zM13,19H14V20H13zM14,19H15V20H14zM15,19H16V20H15zM16,19H17V20H16zM18,19H19V20H18zM20,19H21V20H20zM22,19H23V20H22zM23,19H24V20H23zM25,19H26V20H25zM28,19H29V20H28zM29,19H30V20H29zM31,19H32V20H31zM32,19H33V20H32zM33,19H34V20H33zM34,19H35V20H34zM2,20H3V21H2zM4,20H5V21H4zM5,20H6V21H5zM7,20H8V21H7zM8,20H9V21H8zM12,20H13V21H12zM14,20H15V21H14zM16,20H17V21H16zM17,20H18V21H17zM18,20H19V21H18zM20,20H21V21H20zM22,20H23V21H22zM23,20H24V21H23zM26,20H27V21H26zM27,20H28V21H27zM28,20H29V21H28zM29,20H30V21H29zM30,20H31V21H30zM32,20H33V21H32zM33,20H34V21H33zM2,21H3V22H2zM4,21H5V22H4zM6,21H7V22H6zM7,21H8V22H7zM10,21H11V22H10zM11,21H12V22H11zM13,21H14V22H13zM16,21H17V22H16zM17,21H18V22H17zM21,21H22V22H21zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM27,21H28V22H27zM28,21H29V22H28zM29,21H30V22H29zM30,21H31V22H30zM31,21H32V22H31zM32,21H33V22H32zM33,21H34V22H33zM34,21H35V22H34zM4,22H5V23H4zM5,22H6V23H5zM6,22H7V23H6zM8,22H9V23H8zM9,22H10V23H9zM11,22H12V23H11zM12,22H13V23H12zM13,22H14V23H13zM17,22H18V23H17zM20,22H21V23H20zM21,22H22V23H21zM23,22H24V23H23zM26,22H27V23H26zM27,22H28V23H27zM29,22H30V23H29zM30,22H31V23H30zM31,22H32V23H31zM33,22H34V23H33zM34,22H35V23H34zM2,23H3V24H2zM9,23H10V24H9zM17,23H18V24H17zM18,23H19V24H18zM22,23H23V24H22zM23,23H24V24H23zM24,23H25V24H24zM25,23H26V24H25zM27,23H28V24H27zM28,23H29V24H28zM29,23H30V24H29zM34,23H35V24H34zM2,24H3V25H2zM5,24H6V25H5zM6,24H7V25H6zM8,24H9V25H8zM10,24H11V25H10zM11,24H12V25H11zM12,24H13V25H12zM16,24H17V25H16zM19,24H20V25H19zM20,24H21V25H20zM21,24H22V25H21zM27,24H28V25H27zM29,24H30V25H29zM31,24H32V25H31zM32,24H33V25H32zM33,24H34V25H33zM2,25H3V26H2zM6,25H7V26H6zM7,25H8V26H7zM9,25H10V26H9zM12,25H13V26H12zM14,25H15V26H14zM15,25H16V26H15zM18,25H19V26H18zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM27,25H28V26H27zM28,25H29V26H28zM30,25H31V26H30zM31,25H32V26H31zM32,25H33V26H32zM33,25H34V26H33zM34,25H35V26H34zM2,26H3V27H2zM4,26H5V27H4zM7,26H8V27H7zM8,26H9V27H8zM12,26H13V27H12zM13,26H14V27H13zM16,26H17V27H16zM19,26H20V27H19zM21,26H22V27H21zM24,26H25V27H24zM26,26H27V27H26zM27,26H28V27H27zM28,26H29V27H28zM29,26H30V27H29zM30,26H31V27H30zM34,26H35V27H34zM10,27H11V28H10zM11,27H12V28H11zM13,27H14V28H13zM14,27H15V28H14zM16,27H17V28H16zM18,27H19V28H18zM19,27H20V28H19zM20,27H21V28H20zM21,27H22V28H21zM25,27H26V28H25zM26,27H27V28H26zM30,27H31V28H30zM32,27H33V28H32zM34,27H35V28H34zM2,28H3V29H2zM3,28H4V29H3zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM7,28H8V29H7zM8,28H9V29H8zM12,28H13V29H12zM14,28H15V29H14zM16,28H17V29H16zM17,28H18V29H17zM19,28H20V29H19zM22,28H23V29H22zM24,28H25V29H24zM25,28H26V29H25zM26,28H27V29H26zM28,28H29V29H28zM30,28H31V29H30zM32,28H33V29H32zM2,29H3V30H2zM8,29H9V30H8zM10,29H11V30H10zM12,29H13V30H12zM14,29H15V30H14zM15,29H16V30H15zM17,29H18V30H17zM18,29H19V30H18zM19,29H20V30H19zM20,29H21V30H20zM22,29H23V30H22zM25,29H26V30H25zM26,29H27V30H26zM30,29H31V30H30zM31,29H32V30H31zM32,29H33V30H32zM2,30H3V31H2zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM8,30H9V31H8zM10,30H11V31H10zM11,30H12V31H11zM13,30H14V31H13zM15,30H16V31H15zM16,30H17V31H16zM17,30H18V31H17zM18,30H19V31H18zM21,30H22V31H21zM22,30H23V31H22zM23,30H24V31H23zM24,30H25V31H24zM26,30H27V31H26zM27,30H28V31H27zM28,30H29V31H28zM29,30H30V31H29zM30,30H31V31H30zM31,30H32V31H31zM33,30H34V31H33zM34,30H35V31H34zM2,31H3V32H2zM4,31H5V32H4zM5,31H6V32H5zM6,31H7V32H6zM8,31H9V32H8zM10,31H11V32H10zM11,31H12V32H11zM14,31H15V32H14zM15,31H16V32H15zM17,31H18V32H17zM19,31H20V32H19zM20,31H21V32H20zM25,31H26V32H25zM26,31H27V32H26zM27,31H28V32H27zM30,31H31V32H30zM31,31H32V32H31zM34,31H35V32H34zM2,32H3V33H2zM4,32H5V33H4zM5,32H6V33H5zM6,32H7V33H6zM8,32H9V33H8zM10,32H11V33H10zM11,32H12V33H11zM12,32H13V33H12zM13,32H14V33H13zM14,32H15V33H14zM15,32H16V33H15zM16,32H17V33H16zM17,32H18V33H17zM18,32H19V33H18zM20,32H21V33H20zM22,32H23V33H22zM24,32H25V33H24zM28,32H29V33H28zM29,32H30V33H29zM32,32H33V33H32zM2,33H3V34H2zM8,33H9V34H8zM11,33H12V34H11zM13,33H14V34H13zM17,33H18V34H17zM23,33H24V34H23zM24,33H25V34H24zM30,33H31V34H30zM31,33H32V34H31zM32,33H33V34H32zM2,34H3V35H2zM3,34H4V35H3zM4,34H5V35H4zM5,34H6V35H5zM6,34H7V35H6zM7,34H8V35H7zM8,34H9V35H8zM10,34H11V35H10zM12,34H13V35H12zM16,34H17V35H16zM17,34H18V35H17zM24,34H25V35H24zM25,34H26V35H25zM26,34H27V35H26zM28,34H29V35H28zM29,34H30V35H29zM33,34H34V35H33z" fill="#000"/></svg>
+          </div>
+          <h3 style="color: var(--accent); font-size: 21px; margin-bottom: 4px;">skill-forge</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">by <strong>AgriciDaniel</strong></p>
+          <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px; min-height: 38px;">Claude Code skill architect &amp; 3-layer SOP creator.</p>
+          <a href="https://github.com/AgriciDaniel/skill-forge" target="_blank" class="repo-btn" style="padding: 7px 10px; font-size: 12px;">
+            <span>github.com/AgriciDaniel/skill-forge</span>
+          </a>
+        </div>
+
+        <!-- Repo 4: delegate-skills -->
+        <div class="card" style="border-top: 6px solid var(--purple); padding: 20px 14px;">
+          <div class="qr-box" style="width: 140px; height: 140px; margin-bottom: 12px; padding: 8px;">
+            <!-- QR SVG: delegate-skills -->
+            <svg viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM11,2H12V3H11zM12,2H13V3H12zM14,2H15V3H14zM16,2H17V3H16zM18,2H19V3H18zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM25,2H26V3H25zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM31,2H32V3H31zM32,2H33V3H32zM33,2H34V3H33zM34,2H35V3H34zM2,3H3V4H2zM8,3H9V4H8zM11,3H12V4H11zM14,3H15V4H14zM15,3H16V4H15zM17,3H18V4H17zM18,3H19V4H18zM20,3H21V4H20zM22,3H23V4H22zM23,3H24V4H23zM28,3H29V4H28zM34,3H35V4H34zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM10,4H11V5H10zM12,4H13V5H12zM15,4H16V5H15zM17,4H18V5H17zM21,4H22V5H21zM22,4H23V5H22zM23,4H24V5H23zM24,4H25V5H24zM28,4H29V5H28zM30,4H31V5H30zM31,4H32V5H31zM32,4H33V5H32zM34,4H35V5H34zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM12,5H13V6H12zM14,5H15V6H14zM15,5H16V6H15zM17,5H18V6H17zM20,5H21V6H20zM23,5H24V6H23zM26,5H27V6H26zM28,5H29V6H28zM30,5H31V6H30zM31,5H32V6H31zM32,5H33V6H32zM34,5H35V6H34zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM13,6H14V7H13zM14,6H15V7H14zM16,6H17V7H16zM18,6H19V7H18zM22,6H23V7H22zM23,6H24V7H23zM24,6H25V7H24zM28,6H29V7H28zM30,6H31V7H30zM31,6H32V7H31zM32,6H33V7H32zM34,6H35V7H34zM2,7H3V8H2zM8,7H9V8H8zM11,7H12V8H11zM12,7H13V8H12zM13,7H14V8H13zM15,7H16V8H15zM16,7H17V8H16zM19,7H20V8H19zM20,7H21V8H20zM21,7H22V8H21zM25,7H26V8H25zM26,7H27V8H26zM28,7H29V8H28zM34,7H35V8H34zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM26,8H27V9H26zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM31,8H32V9H31zM32,8H33V9H32zM33,8H34V9H33zM34,8H35V9H34zM10,9H11V10H10zM11,9H12V10H11zM12,9H13V10H12zM13,9H14V10H13zM14,9H15V10H14zM15,9H16V10H15zM18,9H19V10H18zM20,9H21V10H20zM21,9H22V10H21zM22,9H23V10H22zM23,9H24V10H23zM25,9H26V10H25zM2,10H3V11H2zM4,10H5V11H4zM5,10H6V11H5zM6,10H7V11H6zM7,10H8V11H7zM8,10H9V11H8zM10,10H11V11H10zM14,10H15V11H14zM15,10H16V11H15zM16,10H17V11H16zM17,10H18V11H17zM18,10H19V11H18zM19,10H20V11H19zM21,10H22V11H21zM25,10H26V11H25zM28,10H29V11H28zM29,10H30V11H29zM30,10H31V11H30zM31,10H32V11H31zM32,10H33V11H32zM2,11H3V12H2zM3,11H4V12H3zM4,11H5V12H4zM6,11H7V12H6zM7,11H8V12H7zM8,11H9V12H8zM10,11H11V12H10zM13,11H14V12H13zM14,11H15V12H14zM15,11H16V12H15zM16,11H17V12H16zM18,11H19V12H18zM19,11H20V12H19zM20,11H21V12H20zM21,11H22V12H21zM22,11H23V12H22zM25,11H26V12H25zM28,11H29V12H28zM29,11H30V12H29zM31,11H32V12H31zM32,11H33V12H32zM34,11H35V12H34zM2,12H3V13H2zM4,12H5V13H4zM6,12H7V13H6zM8,12H9V13H8zM10,12H11V13H10zM11,12H12V13H11zM15,12H16V13H15zM16,12H17V13H16zM17,12H18V13H17zM19,12H20V13H19zM22,12H23V13H22zM24,12H25V13H24zM26,12H27V13H26zM27,12H28V13H27zM30,12H31V13H30zM32,12H33V13H32zM33,12H34V13H33zM4,13H5V14H4zM6,13H7V14H6zM7,13H8V14H7zM9,13H10V14H9zM10,13H11V14H10zM11,13H12V14H11zM13,13H14V14H13zM14,13H15V14H14zM17,13H18V14H17zM18,13H19V14H18zM19,13H20V14H19zM20,13H21V14H20zM26,13H27V14H26zM28,13H29V14H28zM30,13H31V14H30zM31,13H32V14H31zM32,13H33V14H32zM33,13H34V14H33zM34,13H35V14H34zM2,14H3V15H2zM3,14H4V15H3zM4,14H5V15H4zM6,14H7V15H6zM7,14H8V15H7zM8,14H9V15H8zM10,14H11V15H10zM11,14H12V15H11zM12,14H13V15H12zM15,14H16V15H15zM16,14H17V15H16zM18,14H19V15H18zM22,14H23V15H22zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM27,14H28V15H27zM29,14H30V15H29zM30,14H31V15H30zM31,14H32V15H31zM3,15H4V16H3zM4,15H5V16H4zM5,15H6V16H5zM6,15H7V16H6zM8,15H9V16H8zM9,15H10V16H9zM10,15H11V16H10zM11,15H12V16H11zM12,15H13V16H12zM13,15H14V16H13zM14,15H15V16H14zM15,15H16V16H15zM17,15H18V16H17zM19,15H20V16H19zM20,15H21V16H20zM26,15H27V16H26zM28,15H29V16H28zM33,15H34V16H33zM34,15H35V16H34zM2,16H3V17H2zM4,16H5V17H4zM7,16H8V17H7zM8,16H9V17H8zM10,16H11V17H10zM11,16H12V17H11zM13,16H14V17H13zM15,16H16V17H15zM17,16H18V17H17zM18,16H19V17H18zM20,16H21V17H20zM22,16H23V17H22zM24,16H25V17H24zM27,16H28V17H27zM28,16H29V17H28zM31,16H32V17H31zM33,16H34V17H33zM4,17H5V18H4zM5,17H6V18H5zM8,17H9V18H8zM10,17H11V18H10zM11,17H12V18H11zM12,17H13V18H12zM13,17H14V18H13zM14,17H15V18H14zM17,17H18V18H17zM23,17H24V18H23zM27,17H28V18H27zM28,17H29V18H28zM30,17H31V18H30zM31,17H32V18H31zM32,17H33V18H32zM2,18H3V19H2zM3,18H4V19H3zM5,18H6V19H5zM6,18H7V19H6zM7,18H8V19H7zM8,18H9V19H8zM10,18H11V19H10zM11,18H12V19H11zM12,18H13V19H12zM14,18H15V19H14zM15,18H16V19H15zM17,18H18V19H17zM19,18H20V19H19zM24,18H25V19H24zM26,18H27V19H26zM27,18H28V19H27zM29,18H30V19H29zM30,18H31V19H30zM34,18H35V19H34zM2,19H3V20H2zM4,19H5V20H4zM7,19H8V20H7zM8,19H9V20H8zM10,19H11V20H10zM11,19H12V20H11zM14,19H15V20H14zM15,19H16V20H15zM16,19H17V20H16zM18,19H19V20H18zM20,19H21V20H20zM22,19H23V20H22zM23,19H24V20H23zM25,19H26V20H25zM28,19H29V20H28zM29,19H30V20H29zM31,19H32V20H31zM32,19H33V20H32zM33,19H34V20H33zM34,19H35V20H34zM2,20H3V21H2zM3,20H4V21H3zM4,20H5V21H4zM6,20H7V21H6zM8,20H9V21H8zM10,20H11V21H10zM11,20H12V21H11zM12,20H13V21H12zM13,20H14V21H13zM14,20H15V21H14zM15,20H16V21H15zM17,20H18V21H17zM18,20H19V21H18zM20,20H21V21H20zM22,20H23V21H22zM23,20H24V21H23zM26,20H27V21H26zM27,20H28V21H27zM28,20H29V21H28zM29,20H30V21H29zM30,20H31V21H30zM32,20H33V21H32zM33,20H34V21H33zM2,21H3V22H2zM4,21H5V22H4zM5,21H6V22H5zM6,21H7V22H6zM7,21H8V22H7zM8,21H9V22H8zM10,21H11V22H10zM11,21H12V22H11zM13,21H14V22H13zM16,21H17V22H16zM17,21H18V22H17zM21,21H22V22H21zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM27,21H28V22H27zM28,21H29V22H28zM29,21H30V22H29zM30,21H31V22H30zM31,21H32V22H31zM32,21H33V22H32zM33,21H34V22H33zM34,21H35V22H34zM3,22H4V23H3zM4,22H5V23H4zM6,22H7V23H6zM7,22H8V23H7zM9,22H10V23H9zM10,22H11V23H10zM11,22H12V23H11zM12,22H13V23H12zM14,22H15V23H14zM15,22H16V23H15zM16,22H17V23H16zM17,22H18V23H17zM20,22H21V23H20zM21,22H22V23H21zM23,22H24V23H23zM26,22H27V23H26zM27,22H28V23H27zM29,22H30V23H29zM30,22H31V23H30zM31,22H32V23H31zM33,22H34V23H33zM34,22H35V23H34zM2,23H3V24H2zM4,23H5V24H4zM6,23H7V24H6zM7,23H8V24H7zM11,23H12V24H11zM13,23H14V24H13zM14,23H15V24H14zM17,23H18V24H17zM18,23H19V24H18zM22,23H23V24H22zM23,23H24V24H23zM24,23H25V24H24zM25,23H26V24H25zM27,23H28V24H27zM28,23H29V24H28zM29,23H30V24H29zM34,23H35V24H34zM2,24H3V25H2zM3,24H4V25H3zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM8,24H9V25H8zM10,24H11V25H10zM12,24H13V25H12zM13,24H14V25H13zM14,24H15V25H14zM15,24H16V25H15zM16,24H17V25H16zM19,24H20V25H19zM20,24H21V25H20zM21,24H22V25H21zM27,24H28V25H27zM29,24H30V25H29zM31,24H32V25H31zM32,24H33V25H32zM33,24H34V25H33zM3,25H4V26H3zM4,25H5V26H4zM7,25H8V26H7zM8,25H9V26H8zM10,25H11V26H10zM11,25H12V26H11zM14,25H15V26H14zM16,25H17V26H16zM18,25H19V26H18zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM27,25H28V26H27zM28,25H29V26H28zM30,25H31V26H30zM31,25H32V26H31zM32,25H33V26H32zM33,25H34V26H33zM34,25H35V26H34zM2,26H3V27H2zM3,26H4V27H3zM6,26H7V27H6zM8,26H9V27H8zM10,26H11V27H10zM11,26H12V27H11zM12,26H13V27H12zM15,26H16V27H15zM16,26H17V27H16zM19,26H20V27H19zM21,26H22V27H21zM24,26H25V27H24zM26,26H27V27H26zM27,26H28V27H27zM28,26H29V27H28zM29,26H30V27H29zM30,26H31V27H30zM34,26H35V27H34zM10,27H11V28H10zM11,27H12V28H11zM14,27H15V28H14zM15,27H16V28H15zM16,27H17V28H16zM18,27H19V28H18zM19,27H20V28H19zM20,27H21V28H20zM21,27H22V28H21zM25,27H26V28H25zM26,27H27V28H26zM30,27H31V28H30zM32,27H33V28H32zM34,27H35V28H34zM2,28H3V29H2zM3,28H4V29H3zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM7,28H8V29H7zM8,28H9V29H8zM10,28H11V29H10zM11,28H12V29H11zM12,28H13V29H12zM14,28H15V29H14zM16,28H17V29H16zM17,28H18V29H17zM19,28H20V29H19zM22,28H23V29H22zM24,28H25V29H24zM25,28H26V29H25zM26,28H27V29H26zM28,28H29V29H28zM30,28H31V29H30zM32,28H33V29H32zM2,29H3V30H2zM8,29H9V30H8zM10,29H11V30H10zM11,29H12V30H11zM14,29H15V30H14zM17,29H18V30H17zM18,29H19V30H18zM19,29H20V30H19zM20,29H21V30H20zM22,29H23V30H22zM25,29H26V30H25zM26,29H27V30H26zM30,29H31V30H30zM31,29H32V30H31zM32,29H33V30H32zM2,30H3V31H2zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM8,30H9V31H8zM10,30H11V31H10zM12,30H13V31H12zM13,30H14V31H13zM15,30H16V31H15zM16,30H17V31H16zM17,30H18V31H17zM18,30H19V31H18zM21,30H22V31H21zM22,30H23V31H22zM23,30H24V31H23zM24,30H25V31H24zM26,30H27V31H26zM27,30H28V31H27zM28,30H29V31H28zM29,30H30V31H29zM30,30H31V31H30zM31,30H32V31H31zM33,30H34V31H33zM34,30H35V31H34zM2,31H3V32H2zM4,31H5V32H4zM5,31H6V32H5zM6,31H7V32H6zM8,31H9V32H8zM10,31H11V32H10zM11,31H12V32H11zM12,31H13V32H12zM13,31H14V32H13zM14,31H15V32H14zM15,31H16V32H15zM17,31H18V32H17zM19,31H20V32H19zM20,31H21V32H20zM25,31H26V32H25zM26,31H27V32H26zM27,31H28V32H27zM30,31H31V32H30zM31,31H32V32H31zM34,31H35V32H34zM2,32H3V33H2zM4,32H5V33H4zM5,32H6V33H5zM6,32H7V33H6zM8,32H9V33H8zM10,32H11V33H10zM12,32H13V33H12zM13,32H14V33H13zM15,32H16V33H15zM16,32H17V33H16zM17,32H18V33H17zM18,32H19V33H18zM20,32H21V33H20zM22,32H23V33H22zM24,32H25V33H24zM28,32H29V33H28zM29,32H30V33H29zM32,32H33V33H32zM2,33H3V34H2zM8,33H9V34H8zM10,33H11V34H10zM12,33H13V34H12zM13,33H14V34H13zM15,33H16V34H15zM16,33H17V34H16zM17,33H18V34H17zM23,33H24V34H23zM24,33H25V34H24zM30,33H31V34H30zM31,33H32V34H31zM32,33H33V34H32zM2,34H3V35H2zM3,34H4V35H3zM4,34H5V35H4zM5,34H6V35H5zM6,34H7V35H6zM7,34H8V35H7zM8,34H9V35H8zM10,34H11V35H10zM12,34H13V35H12zM14,34H15V35H14zM15,34H16V35H15zM16,34H17V35H16zM17,34H18V35H17zM24,34H25V35H24zM25,34H26V35H25zM26,34H27V35H26zM28,34H29V35H28zM29,34H30V35H29zM33,34H34V35H33z" fill="#000"/></svg>
+          </div>
+          <h3 style="color: var(--purple); font-size: 21px; margin-bottom: 4px;">delegate-skills</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">by <strong>amElnagdy</strong></p>
+          <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px; min-height: 38px;">Foundational multi-tier AI delegation engine.</p>
+          <a href="https://github.com/amElnagdy/delegate-skills" target="_blank" class="repo-btn" style="padding: 7px 10px; font-size: 12px;">
+            <span>github.com/amElnagdy/delegate-skills</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: Executive Summary & Closing Takeaways -->
+  <div class="slide">
+    <div class="slide-container" style="text-align: center; align-items: center;">
+      <div class="badge green">✨ Executive Summary</div>
+      <h1 class="hero-title" style="font-size: 64px; margin-bottom: 32px;">Your 3 Core Takeaways</h1>
+
+      <div class="grid-3" style="text-align: left; width: 100%; margin-bottom: 36px;">
+        <div class="card" style="border-top: 6px solid var(--accent);">
+          <div style="font-size: 48px; font-weight: 900; color: var(--accent); margin-bottom: 6px;">01</div>
+          <h3 style="color: #fff; font-size: 30px;">Package, Don't Prompt</h3>
+          <p>Stop typing repetitive 500-word prompts daily. Use <strong>Skill Forge</strong> to turn your best workflows into reusable standard operating procedures.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--purple);">
+          <div style="font-size: 48px; font-weight: 900; color: var(--purple); margin-bottom: 6px;">02</div>
+          <h3 style="color: #fff; font-size: 30px;">Delegate to Specialists</h3>
+          <p>Separate the <strong>Manager</strong> from the <strong>Workers</strong>. Specialized agents with clean headspace produce 10x higher quality with zero hallucinations.</p>
+        </div>
+
+        <div class="card" style="border-top: 6px solid var(--green);">
+          <div style="font-size: 48px; font-weight: 900; color: var(--green); margin-bottom: 6px;">03</div>
+          <h3 style="color: #fff; font-size: 30px;">Route Smart, Save 90%</h3>
+          <p>Use <strong>AI Delegation</strong> to route expensive frontier intelligence only where it matters. Let fast, inexpensive models handle the mechanical work.</p>
+        </div>
+      </div>
+
+      <div class="card card-closing-quote" style="display: inline-block; padding: 24px 50px; background: rgba(56, 189, 248, 0.1); border-color: var(--accent);">
+        <p style="font-size: 24px; color: #ffffff; font-weight: 700;">
+          💡 <em>"The future belongs not to prompt engineers, but to system architects who build repeatable AI teams."</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 19: Speaker Profile & Let's Connect -->
+  <div class="slide">
+    <div class="slide-container" style="text-align: center; align-items: center;">
+      <div class="badge accent">👋 About the Speaker</div>
+      <h1 class="hero-title" style="font-size: 56px; margin-bottom: 8px;">Let's Connect &amp; Build Together</h1>
+      <p class="lead-text" style="text-align: center; margin-bottom: 28px; max-width: 1050px; font-size: 22px; color: #e2e8f0;">
+        <strong>Go-To-Market &amp; Content Strategist</strong> • Getting brands found on Google and inside AI answers.
+      </p>
+
+      <div class="grid-2" style="width: 100%; max-width: 1250px; text-align: left; gap: 36px;">
+        
+        <!-- Left: Speaker Bio & Credentials -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 32px 30px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="speaker-header-flex" style="display: flex; align-items: center; gap: 18px; margin-bottom: 20px;">
+              <img class="speaker-avatar-img" src="assets/mostafa-daoud.webp" alt="Mostafa Daoud" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2.5px solid var(--accent); box-shadow: 0 8px 24px var(--accent-glow); flex-shrink: 0;" />
+              <div>
+                <h2 style="font-size: 34px; font-weight: 900; color: #fff; margin-bottom: 4px;">Mostafa Daoud</h2>
+                <p style="font-size: 18px; color: var(--accent); font-weight: 700; line-height: 1.3;">
+                  GTM · SEO · AEO · Content | B2B SaaS, AI &amp; beyond
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px;">
+              <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <span style="font-size: 22px;">🚀</span>
+                <div>
+                  <strong style="color: #fff; font-size: 19px;">Go-To-Market &amp; Organic Discovery:</strong>
+                  <p style="font-size: 16px; color: var(--text-muted); margin-top: 2px;">Taking brands to market and ensuring high visibility across both traditional search engines (Google) and next-gen AI answer engines (AEO / Perplexity / ChatGPT).</p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <span style="font-size: 22px;">🎙️</span>
+                <div>
+                  <strong style="color: #fff; font-size: 19px;">Podcast Host:</strong>
+                  <p style="font-size: 16px; color: var(--text-muted); margin-top: 2px;">Host &amp; Creator @ <em>"ما لا يخبرونك به عن التسويق"</em> (What They Don't Tell You About Marketing) — unpacking real-world marketing truths.</p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <span style="font-size: 22px;">⚙️</span>
+                <div>
+                  <strong style="color: #fff; font-size: 19px;">Autonomous Content Engines:</strong>
+                  <p style="font-size: 16px; color: var(--text-muted); margin-top: 2px;">Designing multi-agent editorial workflows that produce rank-ready content at 90% lower operational cost.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 14px 18px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed var(--border);">
+            <p style="font-size: 16px; color: #cbd5e1; margin: 0;">
+              🤝 <em>Open for GTM strategy, AEO/SEO audits, AI editorial workflow design &amp; team enablement workshops.</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Contact Cards with Real QR Codes (LinkedIn, Podcast, Website) -->
+        <div class="card" style="border-top: 6px solid var(--purple); padding: 30px 24px;">
+          <h3 style="font-size: 24px; color: #fff; margin-bottom: 18px; text-align: center;">Scan to Connect &amp; Listen</h3>
+          
+                    <div class="contact-qr-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px;">
+            
+            <!-- LinkedIn Card -->
+            <div style="background: rgba(14, 23, 42, 0.8); border: 1px solid var(--border); border-radius: 14px; padding: 14px 10px; text-align: center;">
+              <div class="qr-box" style="width: 120px; height: 120px; margin-bottom: 10px; padding: 8px;">
+                <!-- LinkedIn QR (https://www.linkedin.com/in/mostafa-daoud/) -->
+                <svg viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM10,2H11V3H10zM13,2H14V3H13zM14,2H15V3H14zM15,2H16V3H15zM16,2H17V3H16zM17,2H18V3H17zM18,2H19V3H18zM19,2H20V3H19zM20,2H21V3H20zM24,2H25V3H24zM25,2H26V3H25zM26,2H27V3H26zM27,2H28V3H27zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM2,3H3V4H2zM8,3H9V4H8zM12,3H13V4H12zM13,3H14V4H13zM15,3H16V4H15zM18,3H19V4H18zM19,3H20V4H19zM21,3H22V4H21zM24,3H25V4H24zM30,3H31V4H30zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM11,4H12V5H11zM12,4H13V5H12zM14,4H15V5H14zM17,4H18V5H17zM19,4H20V5H19zM20,4H21V5H20zM21,4H22V5H21zM24,4H25V5H24zM26,4H27V5H26zM27,4H28V5H27zM28,4H29V5H28zM30,4H31V5H30zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM15,5H16V6H15zM16,5H17V6H16zM18,5H19V6H18zM20,5H21V6H20zM24,5H25V6H24zM26,5H27V6H26zM27,5H28V6H27zM28,5H29V6H28zM30,5H31V6H30zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM11,6H12V7H11zM15,6H16V7H15zM16,6H17V7H16zM17,6H18V7H17zM19,6H20V7H19zM20,6H21V7H20zM24,6H25V7H24zM26,6H27V7H26zM27,6H28V7H27zM28,6H29V7H28zM30,6H31V7H30zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM11,7H12V8H11zM12,7H13V8H12zM13,7H14V8H13zM15,7H16V8H15zM16,7H17V8H16zM18,7H19V8H18zM21,7H22V8H21zM22,7H23V8H22zM24,7H25V8H24zM30,7H31V8H30zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM25,8H26V9H25zM26,8H27V9H26zM27,8H28V9H27zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM10,9H11V10H10zM11,9H12V10H11zM16,9H17V10H16zM17,9H18V10H17zM18,9H19V10H18zM19,9H20V10H19zM20,9H21V10H20zM21,9H22V10H21zM22,9H23V10H22zM2,10H3V11H2zM6,10H7V11H6zM8,10H9V11H8zM9,10H10V11H9zM10,10H11V11H10zM12,10H13V11H12zM13,10H14V11H13zM14,10H15V11H14zM19,10H20V11H19zM20,10H21V11H20zM22,10H23V11H22zM23,10H24V11H23zM24,10H25V11H24zM25,10H26V11H25zM26,10H27V11H26zM27,10H28V11H27zM30,10H31V11H30zM4,11H5V12H4zM6,11H7V12H6zM10,11H11V12H10zM11,11H12V12H11zM14,11H15V12H14zM16,11H17V12H16zM17,11H18V12H17zM18,11H19V12H18zM19,11H20V12H19zM20,11H21V12H20zM22,11H23V12H22zM24,11H25V12H24zM25,11H26V12H25zM26,11H27V12H26zM27,11H28V12H27zM28,11H29V12H28zM29,11H30V12H29zM30,11H31V12H30zM4,12H5V13H4zM5,12H6V13H5zM6,12H7V13H6zM7,12H8V13H7zM8,12H9V13H8zM9,12H10V13H9zM13,12H14V13H13zM14,12H15V13H14zM15,12H16V13H15zM16,12H17V13H16zM17,12H18V13H17zM18,12H19V13H18zM20,12H21V13H20zM25,12H26V13H25zM26,12H27V13H26zM30,12H31V13H30zM3,13H4V14H3zM5,13H6V14H5zM9,13H10V14H9zM11,13H12V14H11zM13,13H14V14H13zM16,13H17V14H16zM19,13H20V14H19zM20,13H21V14H20zM21,13H22V14H21zM22,13H23V14H22zM23,13H24V14H23zM24,13H25V14H24zM26,13H27V14H26zM27,13H28V14H27zM29,13H30V14H29zM30,13H31V14H30zM2,14H3V15H2zM3,14H4V15H3zM8,14H9V15H8zM10,14H11V15H10zM11,14H12V15H11zM12,14H13V15H12zM13,14H14V15H13zM19,14H20V15H19zM22,14H23V15H22zM23,14H24V15H23zM29,14H30V15H29zM4,15H5V16H4zM6,15H7V16H6zM9,15H10V16H9zM11,15H12V16H11zM12,15H13V16H12zM15,15H16V16H15zM17,15H18V16H17zM18,15H19V16H18zM19,15H20V16H19zM20,15H21V16H20zM24,15H25V16H24zM26,15H27V16H26zM27,15H28V16H27zM28,15H29V16H28zM29,15H30V16H29zM30,15H31V16H30zM2,16H3V17H2zM4,16H5V17H4zM5,16H6V17H5zM6,16H7V17H6zM8,16H9V17H8zM9,16H10V17H9zM11,16H12V17H11zM13,16H14V17H13zM14,16H15V17H14zM16,16H17V17H16zM17,16H18V17H17zM19,16H20V17H19zM22,16H23V17H22zM23,16H24V17H23zM26,16H27V17H26zM27,16H28V17H27zM28,16H29V17H28zM30,16H31V17H30zM3,17H4V18H3zM6,17H7V18H6zM10,17H11V18H10zM12,17H13V18H12zM16,17H17V18H16zM17,17H18V18H17zM18,17H19V18H18zM19,17H20V18H19zM20,17H21V18H20zM24,17H25V18H24zM29,17H30V18H29zM30,17H31V18H30zM5,18H6V19H5zM6,18H7V19H6zM7,18H8V19H7zM8,18H9V19H8zM9,18H10V19H9zM10,18H11V19H10zM11,18H12V19H11zM13,18H14V19H13zM14,18H15V19H14zM19,18H20V19H19zM22,18H23V19H22zM23,18H24V19H23zM25,18H26V19H25zM29,18H30V19H29zM2,19H3V20H2zM3,19H4V20H3zM5,19H6V20H5zM6,19H7V20H6zM9,19H10V20H9zM14,19H15V20H14zM15,19H16V20H15zM16,19H17V20H16zM17,19H18V20H17zM18,19H19V20H18zM19,19H20V20H19zM20,19H21V20H20zM24,19H25V20H24zM25,19H26V20H25zM26,19H27V20H26zM27,19H28V20H27zM29,19H30V20H29zM30,19H31V20H30zM5,20H6V21H5zM8,20H9V21H8zM11,20H12V21H11zM14,20H15V21H14zM16,20H17V21H16zM17,20H18V21H17zM18,20H19V21H18zM20,20H21V21H20zM26,20H27V21H26zM28,20H29V21H28zM30,20H31V21H30zM4,21H5V22H4zM5,21H6V22H5zM7,21H8V22H7zM10,21H11V22H10zM13,21H14V22H13zM17,21H18V22H17zM19,21H20V22H19zM22,21H23V22H22zM23,21H24V22H23zM29,21H30V22H29zM30,21H31V22H30zM2,22H3V23H2zM3,22H4V23H3zM7,22H8V23H7zM8,22H9V23H8zM10,22H11V23H10zM13,22H14V23H13zM14,22H15V23H14zM16,22H17V23H16zM18,22H19V23H18zM19,22H20V23H19zM20,22H21V23H20zM21,22H22V23H21zM22,22H23V23H22zM23,22H24V23H23zM24,22H25V23H24zM25,22H26V23H25zM26,22H27V23H26zM27,22H28V23H27zM30,22H31V23H30zM10,23H11V24H10zM11,23H12V24H11zM13,23H14V24H13zM16,23H17V24H16zM17,23H18V24H17zM18,23H19V24H18zM19,23H20V24H19zM20,23H21V24H20zM21,23H22V24H21zM22,23H23V24H22zM26,23H27V24H26zM30,23H31V24H30zM2,24H3V25H2zM3,24H4V25H3zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM7,24H8V25H7zM8,24H9V25H8zM10,24H11V25H10zM12,24H13V25H12zM14,24H15V25H14zM15,24H16V25H15zM16,24H17V25H16zM17,24H18V25H17zM20,24H21V25H20zM21,24H22V25H21zM22,24H23V25H22zM24,24H25V25H24zM26,24H27V25H26zM27,24H28V25H27zM28,24H29V25H28zM30,24H31V25H30zM2,25H3V26H2zM8,25H9V26H8zM12,25H13V26H12zM16,25H17V26H16zM18,25H19V26H18zM19,25H20V26H19zM20,25H21V26H20zM21,25H22V26H21zM22,25H23V26H22zM26,25H27V26H26zM29,25H30V26H29zM2,26H3V27H2zM4,26H5V27H4zM5,26H6V27H5zM6,26H7V27H6zM8,26H9V27H8zM10,26H11V27H10zM11,26H12V27H11zM12,26H13V27H12zM13,26H14V27H13zM14,26H15V27H14zM15,26H16V27H15zM16,26H17V27H16zM18,26H19V27H18zM19,26H20V27H19zM21,26H22V27H21zM22,26H23V27H22zM23,26H24V27H23zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26zM27,26H28V27H27zM30,26H31V27H30zM2,27H3V28H2zM4,27H5V28H4zM5,27H6V28H5zM6,27H7V28H6zM8,27H9V28H8zM11,27H12V28H11zM12,27H13V28H12zM14,27H15V28H14zM16,27H17V28H16zM17,27H18V28H17zM18,27H19V28H18zM19,27H20V28H19zM20,27H21V28H20zM22,27H23V28H22zM23,27H24V28H23zM25,27H26V28H25zM30,27H31V28H30zM2,28H3V29H2zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM8,28H9V29H8zM11,28H12V29H11zM13,28H14V29H13zM14,28H15V29H14zM16,28H17V29H16zM17,28H18V29H17zM19,28H20V29H19zM20,28H21V29H20zM21,28H22V29H21zM23,28H24V29H23zM27,28H28V29H27zM28,28H29V29H28zM29,28H30V29H29zM30,28H31V29H30zM2,29H3V30H2zM8,29H9V30H8zM11,29H12V30H11zM13,29H14V30H13zM14,29H15V30H14zM15,29H16V30H15zM16,29H17V30H16zM19,29H20V30H19zM20,29H21V30H20zM22,29H23V30H22zM23,29H24V30H23zM26,29H27V30H26zM27,29H28V30H27zM29,29H30V30H29zM30,29H31V30H30zM2,30H3V31H2zM3,30H4V31H3zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM7,30H8V31H7zM8,30H9V31H8zM10,30H11V31H10zM12,30H13V31H12zM15,30H16V31H15zM17,30H18V31H17zM19,30H20V31H19zM22,30H23V31H22zM23,30H24V31H23zM24,30H25V31H24zM25,30H26V31H25zM26,30H27V31H26zM29,30H30V31H29z" fill="#000"/></svg>
+              </div>
+              <h4 style="color: #fff; font-size: 17px; margin-bottom: 2px;">LinkedIn</h4>
+              <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px;">in/mostafa-daoud</p>
+              <a href="https://www.linkedin.com/in/mostafa-daoud/" target="_blank" class="repo-btn" style="padding: 6px 10px; font-size: 12px; width: 100%; justify-content: center;">
+                <span>Connect</span>
+              </a>
+            </div>
+
+            <!-- Podcast Card -->
+            <div style="background: rgba(14, 23, 42, 0.8); border: 1px solid var(--border); border-radius: 14px; padding: 14px 10px; text-align: center;">
+              <div class="qr-box" style="width: 120px; height: 120px; margin-bottom: 10px; padding: 8px;">
+                <!-- Podcast QR (https://untold.marketing) -->
+                <svg viewBox="0 0 29 29" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM10,2H11V3H10zM11,2H12V3H11zM13,2H14V3H13zM14,2H15V3H14zM15,2H16V3H15zM17,2H18V3H17zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM24,2H25V3H24zM25,2H26V3H25zM26,2H27V3H26zM2,3H3V4H2zM8,3H9V4H8zM11,3H12V4H11zM12,3H13V4H12zM16,3H17V4H16zM18,3H19V4H18zM20,3H21V4H20zM26,3H27V4H26zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM13,4H14V5H13zM17,4H18V5H17zM18,4H19V5H18zM20,4H21V5H20zM22,4H23V5H22zM23,4H24V5H23zM24,4H25V5H24zM26,4H27V5H26zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM12,5H13V6H12zM15,5H16V6H15zM16,5H17V6H16zM17,5H18V6H17zM18,5H19V6H18zM20,5H21V6H20zM22,5H23V6H22zM23,5H24V6H23zM24,5H25V6H24zM26,5H27V6H26zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM12,6H13V7H12zM16,6H17V7H16zM17,6H18V7H17zM18,6H19V7H18zM20,6H21V7H20zM22,6H23V7H22zM23,6H24V7H23zM24,6H25V7H24zM26,6H27V7H26zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM12,7H13V8H12zM14,7H15V8H14zM16,7H17V8H16zM18,7H19V8H18zM20,7H21V8H20zM26,7H27V8H26zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM21,8H22V9H21zM22,8H23V9H22zM23,8H24V9H23zM24,8H25V9H24zM25,8H26V9H25zM26,8H27V9H26zM10,9H11V10H10zM14,9H15V10H14zM16,9H17V10H16zM17,9H18V10H17zM2,10H3V11H2zM6,10H7V11H6zM8,10H9V11H8zM9,10H10V11H9zM10,10H11V11H10zM12,10H13V11H12zM14,10H15V11H14zM17,10H18V11H17zM19,10H20V11H19zM20,10H21V11H20zM21,10H22V11H21zM22,10H23V11H22zM23,10H24V11H23zM26,10H27V11H26zM3,11H4V12H3zM4,11H5V12H4zM5,11H6V12H5zM7,11H8V12H7zM9,11H10V12H9zM11,11H12V12H11zM12,11H13V12H12zM14,11H15V12H14zM15,11H16V12H15zM16,11H17V12H16zM17,11H18V12H17zM18,11H19V12H18zM22,11H23V12H22zM23,11H24V12H23zM25,11H26V12H25zM2,12H3V13H2zM4,12H5V13H4zM5,12H6V13H5zM8,12H9V13H8zM9,12H10V13H9zM11,12H12V13H11zM16,12H17V13H16zM17,12H18V13H17zM18,12H19V13H18zM20,12H21V13H20zM21,12H22V13H21zM23,12H24V13H23zM24,12H25V13H24zM3,13H4V14H3zM6,13H7V14H6zM7,13H8V14H7zM9,13H10V14H9zM12,13H13V14H12zM14,13H15V14H14zM16,13H17V14H16zM19,13H20V14H19zM20,13H21V14H20zM21,13H22V14H21zM24,13H25V14H24zM25,13H26V14H25zM3,14H4V15H3zM6,14H7V15H6zM7,14H8V15H7zM8,14H9V15H8zM10,14H11V15H10zM11,14H12V15H11zM12,14H13V15H12zM13,14H14V15H13zM17,14H18V15H17zM19,14H20V15H19zM20,14H21V15H20zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM2,15H3V16H2zM3,15H4V16H3zM6,15H7V16H6zM7,15H8V16H7zM9,15H10V16H9zM11,15H12V16H11zM14,15H15V16H14zM15,15H16V16H15zM17,15H18V16H17zM19,15H20V16H19zM22,15H23V16H22zM25,15H26V16H25zM4,16H5V17H4zM7,16H8V17H7zM8,16H9V17H8zM9,16H10V17H9zM11,16H12V17H11zM12,16H13V17H12zM13,16H14V17H13zM14,16H15V17H14zM16,16H17V17H16zM17,16H18V17H17zM18,16H19V17H18zM21,16H22V17H21zM22,16H23V17H22zM23,16H24V17H23zM24,16H25V17H24zM10,17H11V18H10zM11,17H12V18H11zM12,17H13V18H12zM13,17H14V18H13zM17,17H18V18H17zM19,17H20V18H19zM21,17H22V18H21zM22,17H23V18H22zM24,17H25V18H24zM25,17H26V18H25zM2,18H3V19H2zM3,18H4V19H3zM4,18H5V19H4zM5,18H6V19H5zM6,18H7V19H6zM7,18H8V19H7zM8,18H9V19H8zM12,18H13V19H12zM14,18H15V19H14zM18,18H19V19H18zM19,18H20V19H19zM20,18H21V19H20zM21,18H22V19H21zM22,18H23V19H22zM23,18H24V19H23zM24,18H25V19H24zM10,19H11V20H10zM16,19H17V20H16zM18,19H19V20H18zM22,19H23V20H22zM2,20H3V21H2zM3,20H4V21H3zM4,20H5V21H4zM5,20H6V21H5zM6,20H7V21H6zM7,20H8V21H7zM8,20H9V21H8zM10,20H11V21H10zM11,20H12V21H11zM18,20H19V21H18zM20,20H21V21H20zM22,20H23V21H22zM2,21H3V22H2zM8,21H9V22H8zM12,21H13V22H12zM14,21H15V22H14zM16,21H17V22H16zM18,21H19V22H18zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM25,21H26V22H25zM2,22H3V23H2zM4,22H5V23H4zM5,22H6V23H5zM6,22H7V23H6zM8,22H9V23H8zM10,22H11V23H10zM11,22H12V23H11zM12,22H13V23H12zM13,22H14V23H13zM14,22H15V23H14zM18,22H19V23H18zM19,22H20V23H19zM20,22H21V23H20zM21,22H22V23H21zM22,22H23V23H22zM23,22H24V23H23zM24,22H25V23H24zM2,23H3V24H2zM4,23H5V24H4zM5,23H6V24H5zM6,23H7V24H6zM8,23H9V24H8zM12,23H13V24H12zM14,23H15V24H14zM16,23H17V24H16zM19,23H20V24H19zM20,23H21V24H20zM21,23H22V24H21zM24,23H25V24H24zM25,23H26V24H25zM26,23H27V24H26zM2,24H3V25H2zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM8,24H9V25H8zM12,24H13V25H12zM13,24H14V25H13zM14,24H15V25H14zM15,24H16V25H15zM16,24H17V25H16zM19,24H20V25H19zM20,24H21V25H20zM23,24H24V25H23zM25,24H26V25H25zM2,25H3V26H2zM8,25H9V26H8zM12,25H13V26H12zM14,25H15V26H14zM17,25H18V26H17zM20,25H21V26H20zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM2,26H3V27H2zM3,26H4V27H3zM4,26H5V27H4zM5,26H6V27H5zM6,26H7V27H6zM7,26H8V27H7zM8,26H9V27H8zM10,26H11V27H10zM11,26H12V27H11zM12,26H13V27H12zM14,26H15V27H14zM17,26H18V27H17zM19,26H20V27H19zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26z" fill="#000"/></svg>
+              </div>
+              <h4 style="color: #fff; font-size: 17px; margin-bottom: 2px;">Podcast</h4>
+              <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px;">untold.marketing</p>
+              <a href="https://untold.marketing" target="_blank" class="repo-btn" style="padding: 6px 10px; font-size: 12px; width: 100%; justify-content: center;">
+                <span>Listen</span>
+              </a>
+            </div>
+
+            <!-- Website Card -->
+            <div style="background: rgba(14, 23, 42, 0.8); border: 1px solid var(--border); border-radius: 14px; padding: 14px 10px; text-align: center;">
+              <div class="qr-box" style="width: 120px; height: 120px; margin-bottom: 10px; padding: 8px;">
+                <!-- Website QR (https://mostafadaoud.com) -->
+                <svg viewBox="0 0 29 29" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM10,2H11V3H10zM11,2H12V3H11zM12,2H13V3H12zM16,2H17V3H16zM17,2H18V3H17zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM24,2H25V3H24zM25,2H26V3H25zM26,2H27V3H26zM2,3H3V4H2zM8,3H9V4H8zM18,3H19V4H18zM20,3H21V4H20zM26,3H27V4H26zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM11,4H12V5H11zM12,4H13V5H12zM13,4H14V5H13zM16,4H17V5H16zM17,4H18V5H17zM18,4H19V5H18zM20,4H21V5H20zM22,4H23V5H22zM23,4H24V5H23zM24,4H25V5H24zM26,4H27V5H26zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM12,5H13V6H12zM14,5H15V6H14zM15,5H16V6H15zM16,5H17V6H16zM17,5H18V6H17zM18,5H19V6H18zM20,5H21V6H20zM22,5H23V6H22zM23,5H24V6H23zM24,5H25V6H24zM26,5H27V6H26zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM11,6H12V7H11zM15,6H16V7H15zM17,6H18V7H17zM18,6H19V7H18zM20,6H21V7H20zM22,6H23V7H22zM23,6H24V7H23zM24,6H25V7H24zM26,6H27V7H26zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM12,7H13V8H12zM15,7H16V8H15zM20,7H21V8H20zM26,7H27V8H26zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM21,8H22V9H21zM22,8H23V9H22zM23,8H24V9H23zM24,8H25V9H24zM25,8H26V9H25zM26,8H27V9H26zM10,9H11V10H10zM14,9H15V10H14zM16,9H17V10H16zM17,9H18V10H17zM2,10H3V11H2zM6,10H7V11H6zM8,10H9V11H8zM9,10H10V11H9zM10,10H11V11H10zM19,10H20V11H19zM20,10H21V11H20zM21,10H22V11H21zM22,10H23V11H22zM23,10H24V11H23zM26,10H27V11H26zM2,11H3V12H2zM3,11H4V12H3zM5,11H6V12H5zM7,11H8V12H7zM9,11H10V12H9zM13,11H14V12H13zM15,11H16V12H15zM16,11H17V12H16zM17,11H18V12H17zM18,11H19V12H18zM22,11H23V12H22zM23,11H24V12H23zM25,11H26V12H25zM3,12H4V13H3zM4,12H5V13H4zM6,12H7V13H6zM8,12H9V13H8zM9,12H10V13H9zM11,12H12V13H11zM16,12H17V13H16zM17,12H18V13H17zM20,12H21V13H20zM21,12H22V13H21zM23,12H24V13H23zM24,12H25V13H24zM2,13H3V14H2zM3,13H4V14H3zM5,13H6V14H5zM9,13H10V14H9zM10,13H11V14H10zM13,13H14V14H13zM14,13H15V14H14zM17,13H18V14H17zM18,13H19V14H18zM20,13H21V14H20zM21,13H22V14H21zM22,13H23V14H22zM24,13H25V14H24zM25,13H26V14H25zM2,14H3V15H2zM3,14H4V15H3zM4,14H5V15H4zM5,14H6V15H5zM6,14H7V15H6zM8,14H9V15H8zM9,14H10V15H9zM12,14H13V15H12zM16,14H17V15H16zM19,14H20V15H19zM20,14H21V15H20zM21,14H22V15H21zM23,14H24V15H23zM24,14H25V15H24zM25,14H26V15H25zM26,14H27V15H26zM2,15H3V16H2zM4,15H5V16H4zM6,15H7V16H6zM11,15H12V16H11zM12,15H13V16H12zM14,15H15V16H14zM16,15H17V16H16zM17,15H18V16H17zM18,15H19V16H18zM19,15H20V16H19zM22,15H23V16H22zM25,15H26V16H25zM4,16H5V17H4zM8,16H9V17H8zM9,16H10V17H9zM10,16H11V17H10zM12,16H13V17H12zM13,16H14V17H13zM14,16H15V17H14zM15,16H16V17H15zM16,16H17V17H16zM17,16H18V17H17zM18,16H19V17H18zM19,16H20V17H19zM21,16H22V17H21zM22,16H23V17H22zM23,16H24V17H23zM24,16H25V17H24zM4,17H5V18H4zM5,17H6V18H5zM9,17H10V18H9zM10,17H11V18H10zM11,17H12V18H11zM12,17H13V18H12zM13,17H14V18H13zM20,17H21V18H20zM21,17H22V18H21zM22,17H23V18H22zM24,17H25V18H24zM25,17H26V18H25zM2,18H3V19H2zM3,18H4V19H3zM5,18H6V19H5zM8,18H9V19H8zM10,18H11V19H10zM11,18H12V19H11zM12,18H13V19H12zM14,18H15V19H14zM18,18H19V19H18zM19,18H20V19H19zM20,18H21V19H20zM21,18H22V19H21zM22,18H23V19H22zM23,18H24V19H23zM24,18H25V19H24zM10,19H11V20H10zM11,19H12V20H11zM15,19H16V20H15zM16,19H17V20H16zM18,19H19V20H18zM22,19H23V20H22zM2,20H3V21H2zM3,20H4V21H3zM4,20H5V21H4zM5,20H6V21H5zM6,20H7V21H6zM7,20H8V21H7zM8,20H9V21H8zM10,20H11V21H10zM15,20H16V21H15zM18,20H19V21H18zM20,20H21V21H20zM22,20H23V21H22zM2,21H3V22H2zM8,21H9V22H8zM11,21H12V22H11zM14,21H15V22H14zM16,21H17V22H16zM18,21H19V22H18zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM25,21H26V22H25zM2,22H3V23H2zM4,22H5V23H4zM5,22H6V23H5zM6,22H7V23H6zM8,22H9V23H8zM10,22H11V23H10zM11,22H12V23H11zM13,22H14V23H13zM14,22H15V23H14zM18,22H19V23H18zM19,22H20V23H19zM20,22H21V23H20zM21,22H22V23H21zM22,22H23V23H22zM23,22H24V23H23zM24,22H25V23H24zM2,23H3V24H2zM4,23H5V24H4zM5,23H6V24H5zM6,23H7V24H6zM8,23H9V24H8zM12,23H13V24H12zM14,23H15V24H14zM16,23H17V24H16zM17,23H18V24H17zM19,23H20V24H19zM20,23H21V24H20zM21,23H22V24H21zM24,23H25V24H24zM25,23H26V24H25zM26,23H27V24H26zM2,24H3V25H2zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM8,24H9V25H8zM13,24H14V25H13zM14,24H15V25H14zM15,24H16V25H15zM16,24H17V25H16zM17,24H18V25H17zM18,24H19V25H18zM20,24H21V25H20zM23,24H24V25H23zM25,24H26V25H25zM2,25H3V26H2zM8,25H9V26H8zM12,25H13V26H12zM13,25H14V26H13zM14,25H15V26H14zM16,25H17V26H16zM17,25H18V26H17zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM2,26H3V27H2zM3,26H4V27H3zM4,26H5V27H4zM5,26H6V27H5zM6,26H7V27H6zM7,26H8V27H7zM8,26H9V27H8zM10,26H11V27H10zM11,26H12V27H11zM12,26H13V27H12zM13,26H14V27H13zM14,26H15V27H14zM17,26H18V27H17zM20,26H21V27H20zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26z" fill="#000"/></svg>
+              </div>
+              <h4 style="color: #fff; font-size: 17px; margin-bottom: 2px;">Website</h4>
+              <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px;">mostafadaoud.com</p>
+              <a href="https://mostafadaoud.com" target="_blank" class="repo-btn" style="padding: 6px 10px; font-size: 12px; width: 100%; justify-content: center;">
+                <span>Visit</span>
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Email Channels with Dedicated Mailto Options -->
+          <div style="background: rgba(14, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 14px; padding: 14px 20px; margin-top: 6px;">
+            <div class="contact-email-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; text-align: center;">
+              
+              <!-- Business Email -->
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <span style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;">💼 Business Inquiries</span>
+                <a href="mailto:mostafa@mostafadaoud.com" style="font-size: 14px; color: #fff; text-decoration: none; font-weight: 600;">mostafa@mostafadaoud.com</a>
+              </div>
+
+              <!-- Podcast Email -->
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <span style="font-size: 11px; font-weight: 800; color: var(--purple); text-transform: uppercase; letter-spacing: 0.5px;">🎙️ Podcast Inquiries</span>
+                <a href="mailto:mostafa@untold.marketing" style="font-size: 14px; color: #fff; text-decoration: none; font-weight: 600;">mostafa@untold.marketing</a>
+              </div>
+
+            </div>
+            
+            <div style="text-align: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+              <p style="font-size: 13.5px; color: #cbd5e1; margin: 0; line-height: 1.5; font-weight: 500;">
+                ⏳ <em>Due to high volume, replies may take 3–5 business days. Prioritizing strategic consulting &amp; GTM engagements.</em>
+              </p>
+              <p style="font-size: 12px; color: var(--text-dim); margin: 0;">
+                📍 Cairo, Egypt / Remote Worldwide (US &amp; MENA)
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const slides = document.querySelectorAll('.slide');
+  const progressBar = document.getElementById('progressBar');
+  const slideCount = document.getElementById('slideCount');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const toggleModeBtn = document.getElementById('toggleModeBtn');
+  const navHint = document.getElementById('navHint');
+  const dotsContainer = document.getElementById('dotsContainer');
+
+  let currentSlide = 0;
+  const totalSlides = slides.length;
+  let isScrollMode = false;
+
+  // Build dots
+  slides.forEach((_, idx) => {
+    const dot = document.createElement('div');
+    dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+    dot.title = `Go to Slide ${idx + 1}`;
+    dot.addEventListener('click', () => {
+      if (!isScrollMode) updateSlide(idx);
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.dot');
+
+  function updateSlide(newIndex) {
+    if (newIndex < 0 || newIndex >= totalSlides) return;
+    
+    slides.forEach((slide, idx) => {
+      slide.classList.remove('active', 'prev');
+      if (idx === newIndex) {
+        slide.classList.add('active');
+      } else if (idx < newIndex) {
+        slide.classList.add('prev');
+      }
+    });
+
+    dots.forEach((d, idx) => {
+      d.classList.toggle('active', idx === newIndex);
+    });
+
+    currentSlide = newIndex;
+    progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+    slideCount.textContent = `${currentSlide + 1} / ${totalSlides}`;
+  }
+
+  function next() { if (!isScrollMode) updateSlide(currentSlide + 1); }
+  function prev() { if (!isScrollMode) updateSlide(currentSlide - 1); }
+
+  toggleModeBtn.addEventListener('click', () => {
+    isScrollMode = !isScrollMode;
+    if (isScrollMode) {
+      document.body.className = 'mode-scroll';
+      toggleModeBtn.textContent = '📽️ Slide View';
+      navHint.innerHTML = '<span>Scroll smoothly through the complete visual guide</span>';
+    } else {
+      document.body.className = 'mode-slides';
+      toggleModeBtn.textContent = '📜 Scroll View';
+      navHint.innerHTML = '<span>Navigate with <kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd> | Press <kbd>F</kbd> for Fullscreen</span>';
+      updateSlide(currentSlide);
+    }
+  });
+
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    if (isScrollMode) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      prev();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      updateSlide(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      updateSlide(totalSlides - 1);
+    } else if (e.key.toLowerCase() === 'f') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  });
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  // Click sides to navigate in slide mode
+  deck.addEventListener('click', (e) => {
+    if (isScrollMode) return;
+    if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.dot')) return;
+    const x = e.clientX;
+    const width = window.innerWidth;
+    if (x > width * 0.7) {
+      next();
+    } else if (x < width * 0.3) {
+      prev();
+    }
+  });
+
+  // Touch Swipe (with horizontal intent check to allow vertical scrolling on mobile)
+  let touchStartX = 0, touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', (e) => {
+    if (isScrollMode) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.6) {
+      if (diffX > 0) next();
+      else prev();
+    }
+  }, { passive: true });
+
+  // Init
+  updateSlide(0);
+</script>
+</body>
+</html>
