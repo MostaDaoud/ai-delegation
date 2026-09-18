@@ -1204,7 +1204,7 @@
 <div class="nav-controller">
   <button id="prevBtn" title="Previous Slide (Left Arrow)">◀</button>
   <div class="slide-dots" id="dotsContainer"></div>
-  <span id="slideCount" style="font-size: 17px; font-weight: 800; color: var(--text-muted); min-width: 60px; text-align: center;">1 / 19</span>
+  <span id="slideCount" style="font-size: 17px; font-weight: 800; color: var(--text-muted); min-width: 60px; text-align: center;">1 / 20</span>
   <button id="nextBtn" title="Next Slide (Right Arrow)">▶</button>
   <button id="toggleModeBtn" class="btn-mode-toggle" title="Switch to Continuous Scroll View">📜 Scroll View</button>
 </div>
@@ -1735,7 +1735,102 @@
     </div>
   </div>
 
-  <!-- SLIDE 7: Real-Life Case Study (Overview) -->
+  <!-- SLIDE 7: The AI Tool Landscape (ChatGPT vs Claude vs OpenCode vs Agy) -->
+  <div class="slide">
+    <div class="slide-container">
+      <div class="badge purple">🛠️ The AI Tool Landscape</div>
+      <h2 class="slide-heading">Where Does the Work Actually Happen? (Choosing the Right AI Workplace)</h2>
+      <p class="lead-text">From quick browser chats to autonomous agent IDEs: understand what each tool is built for.</p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        
+        <!-- Tool 1: ChatGPT -->
+        <div class="card" style="border-top: 6px solid var(--accent); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">💬</span>
+              <div>
+                <h3 style="color: var(--accent); font-size: 21px; margin: 0;">ChatGPT</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700;">The Browser Chat</span>
+              </div>
+            </div>
+            <p style="font-size: 15.5px; color: #fff; font-weight: 700; margin-bottom: 8px;">Instant conversational assistant.</p>
+            <p style="font-size: 14.5px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.55;">Best for quick brainstorming, one-off questions, rewriting paragraphs, and messy early ideation in your web browser.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 13px; color: #e2e8f0;">
+            <strong>Workplace:</strong> Web browser chat — fast, simple, but no persistent terminal/file harness.
+          </div>
+        </div>
+
+        <!-- Tool 2: Claude & Claude Code -->
+        <div class="card" style="border-top: 6px solid var(--amber); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">🧠</span>
+              <div>
+                <h3 style="color: var(--amber); font-size: 21px; margin: 0;">Claude / Code</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700;">The Deep Strategist</span>
+              </div>
+            </div>
+            <p style="font-size: 15.5px; color: #fff; font-weight: 700; margin-bottom: 8px;">Deep reasoning &amp; CLI coding.</p>
+            <p style="font-size: 14.5px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.55;">Best for analyzing massive documents, complex codebase architecture, and executing structured skills directly in your terminal.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(251, 191, 36, 0.1); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; font-size: 13px; color: #e2e8f0;">
+            <strong>Workplace:</strong> Web app + <code>claude-code</code> CLI — standard for structured skill SOP execution.
+          </div>
+        </div>
+
+        <!-- Tool 3: OpenCode -->
+        <div class="card" style="border-top: 6px solid var(--green); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">⚙️</span>
+              <div>
+                <h3 style="color: var(--green); font-size: 21px; margin: 0;">OpenCode</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700;">The Open CLI Harness</span>
+              </div>
+            </div>
+            <p style="font-size: 15.5px; color: #fff; font-weight: 700; margin-bottom: 8px;">Multi-model open terminal.</p>
+            <p style="font-size: 14.5px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.55;">Best for developers wanting zero vendor lock-in: switch between OpenAI, Claude, Gemini, or local models right from your terminal.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(74, 222, 128, 0.1); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; font-size: 13px; color: #e2e8f0;">
+            <strong>Workplace:</strong> Open-source terminal harness — complete model provider freedom &amp; privacy.
+          </div>
+        </div>
+
+        <!-- Tool 4: Agy (Antigravity) -->
+        <div class="card" style="border-top: 6px solid var(--purple); padding: 24px 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 28px;">🚀</span>
+              <div>
+                <h3 style="color: var(--purple); font-size: 21px; margin: 0;">Agy (Antigravity)</h3>
+                <span style="font-size: 13px; color: var(--text-dim); font-weight: 700;">Multi-Agent OS &amp; IDE</span>
+              </div>
+            </div>
+            <p style="font-size: 15.5px; color: #fff; font-weight: 700; margin-bottom: 8px;">Autonomous agent workplace.</p>
+            <p style="font-size: 14.5px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.55;">Best for running multi-agent swarms in the background, generating interactive UI artifacts, and managing persistent project brains.</p>
+          </div>
+          <div style="padding: 10px 12px; background: rgba(192, 132, 252, 0.1); border-left: 3px solid var(--purple); border-radius: 0 8px 8px 0; font-size: 13px; color: #e2e8f0;">
+            <strong>Workplace:</strong> Full Agentic IDE — parallel background subagents, MCP tools, and rich artifacts.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card card-summary-row" style="background: rgba(56, 189, 248, 0.08); border-color: var(--accent); display: flex; align-items: center; justify-content: space-between; padding: 16px 26px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">💡</span>
+          <span style="color: #cbd5e1; font-size: 17px;">
+            <strong>The Workflow Ladder:</strong> Start ideating in <strong>ChatGPT/Claude</strong> ➔ Package SOPs in <strong>Claude Code/OpenCode</strong> ➔ Run fully autonomous multi-agent pipelines in <strong>Agy</strong>.
+          </span>
+        </div>
+        <div class="badge" style="margin: 0; font-size: 14px; flex-shrink: 0;">Full Ecosystem</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Real-Life Case Study (Overview) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge green">💡 Real-Life Case Study</div>
@@ -1775,7 +1870,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 8: Inside the 4-Phase Pipeline -->
+  <!-- SLIDE 9: Inside the 4-Phase Pipeline -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge green">🔍 Pipeline Breakdown</div>
@@ -1883,7 +1978,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 9: Autonomous Quality Control (Visual Show vs Tell) -->
+  <!-- SLIDE 10: Autonomous Quality Control (Visual Show vs Tell) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge amber">🛡️ Autonomous Quality Control</div>
@@ -1971,7 +2066,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 10: Real-World Results & Client Testimonials -->
+  <!-- SLIDE 11: Real-World Results & Client Testimonials -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge green">🌟 Real-World Results &amp; Client Proof</div>
@@ -2040,7 +2135,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 11: Why the Manager Never Writes (The Clean Desk Principle) -->
+  <!-- SLIDE 12: Why the Manager Never Writes (The Clean Desk Principle) -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge amber">👑 The Golden Rule</div>
@@ -2143,7 +2238,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 12: Cost Math & ROI -->
+  <!-- SLIDE 13: Cost Math & ROI -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge green">💰 The Cost Revolution</div>
@@ -2198,7 +2293,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 13: Model Tiers Demystified -->
+  <!-- SLIDE 14: Model Tiers Demystified -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge">🧮 3 Brain Sizes Demystified</div>
@@ -2237,7 +2332,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 14: 3 Other Everyday Workforces -->
+  <!-- SLIDE 15: 3 Other Everyday Workforces -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge purple">🏢 Practical Business Applications</div>
@@ -2273,7 +2368,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 15: Decision Matrix -->
+  <!-- SLIDE 16: Decision Matrix -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge amber">🧭 Practical Guidance</div>
@@ -2314,7 +2409,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 16: 4-Step Playbook -->
+  <!-- SLIDE 17: 4-Step Playbook -->
   <div class="slide">
     <div class="slide-container">
       <div class="badge green">🚀 Implementation Guide</div>
@@ -2389,7 +2484,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 17: Open Source Repositories & QR Codes (NEW) -->
+  <!-- SLIDE 18: Open Source Repositories & QR Codes (NEW) -->
   <div class="slide">
     <div class="slide-container" style="text-align: center; align-items: center;">
       <div class="badge green">📱 Scan &amp; Star on GitHub</div>
@@ -2460,7 +2555,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 18: Executive Summary & Closing Takeaways -->
+  <!-- SLIDE 19: Executive Summary & Closing Takeaways -->
   <div class="slide">
     <div class="slide-container" style="text-align: center; align-items: center;">
       <div class="badge green">✨ Executive Summary</div>
@@ -2494,7 +2589,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 19: Speaker Profile & Let's Connect -->
+  <!-- SLIDE 20: Speaker Profile & Let's Connect -->
   <div class="slide">
     <div class="slide-container" style="text-align: center; align-items: center;">
       <div class="badge accent">👋 About the Speaker</div>
